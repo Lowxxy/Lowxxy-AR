@@ -1,9 +1,9 @@
 {
-  "id": "./?app=lowxxy-v2",
+  "id": "./?app=lowxxy-v3",
   "name": "Lowxxy AR",
   "short_name": "Lowxxy",
   "description": "Scan Lowxxy designs and unlock animated AR experiences.",
-  "start_url": "./?app=lowxxy-v2",
+  "start_url": "./?app=lowxxy-v3",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
@@ -11,13 +11,13 @@
   "theme_color": "#000000",
   "icons": [
     {
-      "src": "./icons/lowxxy-icon-192-v2.png",
+      "src": "./icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "./icons/lowxxy-icon-512-v2.png",
+      "src": "./icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
