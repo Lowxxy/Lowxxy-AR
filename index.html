@@ -33,13 +33,16 @@
       background: rgba(12,12,12,.94); box-shadow: 0 20px 60px rgba(0,0,0,.55);
     }
     .brand { margin: 0 0 8px; font-size: clamp(34px, 10vw, 54px); line-height: 1; letter-spacing: .12em; font-weight: 900; }
-    .subtitle { margin: 0 0 24px; color: rgba(255,255,255,.72); font-size: 15px; line-height: 1.5; }
+    .subtitle { margin: 0 0 20px; color: rgba(255,255,255,.72); font-size: 15px; line-height: 1.5; }
+    .button-stack { display: grid; gap: 12px; }
     button {
       width: 100%; min-height: 54px; border: 0; border-radius: 999px;
       padding: 14px 22px; background: #fff; color: #000;
       font: inherit; font-weight: 800; letter-spacing: .05em; cursor: pointer;
     }
+    button.secondary { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.35); }
     button:disabled { opacity: .5; cursor: wait; }
+    #installHelp { margin: 14px 0 0; color: rgba(255,255,255,.72); font-size: 13px; line-height: 1.45; display: none; }
     #statusBar {
       position: fixed; z-index: 900; left: 50%; top: max(18px, env(safe-area-inset-top));
       transform: translateX(-50%); width: min(92%, 430px); padding: 11px 16px;
@@ -56,8 +59,12 @@
     <div id="startOverlay" class="overlay">
       <div class="panel">
         <h1 class="brand">LOWXXY</h1>
-        <p class="subtitle">Tap below, allow camera access, and point your phone at the full Lowxxy design.</p>
-        <button id="startButton" type="button">START AR</button>
+        <p class="subtitle">Install Lowxxy AR or start scanning now.</p>
+        <div class="button-stack">
+          <button id="installButton" class="secondary hidden" type="button">INSTALL LOWXXY APP</button>
+          <button id="startButton" type="button">START AR</button>
+        </div>
+        <p id="installHelp"></p>
         <p id="errorText"></p>
       </div>
     </div>
@@ -93,10 +100,17 @@
       const videoPlane = document.querySelector("#videoPlane");
       const startOverlay = document.querySelector("#startOverlay");
       const startButton = document.querySelector("#startButton");
+      const installButton = document.querySelector("#installButton");
+      const installHelp = document.querySelector("#installHelp");
       const statusBar = document.querySelector("#statusBar");
       const errorText = document.querySelector("#errorText");
 
       let arSystem;
+      let deferredInstallPrompt = null;
+
+      const isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+      const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+      const isAndroid = /android/i.test(navigator.userAgent);
 
       const showError = (message) => {
         startOverlay.classList.remove("hidden");
@@ -106,6 +120,54 @@
         errorText.style.display = "block";
         errorText.textContent = message;
       };
+
+      if (!isStandalone) {
+        window.addEventListener("beforeinstallprompt", (event) => {
+          event.preventDefault();
+          deferredInstallPrompt = event;
+          installButton.classList.remove("hidden");
+          installHelp.style.display = "none";
+        });
+
+        if (isIOS) {
+          installButton.classList.remove("hidden");
+          installButton.textContent = "HOW TO INSTALL ON IPHONE";
+        } else if (isAndroid) {
+          installButton.classList.remove("hidden");
+        }
+      }
+
+      window.addEventListener("appinstalled", () => {
+        deferredInstallPrompt = null;
+        installButton.classList.add("hidden");
+        installHelp.style.display = "block";
+        installHelp.textContent = "Lowxxy AR was installed successfully.";
+      });
+
+      installButton.addEventListener("click", async () => {
+        installHelp.style.display = "block";
+
+        if (deferredInstallPrompt) {
+          deferredInstallPrompt.prompt();
+          const choice = await deferredInstallPrompt.userChoice;
+          deferredInstallPrompt = null;
+          if (choice.outcome === "accepted") {
+            installHelp.textContent = "Installing Lowxxy AR…";
+            installButton.classList.add("hidden");
+          } else {
+            installHelp.textContent = "Installation was canceled. You can try again later from Chrome's menu.";
+          }
+          return;
+        }
+
+        if (isIOS) {
+          installHelp.textContent = "In Safari, tap Share, then Add to Home Screen, then Add.";
+        } else if (isAndroid) {
+          installHelp.textContent = "Open this page in Chrome, then tap this button again. If no prompt appears, tap Chrome's three-dot menu and choose Add to Home screen or Install app.";
+        } else {
+          installHelp.textContent = "Open this page in Chrome or Edge, then use the browser's install option.";
+        }
+      });
 
       videoEl.addEventListener("loadedmetadata", () => {
         if (videoEl.videoWidth && videoEl.videoHeight) {
@@ -142,9 +204,7 @@
         startButton.textContent = "OPENING CAMERA...";
         errorText.style.display = "none";
 
-        if (!arSystem) {
-          arSystem = sceneEl.systems["mindar-image-system"];
-        }
+        if (!arSystem) arSystem = sceneEl.systems["mindar-image-system"];
         if (!arSystem) {
           showError("The AR engine did not load. Refresh the page and try again.");
           return;
@@ -168,6 +228,14 @@
           showError("The camera could not start. Check camera permission, then reload the page.");
         }
       });
+
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("./service-worker.js").catch((error) => {
+            console.warn("Service worker registration failed:", error);
+          });
+        });
+      }
     });
   </script>
 </body>
