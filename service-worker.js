@@ -1,10 +1,10 @@
-const CACHE_NAME = "lowxxy-ar-v8";
+const CACHE_NAME = "lowxxy-ar-v9";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
-  "./icons/lowxxy-icon-192-v2.png",
-  "./icons/lowxxy-icon-512-v2.png",
+  "./icons/icon-192.png",
+  "./icons/icon-512.png",
   "./icons/lowxxy-logo-white.png"
 ];
 
