@@ -24,16 +24,19 @@
     .overlay {
       position: fixed; inset: 0; z-index: 1000; display: flex;
       align-items: center; justify-content: center; padding: 24px;
-      background: radial-gradient(circle at 50% 35%, rgba(255,255,255,.09), transparent 38%), #000;
+      background: radial-gradient(circle at 50% 30%, rgba(255,255,255,.08), transparent 40%), #000;
       text-align: center;
     }
     .panel {
-      width: min(430px, 100%); padding: 30px 24px;
-      border: 1px solid rgba(255,255,255,.22); border-radius: 24px;
-      background: rgba(12,12,12,.94); box-shadow: 0 20px 60px rgba(0,0,0,.55);
+      width: min(460px, 100%); padding: 30px 24px;
+      border: 1px solid rgba(255,255,255,.18); border-radius: 24px;
+      background: rgba(10,10,10,.94); box-shadow: 0 20px 60px rgba(0,0,0,.55);
     }
-    .brand { margin: 0 0 8px; font-size: clamp(34px, 10vw, 54px); line-height: 1; letter-spacing: .12em; font-weight: 900; }
-    .subtitle { margin: 0 0 20px; color: rgba(255,255,255,.72); font-size: 15px; line-height: 1.5; }
+    .brand-logo {
+      display: block; width: min(100%, 360px); height: auto; margin: 0 auto 14px;
+      filter: drop-shadow(0 0 22px rgba(255,255,255,.08));
+    }
+    .subtitle { margin: 0 0 20px; color: rgba(255,255,255,.76); font-size: 15px; line-height: 1.5; }
     .button-stack { display: grid; gap: 12px; }
     button {
       width: 100%; min-height: 54px; border: 0; border-radius: 999px;
@@ -58,7 +61,7 @@
   <div id="app">
     <div id="startOverlay" class="overlay">
       <div class="panel">
-        <h1 class="brand">LOWXXY</h1>
+        <img class="brand-logo" src="./icons/lowxxy-logo-white.png" alt="Lowxxy" />
         <p class="subtitle">Install Lowxxy AR or start scanning now.</p>
         <div class="button-stack">
           <button id="installButton" class="secondary hidden" type="button">INSTALL LOWXXY APP</button>
@@ -225,7 +228,7 @@
           await arSystem.start();
         } catch (error) {
           console.error(error);
-          showError("The camera could not start. Check camera permission, then reload the page.");
+          showError("The camera could not start. Make sure you allowed camera access and refresh the page.");
         }
       });
 
