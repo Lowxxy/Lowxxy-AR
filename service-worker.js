@@ -1,10 +1,10 @@
-const CACHE_NAME = "lowxxy-ar-v7";
+const CACHE_NAME = "lowxxy-ar-v8";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
-  "./icons/icon-192.png",
-  "./icons/icon-512.png",
+  "./icons/lowxxy-icon-192-v2.png",
+  "./icons/lowxxy-icon-512-v2.png",
   "./icons/lowxxy-logo-white.png"
 ];
 
@@ -15,7 +15,9 @@ self.addEventListener("install", (event) => {
 
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then((keys) => Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key)) ))
+    caches.keys().then((keys) =>
+      Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key)))
+    )
   );
   self.clients.claim();
 });
