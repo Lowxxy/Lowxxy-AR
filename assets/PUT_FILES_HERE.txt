@@ -1,0 +1,6 @@
+Replace this note with these two files:
+
+1. targets.mind
+2. wave.mp4
+
+The filenames must match exactly.
