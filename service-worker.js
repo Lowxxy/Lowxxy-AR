@@ -1,10 +1,11 @@
-const CACHE_NAME = "lowxxy-ar-v3";
+const CACHE_NAME = "lowxxy-ar-v5";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
   "./icons/icon-192.png",
-  "./icons/icon-512.png"
+  "./icons/icon-512.png",
+  "./icons/lowxxy-logo-white.png"
 ];
 
 self.addEventListener("install", (event) => {
