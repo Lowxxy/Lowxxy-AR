@@ -53,6 +53,39 @@
       background: rgba(0,0,0,.72); color: #fff; text-align: center; font-size: 14px;
       backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); pointer-events: none;
     }
+    #shopBar {
+      position: fixed;
+      z-index: 950;
+      left: 50%;
+      bottom: max(18px, env(safe-area-inset-bottom));
+      transform: translateX(-50%);
+      width: min(92%, 430px);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 12px 12px 16px;
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 18px;
+      background: rgba(0,0,0,.80);
+      color: #fff;
+      box-shadow: 0 12px 36px rgba(0,0,0,.38);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+    .shop-copy { min-width: 0; flex: 1; text-align: left; }
+    .shop-title { display: block; font-size: 14px; font-weight: 800; line-height: 1.2; }
+    .shop-subtitle { display: block; margin-top: 3px; color: rgba(255,255,255,.68); font-size: 12px; line-height: 1.25; }
+    #shopButton {
+      width: auto;
+      min-height: 42px;
+      flex: 0 0 auto;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: #fff;
+      color: #000;
+      font-size: 12px;
+      white-space: nowrap;
+    }
     #errorText { display: none; margin: 18px 0 0; color: #ffb4b4; font-size: 14px; line-height: 1.45; }
     .hidden { display: none !important; }
   </style>
@@ -73,6 +106,14 @@
     </div>
 
     <div id="statusBar" class="hidden">Point the camera at the Lowxxy design</div>
+
+    <div id="shopBar" class="hidden">
+      <div class="shop-copy">
+        <span class="shop-title">Want to see more?</span>
+        <span class="shop-subtitle">Explore the latest Lowxxy designs.</span>
+      </div>
+      <button id="shopButton" type="button">SHOP LOWXXY</button>
+    </div>
 
     <a-scene
       mindar-image="imageTargetSrc: ./assets/targets.mind; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.0001; filterBeta: 0.001; warmupTolerance: 8; missTolerance: 10;"
@@ -106,6 +147,8 @@
       const installButton = document.querySelector("#installButton");
       const installHelp = document.querySelector("#installHelp");
       const statusBar = document.querySelector("#statusBar");
+      const shopBar = document.querySelector("#shopBar");
+      const shopButton = document.querySelector("#shopButton");
       const errorText = document.querySelector("#errorText");
 
       let arSystem;
@@ -122,6 +165,7 @@
       const showError = (message) => {
         startOverlay.classList.remove("hidden");
         statusBar.classList.add("hidden");
+        shopBar.classList.add("hidden");
         startButton.disabled = false;
         startButton.textContent = "TRY AGAIN";
         errorText.style.display = "block";
@@ -175,6 +219,10 @@
         }
       });
 
+      shopButton.addEventListener("click", () => {
+        window.location.href = "https://lowxxy.myshopify.com";
+      });
+
       videoEl.addEventListener("loadedmetadata", () => {
         if (videoEl.videoWidth && videoEl.videoHeight) {
           videoPlane.setAttribute("height", String(videoEl.videoHeight / videoEl.videoWidth));
@@ -225,6 +273,7 @@
 
         startOverlay.classList.add("hidden");
         statusBar.classList.remove("hidden");
+        shopBar.classList.remove("hidden");
         statusBar.textContent = "Opening camera...";
 
         try {
