@@ -64,7 +64,7 @@
         <img class="brand-logo" src="./icons/lowxxy-logo-white.png" alt="Lowxxy" />
         <p class="subtitle">Install Lowxxy AR or start scanning now.</p>
         <div class="button-stack">
-          <button id="installButton" class="secondary hidden" type="button">INSTALL LOWXXY APP</button>
+          <button id="installButton" class="secondary" type="button">INSTALL LOWXXY APP</button>
           <button id="startButton" type="button">START AR</button>
         </div>
         <p id="installHelp"></p>
@@ -115,6 +115,10 @@
       const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
       const isAndroid = /android/i.test(navigator.userAgent);
 
+      if (isStandalone) {
+        installButton.classList.add("hidden");
+      }
+
       const showError = (message) => {
         startOverlay.classList.remove("hidden");
         statusBar.classList.add("hidden");
@@ -125,18 +129,17 @@
       };
 
       if (!isStandalone) {
+        installButton.classList.remove("hidden");
+
         window.addEventListener("beforeinstallprompt", (event) => {
           event.preventDefault();
           deferredInstallPrompt = event;
-          installButton.classList.remove("hidden");
+          installButton.textContent = "INSTALL LOWXXY APP";
           installHelp.style.display = "none";
         });
 
         if (isIOS) {
-          installButton.classList.remove("hidden");
           installButton.textContent = "HOW TO INSTALL ON IPHONE";
-        } else if (isAndroid) {
-          installButton.classList.remove("hidden");
         }
       }
 
@@ -166,7 +169,7 @@
         if (isIOS) {
           installHelp.textContent = "In Safari, tap Share, then Add to Home Screen, then Add.";
         } else if (isAndroid) {
-          installHelp.textContent = "Open this page in Chrome, then tap this button again. If no prompt appears, tap Chrome's three-dot menu and choose Add to Home screen or Install app.";
+          installHelp.textContent = "Chrome has not made the install prompt available yet. Open this page directly in Chrome, wait a few seconds, then tap this button again. You can also use Chrome’s three-dot menu and choose Install app or Add to Home screen.";
         } else {
           installHelp.textContent = "Open this page in Chrome or Edge, then use the browser's install option.";
         }
