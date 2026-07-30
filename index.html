@@ -131,7 +131,7 @@
 
       <a-entity id="shirtTarget" mindar-image-target="targetIndex: 0">
         <a-video id="videoPlane" src="#waveVideo" position="0 0 0.01" width="1" height="1"
-          rotation="0 0 0" material="shader: flat; side: double;"></a-video>
+          rotation="0 0 0" material="shader: flat; side: double; transparent: false; opacity: 1;"></a-video>
       </a-entity>
     </a-scene>
   </div>
@@ -142,8 +142,7 @@
       const targetEl = document.querySelector("#shirtTarget");
       const videoEl = document.querySelector("#waveVideo");
       const videoPlane = document.querySelector("#videoPlane");
-      videoPlane.setAttribute("material", "shader: flat; side: double; transparent: true; opacity: 0.82;");
-      const startOverlay = document.querySelector("#startOverlay");
+            const startOverlay = document.querySelector("#startOverlay");
       const startButton = document.querySelector("#startButton");
       const installButton = document.querySelector("#installButton");
       const installHelp = document.querySelector("#installHelp");
