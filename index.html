@@ -20,7 +20,6 @@
     * { box-sizing: border-box; }
     html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: #000; }
     #app, a-scene { position: fixed; inset: 0; width: 100%; height: 100%; }
-
     .overlay {
       position: fixed; inset: 0; z-index: 1000;
       display: flex; align-items: center; justify-content: center;
@@ -45,7 +44,6 @@
     #installHelp, #errorText { display: none; margin: 16px 0 0; font-size: 14px; line-height: 1.45; }
     #installHelp { color: rgba(255,255,255,.72); }
     #errorText { color: #ffb4b4; }
-
     #statusBar {
       position: fixed; z-index: 900; left: 50%;
       top: max(18px, env(safe-area-inset-top)); transform: translateX(-50%);
@@ -54,7 +52,6 @@
       background: rgba(0,0,0,.72); color: #fff; text-align: center;
       font-size: 14px; backdrop-filter: blur(12px); pointer-events: none;
     }
-
     #shopBar {
       position: fixed; z-index: 950; left: 50%;
       bottom: max(18px, env(safe-area-inset-bottom)); transform: translateX(-50%);
@@ -70,13 +67,12 @@
     .hidden { display: none !important; }
   </style>
 </head>
-
 <body>
 <div id="app">
   <div id="startOverlay" class="overlay">
     <div class="panel">
       <img class="brand-logo" src="./icons/lowxxy-logo-white.png" alt="Lowxxy">
-      <p class="subtitle">Point your camera at the Lowxxy design to unlock the animation.</p>
+      <p class="subtitle">Point your camera at the Lowxxy design to unlock the pop-out character.</p>
       <div class="button-stack">
         <button id="installButton" class="secondary">INSTALL LOWXXY APP</button>
         <button id="startButton">START AR</button>
@@ -97,7 +93,7 @@
   </div>
 
   <a-scene
-    mindar-image="imageTargetSrc: ./assets/targets.mind?v=5; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.0001; filterBeta: 0.001; warmupTolerance: 8; missTolerance: 10;"
+    mindar-image="imageTargetSrc: ./assets/targets.mind?v=6; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.0001; filterBeta: 0.001; warmupTolerance: 8; missTolerance: 10;"
     embedded
     color-space="sRGB"
     renderer="colorManagement: true; physicallyCorrectLights: true; alpha: true;"
@@ -105,27 +101,34 @@
     device-orientation-permission-ui="enabled: false">
 
     <a-assets timeout="30000">
-      <a-asset-item
-        id="lowxxyModelAsset"
-        src="./assets/Lowxxy_Popout_Test.glb?v=5">
-      </a-asset-item>
+      <a-asset-item id="lowxxyModelAsset" src="./assets/Lowxxy_Popout_Test.glb?v=6"></a-asset-item>
     </a-assets>
 
     <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
     <a-entity id="shirtTarget" mindar-image-target="targetIndex: 0">
-      <a-entity
-        id="lowxxyModel"
-        gltf-model="#lowxxyModelAsset"
-        animation-mixer="clip: *; loop: repeat; repetitions: Infinity; timeScale: 1"
-        position="0 -0.20 0.10"
-        rotation="0 0 0"
-        scale="80 80 80"
-        visible="true">
+      <!-- Invisible mask to fake the character starting behind the shirt -->
+      <a-plane
+        id="shirtOccluder"
+        position="0 -0.03 0.01"
+        width="0.70"
+        height="0.92"
+        material="shader: flat; color: #ffffff; transparent: true; opacity: 0; colorWrite: false; depthWrite: true; depthTest: true; side: double">
+      </a-plane>
+
+      <a-entity id="characterRig" position="0 0 0">
+        <a-entity
+          id="lowxxyModel"
+          gltf-model="#lowxxyModelAsset"
+          position="0 -0.06 -0.22"
+          rotation="0 0 0"
+          scale="550 550 550"
+          visible="false">
+        </a-entity>
       </a-entity>
 
-      <a-light type="ambient" intensity="2"></a-light>
-      <a-light type="directional" intensity="2" position="1 2 3"></a-light>
+      <a-light type="ambient" intensity="2.2"></a-light>
+      <a-light type="directional" intensity="2.6" position="1 2 3"></a-light>
     </a-entity>
   </a-scene>
 </div>
@@ -147,9 +150,45 @@ window.addEventListener("DOMContentLoaded", () => {
 
   let arSystem = null;
   let deferredInstallPrompt = null;
+  let isPlaying = false;
+
+  const startPos = "0 -0.06 -0.22";
+  const endPos = "0 -0.03 0.08";
+  const modelScale = "550 550 550";
+  const travelDuration = 1700;
+
+  function resetModel() {
+    model.setAttribute("visible", false);
+    model.setAttribute("position", startPos);
+    model.setAttribute("scale", modelScale);
+    model.removeAttribute("animation__popout");
+    model.removeAttribute("animation-mixer");
+    isPlaying = false;
+  }
+
+  function playModel() {
+    resetModel();
+    model.setAttribute("visible", true);
+
+    // Restart the Maya/GLB animation clip
+    setTimeout(() => {
+      model.setAttribute(
+        "animation-mixer",
+        "clip: *; loop: once; clampWhenFinished: true; timeScale: 1"
+      );
+
+      // Move the whole character from behind the shirt to in front of it
+      model.setAttribute(
+        "animation__popout",
+        `property: position; from: ${startPos}; to: ${endPos}; dur: ${travelDuration}; easing: easeOutCubic`
+      );
+      isPlaying = true;
+    }, 60);
+  }
 
   model.addEventListener("model-loaded", () => {
     console.log("Lowxxy model loaded successfully.");
+    resetModel();
   });
 
   model.addEventListener("model-error", (event) => {
@@ -164,10 +203,12 @@ window.addEventListener("DOMContentLoaded", () => {
 
   target.addEventListener("targetFound", () => {
     statusBar.textContent = "LOWXXY UNLOCKED";
+    playModel();
   });
 
   target.addEventListener("targetLost", () => {
     statusBar.textContent = "Point the camera back at the design";
+    resetModel();
   });
 
   const isStandalone =
