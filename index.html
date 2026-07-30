@@ -72,6 +72,20 @@
 </head>
 
 <body>
+
+  <div id="versionBanner" style="
+    position:fixed;
+    z-index:5000;
+    top:8px;
+    left:8px;
+    padding:10px 14px;
+    border-radius:10px;
+    background:#ff0033;
+    color:white;
+    font:700 16px Arial,sans-serif;
+    box-shadow:0 4px 18px rgba(0,0,0,.45);
+  ">LOWXXY TEST VERSION 12</div>
+
 <div id="app">
   <div id="startOverlay" class="overlay">
     <div class="panel">
@@ -128,7 +142,7 @@
         position="0 0 0.015"
         width="1"
         height="1"
-        material="shader: flat; color: #00ff66; wireframe: true; opacity: 0.8; transparent: true; side: double">
+        material="shader: flat; color: #00ff66; opacity: 0.55; transparent: true; side: double">
       </a-plane>
 
       <a-light type="ambient" intensity="2"></a-light>
@@ -248,9 +262,16 @@ window.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("load", async () => {
       try {
         const registrations = await navigator.serviceWorker.getRegistrations();
-        for (const registration of registrations) await registration.update();
+        for (const registration of registrations) {
+          await registration.unregister();
+        }
+        if (window.caches) {
+          const keys = await caches.keys();
+          await Promise.all(keys.map(key => caches.delete(key)));
+        }
+        console.log("Old Lowxxy service worker and caches cleared.");
       } catch (error) {
-        console.warn("Service worker update skipped.", error);
+        console.warn("Cache cleanup skipped.", error);
       }
     });
   }
