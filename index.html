@@ -93,7 +93,7 @@
   </div>
 
   <a-scene
-    mindar-image="imageTargetSrc: ./assets/targets.mind?v=8; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.0001; filterBeta: 0.001; warmupTolerance: 8; missTolerance: 10;"
+    mindar-image="imageTargetSrc: ./assets/targets.mind?v=9; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.0001; filterBeta: 0.001; warmupTolerance: 8; missTolerance: 10;"
     embedded
     color-space="sRGB"
     renderer="colorManagement: true; physicallyCorrectLights: true; alpha: true;"
@@ -101,7 +101,7 @@
     device-orientation-permission-ui="enabled: false">
 
     <a-assets timeout="30000">
-      <a-asset-item id="lowxxyModelAsset" src="./assets/Lowxxy_Popout_Test.glb?v=8"></a-asset-item>
+      <a-asset-item id="lowxxyModelAsset" src="./assets/Lowxxy_Popout_Test.glb?v=9"></a-asset-item>
     </a-assets>
 
     <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
@@ -118,8 +118,7 @@
 
       <a-entity
         id="characterRig"
-        position="-0.08 -0.04 -0.12"
-        scale="1400 1400 1400"
+        position="0 0 -0.10"
         visible="false">
         <a-entity
           id="lowxxyModel"
@@ -156,9 +155,10 @@ window.addEventListener("DOMContentLoaded", () => {
   let deferredInstallPrompt = null;
   let isPlaying = false;
 
-  const startPos = "-0.08 -0.04 -0.12";
-  const endPos = "-0.08 -0.02 0.08";
+  const startPos = "0 0 -0.10";
+  const endPos = "0 0 0.10";
   const travelDuration = 1900;
+  const desiredTargetWidth = 0.90;
 
   function resetModel() {
     model.setAttribute("visible", false);
@@ -191,6 +191,40 @@ window.addEventListener("DOMContentLoaded", () => {
 
   model.addEventListener("model-loaded", () => {
     console.log("Lowxxy model loaded successfully.");
+
+    const object = model.getObject3D("mesh");
+    if (!object) {
+      console.warn("Model mesh was not available for automatic sizing.");
+      resetModel();
+      return;
+    }
+
+    // Measure the imported character, then scale it to about 90% of the
+    // tracked shirt design's width. MindAR treats the target width as 1 unit.
+    object.updateMatrixWorld(true);
+    const box = new THREE.Box3().setFromObject(object);
+    const size = new THREE.Vector3();
+    const center = new THREE.Vector3();
+    box.getSize(size);
+    box.getCenter(center);
+
+    const largestHorizontalDimension = Math.max(size.x, size.y);
+    const automaticScale =
+      largestHorizontalDimension > 0
+        ? desiredTargetWidth / largestHorizontalDimension
+        : 1;
+
+    characterRig.setAttribute(
+      "scale",
+      `${automaticScale} ${automaticScale} ${automaticScale}`
+    );
+
+    // Center the imported model inside its wrapper so unusual Maya origins
+    // cannot throw it off-screen.
+    model.object3D.position.set(-center.x, -center.y, -center.z);
+    model.object3D.updateMatrixWorld(true);
+
+    console.log("Automatic Lowxxy scale:", automaticScale);
     resetModel();
   });
 
