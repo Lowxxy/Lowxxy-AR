@@ -97,7 +97,7 @@
   </div>
 
   <a-scene
-    mindar-image="imageTargetSrc: ./assets/targets.mind?v=4; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.0001; filterBeta: 0.001; warmupTolerance: 8; missTolerance: 10;"
+    mindar-image="imageTargetSrc: ./assets/targets.mind?v=5; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.0001; filterBeta: 0.001; warmupTolerance: 8; missTolerance: 10;"
     embedded
     color-space="sRGB"
     renderer="colorManagement: true; physicallyCorrectLights: true; alpha: true;"
@@ -107,7 +107,7 @@
     <a-assets timeout="30000">
       <a-asset-item
         id="lowxxyModelAsset"
-        src="./assets/Lowxxy_Popout_Test.glb?v=4">
+        src="./assets/Lowxxy_Popout_Test.glb?v=5">
       </a-asset-item>
     </a-assets>
 
@@ -118,9 +118,9 @@
         id="lowxxyModel"
         gltf-model="#lowxxyModelAsset"
         animation-mixer="clip: *; loop: repeat; repetitions: Infinity; timeScale: 1"
-        position="0 -0.35 0.12"
+        position="0 -0.20 0.10"
         rotation="0 0 0"
-        scale="0.65 0.65 0.65"
+        scale="80 80 80"
         visible="true">
       </a-entity>
 
