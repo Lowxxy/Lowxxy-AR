@@ -97,7 +97,7 @@
   </div>
 
   <a-scene
-    mindar-image="imageTargetSrc: ./assets/targets.mind?v=13; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.0001; filterBeta: 0.001; warmupTolerance: 8; missTolerance: 10;"
+    mindar-image="imageTargetSrc: ./assets/targets.mind?v=14; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.0001; filterBeta: 0.001; warmupTolerance: 8; missTolerance: 10;"
     embedded
     color-space="sRGB"
     renderer="colorManagement: true; physicallyCorrectLights: true; alpha: true;"
@@ -107,7 +107,7 @@
     <a-assets timeout="30000">
       <a-asset-item
         id="lowxxyModelAsset"
-        src="./assets/Lowxxy_Popout_Test.glb?v=13">
+        src="./assets/Lowxxy_Popout_Test.glb?v=14">
       </a-asset-item>
     </a-assets>
 
@@ -117,9 +117,9 @@
       <a-entity
         id="lowxxyModel"
         gltf-model="#lowxxyModelAsset"
-        position="0 -0.20 0.10"
+        position="0.38 -0.42 0.10"
         rotation="0 0 0"
-        scale="600 600 600"
+        scale="350 350 350"
         visible="true">
       </a-entity>
 
@@ -240,9 +240,15 @@ window.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("load", async () => {
       try {
         const registrations = await navigator.serviceWorker.getRegistrations();
-        for (const registration of registrations) await registration.update();
+        for (const registration of registrations) {
+          await registration.unregister();
+        }
+        if (window.caches) {
+          const keys = await caches.keys();
+          await Promise.all(keys.map(key => caches.delete(key)));
+        }
       } catch (error) {
-        console.warn("Service worker update skipped.", error);
+        console.warn("Cache cleanup skipped.", error);
       }
     });
   }
