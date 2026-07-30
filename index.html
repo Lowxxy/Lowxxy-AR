@@ -1,62 +1,207 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<meta name="theme-color" content="#000000" />
-<meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-<title>Lowxxy AR</title>
-<link rel="manifest" href="./manifest.webmanifest" />
-<link rel="apple-touch-icon" href="./icons/icon-192.png" />
-<script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
-<style>
-:root{color-scheme:dark;font-family:Arial,Helvetica,sans-serif}*{box-sizing:border-box}html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#000}#app,a-scene{position:fixed;inset:0;width:100%;height:100%}.overlay{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:24px;background:radial-gradient(circle at 50% 30%,rgba(255,255,255,.08),transparent 40%),#000;text-align:center}.panel{width:min(460px,100%);padding:30px 24px;border:1px solid rgba(255,255,255,.18);border-radius:24px;background:rgba(10,10,10,.94);box-shadow:0 20px 60px rgba(0,0,0,.55)}.brand-logo{display:block;width:min(340px,100%);height:auto;margin:0 auto 14px}.subtitle{margin:0 0 22px;color:rgba(255,255,255,.75);font-size:16px;line-height:1.5}.button-stack{display:flex;flex-direction:column;gap:12px}button{width:100%;min-height:54px;border:0;border-radius:999px;padding:14px 22px;background:#fff;color:#000;font:inherit;font-weight:800;letter-spacing:.05em;cursor:pointer}button.secondary{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.22)}button:disabled{opacity:.5;cursor:wait}#installHelp,#errorText{display:none;margin:16px 0 0;font-size:14px;line-height:1.45}#installHelp{color:rgba(255,255,255,.72)}#errorText{color:#ffb4b4}#statusBar{position:fixed;z-index:900;left:50%;top:max(18px,env(safe-area-inset-top));transform:translateX(-50%);width:min(92%,430px);padding:11px 16px;border:1px solid rgba(255,255,255,.22);border-radius:999px;background:rgba(0,0,0,.72);color:#fff;text-align:center;font-size:14px;backdrop-filter:blur(12px);pointer-events:none}#shopBar{position:fixed;z-index:950;left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(92%,430px);padding:14px;display:flex;align-items:center;gap:12px;border-radius:24px;border:1px solid rgba(255,255,255,.15);background:rgba(0,0,0,.82);color:#fff;box-shadow:0 12px 36px rgba(0,0,0,.38);backdrop-filter:blur(14px)}.shop-copy{min-width:0;flex:1;text-align:left}.shop-title{display:block;font-size:14px;font-weight:800}.shop-subtitle{display:block;margin-top:3px;color:rgba(255,255,255,.68);font-size:12px}.shop-button{width:auto;min-height:42px;flex:0 0 auto;padding:10px 16px;font-size:12px}.hidden{display:none!important}#animationCanvas{display:none}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Lowxxy AR</title>
+
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aframe-extras@7.2.0/dist/aframe-extras.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+  <style>
+    :root{color-scheme:dark;font-family:Arial,Helvetica,sans-serif}
+    *{box-sizing:border-box}
+    html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#000}
+    #app,a-scene{position:fixed;inset:0;width:100%;height:100%}
+
+    .overlay{
+      position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;
+      padding:24px;background:rgba(0,0,0,.92);text-align:center
+    }
+    .panel{
+      width:min(460px,100%);padding:30px 24px;border:1px solid rgba(255,255,255,.18);
+      border-radius:24px;background:rgba(10,10,10,.94);box-shadow:0 20px 60px rgba(0,0,0,.55)
+    }
+    .brand-logo{display:block;width:min(340px,100%);height:auto;margin:0 auto 14px}
+    .subtitle{margin:0 0 22px;color:rgba(255,255,255,.75);font-size:16px;line-height:1.5}
+    .button-stack{display:flex;flex-direction:column;gap:12px}
+    button{
+      width:100%;min-height:54px;border:0;border-radius:999px;padding:14px 22px;background:#fff;
+      color:#000;font:inherit;font-weight:800;letter-spacing:.05em;cursor:pointer
+    }
+    button.secondary{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.22)}
+    #statusBar{
+      position:fixed;z-index:900;left:50%;top:max(18px,env(safe-area-inset-top));
+      transform:translateX(-50%);width:min(92%,430px);padding:11px 16px;
+      border:1px solid rgba(255,255,255,.22);border-radius:999px;background:rgba(0,0,0,.72);
+      color:#fff;text-align:center;font-size:14px;backdrop-filter:blur(12px);pointer-events:none
+    }
+    #shopBar{
+      position:fixed;z-index:950;left:50%;bottom:max(18px,env(safe-area-inset-bottom));
+      transform:translateX(-50%);width:min(92%,430px);padding:14px;display:flex;align-items:center;gap:12px;
+      border-radius:24px;border:1px solid rgba(255,255,255,.15);background:rgba(0,0,0,.82);
+      color:#fff;box-shadow:0 12px 36px rgba(0,0,0,.38);backdrop-filter:blur(14px)
+    }
+    .shop-copy{min-width:0;flex:1;text-align:left}
+    .shop-title{display:block;font-size:14px;font-weight:800}
+    .shop-subtitle{display:block;margin-top:3px;color:rgba(255,255,255,.68);font-size:12px}
+    .shop-button{width:auto;min-height:42px;flex:0 0 auto;padding:10px 16px;font-size:12px}
+    .hidden{display:none!important}
+    #errorText{display:none;margin:16px 0 0;font-size:14px;line-height:1.45;color:#ffb4b4}
+  </style>
 </head>
 <body>
 <div id="app">
-  <div id="startOverlay" class="overlay"><div class="panel"><img class="brand-logo" src="./icons/lowxxy-logo-white.png" alt="Lowxxy"/><p class="subtitle">Install Lowxxy AR or start scanning now.</p><div class="button-stack"><button id="installButton" class="secondary">INSTALL LOWXXY APP</button><button id="startButton">START AR</button></div><p id="installHelp"></p><p id="errorText"></p></div></div>
+  <div id="startOverlay" class="overlay">
+    <div class="panel">
+      <img class="brand-logo" src="./icons/lowxxy-logo-white.png" alt="Lowxxy"/>
+      <p class="subtitle">Start AR and point the camera at the Lowxxy shirt design.</p>
+      <div class="button-stack">
+        <button id="startButton">START AR</button>
+        <button id="installButton" class="secondary">INSTALL LOWXXY APP</button>
+      </div>
+      <p id="errorText"></p>
+    </div>
+  </div>
+
   <div id="statusBar" class="hidden">Point the camera at the Lowxxy design</div>
-  <div id="shopBar" class="hidden"><div class="shop-copy"><span class="shop-title">Want to see more?</span><span class="shop-subtitle">Explore the latest Lowxxy designs.</span></div><button id="shopButton" class="shop-button">SHOP LOWXXY</button></div>
-  <canvas id="animationCanvas" width="640" height="360"></canvas>
-  <a-scene mindar-image="imageTargetSrc: ./assets/targets.mind; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.0001; filterBeta: 0.001; warmupTolerance: 8; missTolerance: 10;" embedded color-space="sRGB" renderer="colorManagement: true; alpha: true;" vr-mode-ui="enabled:false" device-orientation-permission-ui="enabled:false">
+
+  <div id="shopBar" class="hidden">
+    <div class="shop-copy">
+      <span class="shop-title">Want to see more?</span>
+      <span class="shop-subtitle">Explore the latest Lowxxy designs.</span>
+    </div>
+    <button id="shopButton" class="shop-button">SHOP LOWXXY</button>
+  </div>
+
+  <a-scene
+    mindar-image="imageTargetSrc: ./assets/targets.mind; autoStart: false; uiLoading: no; uiError: no; uiScanning: no;"
+    embedded
+    color-space="sRGB"
+    renderer="colorManagement: true; alpha: true;"
+    vr-mode-ui="enabled:false"
+    device-orientation-permission-ui="enabled:false">
+
+    <a-assets timeout="30000">
+      <a-asset-item id="lowxxyModel" src="./assets/Lowxxy_AR_Scaled.glb"></a-asset-item>
+    </a-assets>
+
     <a-camera position="0 0 0" look-controls="enabled:false"></a-camera>
+
     <a-entity id="shirtTarget" mindar-image-target="targetIndex:0">
-      <a-plane id="canvasPlane" position="0 0 0.01" width="1" height="0.5625" material="shader:flat;src:#animationCanvas;transparent:true;alphaTest:0.01;side:double"></a-plane>
+      <a-gltf-model
+        id="popoutModel"
+        src="#lowxxyModel"
+        visible="false"
+        position="0 -0.1 0.05"
+        rotation="0 0 0"
+        scale="0.05 0.05 0.05"
+        animation-mixer="loop: repeat">
+      </a-gltf-model>
     </a-entity>
   </a-scene>
 </div>
+
 <script>
-window.addEventListener('DOMContentLoaded', async () => {
-  const scene=document.querySelector('a-scene'), target=document.querySelector('#shirtTarget'), plane=document.querySelector('#canvasPlane');
-  const canvas=document.querySelector('#animationCanvas'), ctx=canvas.getContext('2d',{alpha:true});
-  const startOverlay=document.querySelector('#startOverlay'), startButton=document.querySelector('#startButton'), installButton=document.querySelector('#installButton'), installHelp=document.querySelector('#installHelp'), statusBar=document.querySelector('#statusBar'), shopBar=document.querySelector('#shopBar'), shopButton=document.querySelector('#shopButton'), errorText=document.querySelector('#errorText');
-  const FRAME_COUNT=201, FPS=24, COLS=5, ROWS=4, FW=640, FH=360, PER_SHEET=20;
-  const sheets=[]; let arSystem, playing=false, rafId=null, startedAt=0, deferredInstallPrompt=null;
-  const loadImage=src=>new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=reject;img.src=src});
-  try { for(let i=0;i<11;i++) sheets.push(await loadImage(`./assets/frames/sheet-${String(i).padStart(2,'0')}.webp`)); }
-  catch(e){ errorText.style.display='block'; errorText.textContent='Animation frames could not load. Refresh and try again.'; }
-  function markTexture(){ const mesh=plane.getObject3D('mesh'); if(mesh?.material?.map) mesh.material.map.needsUpdate=true; }
-  function drawFrame(n){
-    const sheetIndex=Math.floor(n/PER_SHEET), local=n%PER_SHEET, col=local%COLS, row=Math.floor(local/COLS), img=sheets[sheetIndex];
-    ctx.clearRect(0,0,FW,FH); if(img) ctx.drawImage(img,col*FW,row*FH,FW,FH,0,0,FW,FH); markTexture();
+window.addEventListener('DOMContentLoaded', () => {
+  const scene = document.querySelector('a-scene');
+  const target = document.querySelector('#shirtTarget');
+  const model = document.querySelector('#popoutModel');
+
+  const startOverlay = document.querySelector('#startOverlay');
+  const startButton = document.querySelector('#startButton');
+  const installButton = document.querySelector('#installButton');
+  const statusBar = document.querySelector('#statusBar');
+  const shopBar = document.querySelector('#shopBar');
+  const shopButton = document.querySelector('#shopButton');
+  const errorText = document.querySelector('#errorText');
+
+  let arSystem;
+  let deferredInstallPrompt = null;
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredInstallPrompt = e;
+  });
+
+  installButton.addEventListener('click', async () => {
+    if (deferredInstallPrompt) {
+      deferredInstallPrompt.prompt();
+      await deferredInstallPrompt.userChoice;
+      deferredInstallPrompt = null;
+    } else {
+      alert('Use your browser menu and choose "Add to Home Screen" or "Install App".');
+    }
+  });
+
+  shopButton.addEventListener('click', () => {
+    location.href = 'https://lowxxy.myshopify.com';
+  });
+
+  scene.addEventListener('loaded', () => {
+    arSystem = scene.systems['mindar-image-system'];
+  });
+
+  model.addEventListener('model-loaded', () => {
+    console.log('3D model loaded');
+  });
+
+  model.addEventListener('model-error', () => {
+    errorText.style.display = 'block';
+    errorText.textContent = '3D model could not load. Make sure Lowxxy_AR_Scaled.glb is inside the assets folder.';
+  });
+
+  target.addEventListener('targetFound', () => {
+    statusBar.textContent = 'LOWXXY UNLOCKED';
+    model.setAttribute('visible', true);
+  });
+
+  target.addEventListener('targetLost', () => {
+    statusBar.textContent = 'Point the camera back at the design';
+    model.setAttribute('visible', false);
+  });
+
+  startButton.addEventListener('click', async () => {
+    startButton.disabled = true;
+    startButton.textContent = 'OPENING CAMERA...';
+
+    if (!arSystem) arSystem = scene.systems['mindar-image-system'];
+
+    if (!arSystem) {
+      errorText.style.display = 'block';
+      errorText.textContent = 'AR engine did not load. Refresh and try again.';
+      startButton.disabled = false;
+      startButton.textContent = 'START AR';
+      return;
+    }
+
+    startOverlay.classList.add('hidden');
+    statusBar.classList.remove('hidden');
+    shopBar.classList.remove('hidden');
+
+    try {
+      await arSystem.start();
+    } catch (e) {
+      startOverlay.classList.remove('hidden');
+      statusBar.classList.add('hidden');
+      shopBar.classList.add('hidden');
+      errorText.style.display = 'block';
+      errorText.textContent = 'Camera could not start. Allow camera access, then refresh.';
+      startButton.disabled = false;
+      startButton.textContent = 'TRY AGAIN';
+    }
+  });
+
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js'));
   }
-  function animate(t){ if(!playing) return; const elapsed=(t-startedAt)/1000; const frame=Math.floor(elapsed*FPS)%FRAME_COUNT; drawFrame(frame); rafId=requestAnimationFrame(animate); }
-  function startAnimation(){ playing=true; startedAt=performance.now(); cancelAnimationFrame(rafId); rafId=requestAnimationFrame(animate); }
-  function stopAnimation(){ playing=false; cancelAnimationFrame(rafId); ctx.clearRect(0,0,FW,FH); markTexture(); }
-  drawFrame(0);
-  const isStandalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true, isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent), isAndroid=/android/i.test(navigator.userAgent);
-  if(isStandalone) installButton.classList.add('hidden');
-  window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstallPrompt=e;installButton.classList.remove('hidden');});
-  installButton.addEventListener('click',async()=>{installHelp.style.display='block';if(deferredInstallPrompt){deferredInstallPrompt.prompt();await deferredInstallPrompt.userChoice;deferredInstallPrompt=null;return}installHelp.textContent=isIOS?'In Safari, tap Share, then Add to Home Screen, then Add.':isAndroid?'Use Chrome’s three-dot menu and choose Install app or Add to Home screen.':'Use your browser’s install option.'});
-  shopButton.addEventListener('click',()=>location.href='https://lowxxy.myshopify.com');
-  scene.addEventListener('loaded',()=>{arSystem=scene.systems['mindar-image-system']});
-  target.addEventListener('targetFound',()=>{statusBar.textContent='LOWXXY UNLOCKED';startAnimation()});
-  target.addEventListener('targetLost',()=>{statusBar.textContent='Point the camera back at the design';stopAnimation()});
-  startButton.addEventListener('click',async()=>{startButton.disabled=true;startButton.textContent='OPENING CAMERA...';if(!arSystem) arSystem=scene.systems['mindar-image-system'];if(!arSystem){errorText.style.display='block';errorText.textContent='The AR engine did not load. Refresh and try again.';startButton.disabled=false;return}startOverlay.classList.add('hidden');statusBar.classList.remove('hidden');shopBar.classList.remove('hidden');try{await arSystem.start()}catch(e){startOverlay.classList.remove('hidden');statusBar.classList.add('hidden');shopBar.classList.add('hidden');errorText.style.display='block';errorText.textContent='Camera could not start. Allow camera access, then refresh.';startButton.disabled=false;startButton.textContent='TRY AGAIN'}});
-  if('serviceWorker' in navigator) window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js'));
 });
 </script>
 </body>
