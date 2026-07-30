@@ -33,19 +33,27 @@
       background: rgba(10,10,10,.94); box-shadow: 0 20px 60px rgba(0,0,0,.55);
     }
     .brand-logo {
-      display: block; width: min(100%, 360px); height: auto; margin: 0 auto 14px;
-      filter: drop-shadow(0 0 22px rgba(255,255,255,.08));
+      display: block; width: min(340px, 100%); height: auto; margin: 0 auto 14px;
     }
-    .subtitle { margin: 0 0 20px; color: rgba(255,255,255,.76); font-size: 15px; line-height: 1.5; }
-    .button-stack { display: grid; gap: 12px; }
+    .subtitle {
+      margin: 0 0 22px; color: rgba(255,255,255,.75); font-size: 16px; line-height: 1.5;
+    }
+    .button-stack { display: flex; flex-direction: column; gap: 12px; }
     button {
       width: 100%; min-height: 54px; border: 0; border-radius: 999px;
-      padding: 14px 22px; background: #fff; color: #000;
-      font: inherit; font-weight: 800; letter-spacing: .05em; cursor: pointer;
+      padding: 14px 22px; background: #fff; color: #000; font: inherit;
+      font-weight: 800; letter-spacing: .05em; cursor: pointer;
     }
-    button.secondary { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.35); }
+    button.secondary {
+      background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.22);
+    }
     button:disabled { opacity: .5; cursor: wait; }
-    #installHelp { margin: 14px 0 0; color: rgba(255,255,255,.72); font-size: 13px; line-height: 1.45; display: none; }
+    #installHelp, #errorText {
+      display: none; margin: 16px 0 0; font-size: 14px; line-height: 1.45;
+    }
+    #installHelp { color: rgba(255,255,255,.72); }
+    #errorText { color: #ffb4b4; }
+
     #statusBar {
       position: fixed; z-index: 900; left: 50%; top: max(18px, env(safe-area-inset-top));
       transform: translateX(-50%); width: min(92%, 430px); padding: 11px 16px;
@@ -53,40 +61,22 @@
       background: rgba(0,0,0,.72); color: #fff; text-align: center; font-size: 14px;
       backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); pointer-events: none;
     }
+
     #shopBar {
-      position: fixed;
-      z-index: 950;
-      left: 50%;
-      bottom: max(18px, env(safe-area-inset-bottom));
-      transform: translateX(-50%);
-      width: min(92%, 430px);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 12px 12px 16px;
-      border: 1px solid rgba(255,255,255,.22);
-      border-radius: 18px;
-      background: rgba(0,0,0,.80);
-      color: #fff;
-      box-shadow: 0 12px 36px rgba(0,0,0,.38);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+      position: fixed; z-index: 950; left: 50%; bottom: max(18px, env(safe-area-inset-bottom));
+      transform: translateX(-50%); width: min(92%, 430px); padding: 14px;
+      display: flex; align-items: center; gap: 12px; border-radius: 24px;
+      border: 1px solid rgba(255,255,255,.15); background: rgba(0,0,0,.82);
+      color: #fff; box-shadow: 0 12px 36px rgba(0,0,0,.38);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
     }
     .shop-copy { min-width: 0; flex: 1; text-align: left; }
     .shop-title { display: block; font-size: 14px; font-weight: 800; line-height: 1.2; }
     .shop-subtitle { display: block; margin-top: 3px; color: rgba(255,255,255,.68); font-size: 12px; line-height: 1.25; }
     #shopButton {
-      width: auto;
-      min-height: 42px;
-      flex: 0 0 auto;
-      padding: 10px 16px;
-      border-radius: 999px;
-      background: #fff;
-      color: #000;
-      font-size: 12px;
-      white-space: nowrap;
+      width: auto; min-height: 42px; flex: 0 0 auto; padding: 10px 16px;
+      border-radius: 999px; background: #fff; color: #000; font-size: 12px; white-space: nowrap;
     }
-    #errorText { display: none; margin: 18px 0 0; color: #ffb4b4; font-size: 14px; line-height: 1.45; }
     .hidden { display: none !important; }
   </style>
 </head>
@@ -124,14 +114,17 @@
       device-orientation-permission-ui="enabled: false">
 
       <a-assets timeout="20000">
-        <video id="waveVideo" src="./assets/wave.mp4" preload="auto" loop muted playsinline webkit-playsinline crossorigin="anonymous"></video>
+        <video id="waveVideo" preload="auto" loop muted playsinline webkit-playsinline crossorigin="anonymous">
+          <source src="./assets/character-transparent.webm" type="video/webm" />
+          <source src="./assets/wave.mp4" type="video/mp4" />
+        </video>
       </a-assets>
 
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
       <a-entity id="shirtTarget" mindar-image-target="targetIndex: 0">
         <a-video id="videoPlane" src="#waveVideo" position="0 0 0.01" width="1" height="1"
-          rotation="0 0 0" material="shader: flat; side: double; transparent: false; opacity: 1;"></a-video>
+          rotation="0 0 0" material="shader: flat; side: double;"></a-video>
       </a-entity>
     </a-scene>
   </div>
@@ -142,7 +135,8 @@
       const targetEl = document.querySelector("#shirtTarget");
       const videoEl = document.querySelector("#waveVideo");
       const videoPlane = document.querySelector("#videoPlane");
-            const startOverlay = document.querySelector("#startOverlay");
+      videoPlane.setAttribute("material", "shader: flat; side: double; transparent: true; alphaTest: 0.02;");
+      const startOverlay = document.querySelector("#startOverlay");
       const startButton = document.querySelector("#startButton");
       const installButton = document.querySelector("#installButton");
       const installHelp = document.querySelector("#installHelp");
@@ -172,20 +166,16 @@
         errorText.textContent = message;
       };
 
-      if (!isStandalone) {
+      window.addEventListener("beforeinstallprompt", (event) => {
+        event.preventDefault();
+        deferredInstallPrompt = event;
         installButton.classList.remove("hidden");
-
-        window.addEventListener("beforeinstallprompt", (event) => {
-          event.preventDefault();
-          deferredInstallPrompt = event;
-          installButton.textContent = "INSTALL LOWXXY APP";
-          installHelp.style.display = "none";
-        });
-
+        installHelp.style.display = "block";
+        installHelp.textContent = "You can install Lowxxy AR on your home screen for faster access.";
         if (isIOS) {
           installButton.textContent = "HOW TO INSTALL ON IPHONE";
         }
-      }
+      });
 
       window.addEventListener("appinstalled", () => {
         deferredInstallPrompt = null;
