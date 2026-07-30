@@ -97,7 +97,7 @@
   </div>
 
   <a-scene
-    mindar-image="imageTargetSrc: ./assets/targets.mind?v=10; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.0001; filterBeta: 0.001; warmupTolerance: 8; missTolerance: 10;"
+    mindar-image="imageTargetSrc: ./assets/targets.mind?v=11; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.0001; filterBeta: 0.001; warmupTolerance: 8; missTolerance: 10;"
     embedded
     color-space="sRGB"
     renderer="colorManagement: true; physicallyCorrectLights: true; alpha: true;"
@@ -107,7 +107,7 @@
     <a-assets timeout="30000">
       <a-asset-item
         id="lowxxyModelAsset"
-        src="./assets/Lowxxy_Popout_Test.glb?v=10">
+        src="./assets/Lowxxy_Popout_Test.glb?v=11">
       </a-asset-item>
     </a-assets>
 
@@ -115,22 +115,21 @@
 
     <a-entity id="shirtTarget" mindar-image-target="targetIndex: 0">
       <a-entity
-        id="characterAnchor"
-        position="0 0 -0.12"
-        visible="false">
-        <a-entity
-          id="characterPivot"
-          position="0 0 0"
-          scale="1 1 1">
-          <a-entity
-            id="lowxxyModel"
-            gltf-model="#lowxxyModelAsset"
-            position="0 0 0"
-            rotation="0 0 0"
-            scale="1 1 1">
-          </a-entity>
-        </a-entity>
+        id="lowxxyModel"
+        gltf-model="#lowxxyModelAsset"
+        position="0 -0.20 0.10"
+        rotation="0 0 0"
+        scale="600 600 600"
+        visible="true">
       </a-entity>
+
+
+      <a-plane
+        position="0 0 0.015"
+        width="1"
+        height="1"
+        material="shader: flat; color: #00ff66; wireframe: true; opacity: 0.8; transparent: true; side: double">
+      </a-plane>
 
       <a-light type="ambient" intensity="2"></a-light>
       <a-light type="directional" intensity="2" position="1 2 3"></a-light>
@@ -143,8 +142,6 @@ window.addEventListener("DOMContentLoaded", () => {
   const scene = document.querySelector("a-scene");
   const target = document.querySelector("#shirtTarget");
   const model = document.querySelector("#lowxxyModel");
-  const characterAnchor = document.querySelector("#characterAnchor");
-  const characterPivot = document.querySelector("#characterPivot");
 
   const startOverlay = document.querySelector("#startOverlay");
   const startButton = document.querySelector("#startButton");
@@ -160,29 +157,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
   model.addEventListener("model-loaded", () => {
     console.log("Lowxxy model loaded successfully.");
-
-    const mesh = model.getObject3D("mesh");
-    if (!mesh) return;
-
-    // Measure the actual imported geometry.
-    mesh.updateMatrixWorld(true);
-    const box = new THREE.Box3().setFromObject(mesh);
-    const size = new THREE.Vector3();
-    const center = new THREE.Vector3();
-    box.getSize(size);
-    box.getCenter(center);
-
-    // Move the GLB so its true geometric center sits exactly on the shirt target.
-    model.object3D.position.set(-center.x, -center.y, -center.z);
-
-    // Scale around that centered pivot instead of around Maya's distant origin.
-    const targetWidth = 0.90;
-    const modelWidth = Math.max(size.x, size.y);
-    const fittedScale = modelWidth > 0 ? targetWidth / modelWidth : 1;
-    characterPivot.object3D.scale.setScalar(fittedScale);
-
-    characterAnchor.setAttribute("visible", false);
-    console.log("Centered scale:", fittedScale);
   });
 
   model.addEventListener("model-error", (event) => {
