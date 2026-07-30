@@ -1,9 +1,13 @@
-const CACHE_NAME = "lowxxy-ar-v14-popout-v2";
+const CACHE_NAME = "lowxxy-ar-v15-png-transparent";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
   "./service-worker.js",
+  "./icons/icon-192.png",
+  "./icons/icon-512.png",
+  "./icons/lowxxy-logo-white.png",
+  "./assets/character-transparent.webm",
   "./assets/wave.mp4"
 ];
 
