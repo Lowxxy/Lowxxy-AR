@@ -72,20 +72,6 @@
 </head>
 
 <body>
-
-  <div id="versionBanner" style="
-    position:fixed;
-    z-index:5000;
-    top:8px;
-    left:8px;
-    padding:10px 14px;
-    border-radius:10px;
-    background:#ff0033;
-    color:white;
-    font:700 16px Arial,sans-serif;
-    box-shadow:0 4px 18px rgba(0,0,0,.45);
-  ">LOWXXY TEST VERSION 12</div>
-
 <div id="app">
   <div id="startOverlay" class="overlay">
     <div class="panel">
@@ -111,7 +97,7 @@
   </div>
 
   <a-scene
-    mindar-image="imageTargetSrc: ./assets/targets.mind?v=11; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.0001; filterBeta: 0.001; warmupTolerance: 8; missTolerance: 10;"
+    mindar-image="imageTargetSrc: ./assets/targets.mind?v=13; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.0001; filterBeta: 0.001; warmupTolerance: 8; missTolerance: 10;"
     embedded
     color-space="sRGB"
     renderer="colorManagement: true; physicallyCorrectLights: true; alpha: true;"
@@ -121,7 +107,7 @@
     <a-assets timeout="30000">
       <a-asset-item
         id="lowxxyModelAsset"
-        src="./assets/Lowxxy_Popout_Test.glb?v=11">
+        src="./assets/Lowxxy_Popout_Test.glb?v=13">
       </a-asset-item>
     </a-assets>
 
@@ -136,14 +122,6 @@
         scale="600 600 600"
         visible="true">
       </a-entity>
-
-
-      <a-plane
-        position="0 0 0.015"
-        width="1"
-        height="1"
-        material="shader: flat; color: #00ff66; opacity: 0.55; transparent: true; side: double">
-      </a-plane>
 
       <a-light type="ambient" intensity="2"></a-light>
       <a-light type="directional" intensity="2" position="1 2 3"></a-light>
@@ -262,16 +240,9 @@ window.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("load", async () => {
       try {
         const registrations = await navigator.serviceWorker.getRegistrations();
-        for (const registration of registrations) {
-          await registration.unregister();
-        }
-        if (window.caches) {
-          const keys = await caches.keys();
-          await Promise.all(keys.map(key => caches.delete(key)));
-        }
-        console.log("Old Lowxxy service worker and caches cleared.");
+        for (const registration of registrations) await registration.update();
       } catch (error) {
-        console.warn("Cache cleanup skipped.", error);
+        console.warn("Service worker update skipped.", error);
       }
     });
   }
