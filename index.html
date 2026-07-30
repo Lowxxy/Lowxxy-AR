@@ -93,7 +93,7 @@
   </div>
 
   <a-scene
-    mindar-image="imageTargetSrc: ./assets/targets.mind?v=6; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.0001; filterBeta: 0.001; warmupTolerance: 8; missTolerance: 10;"
+    mindar-image="imageTargetSrc: ./assets/targets.mind?v=7; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.0001; filterBeta: 0.001; warmupTolerance: 8; missTolerance: 10;"
     embedded
     color-space="sRGB"
     renderer="colorManagement: true; physicallyCorrectLights: true; alpha: true;"
@@ -101,7 +101,7 @@
     device-orientation-permission-ui="enabled: false">
 
     <a-assets timeout="30000">
-      <a-asset-item id="lowxxyModelAsset" src="./assets/Lowxxy_Popout_Test.glb?v=6"></a-asset-item>
+      <a-asset-item id="lowxxyModelAsset" src="./assets/Lowxxy_Popout_Test.glb?v=7"></a-asset-item>
     </a-assets>
 
     <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
@@ -116,14 +116,17 @@
         material="shader: flat; color: #ffffff; transparent: true; opacity: 0; colorWrite: false; depthWrite: true; depthTest: true; side: double">
       </a-plane>
 
-      <a-entity id="characterRig" position="0 0 0">
+      <a-entity
+        id="characterRig"
+        position="0 -0.04 -0.18"
+        scale="3000 3000 3000"
+        visible="false">
         <a-entity
           id="lowxxyModel"
           gltf-model="#lowxxyModelAsset"
-          position="0 -0.06 -0.22"
+          position="0 0 0"
           rotation="0 0 0"
-          scale="25000 25000 25000"
-          visible="false">
+          scale="1 1 1">
         </a-entity>
       </a-entity>
 
@@ -138,6 +141,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const scene = document.querySelector("a-scene");
   const target = document.querySelector("#shirtTarget");
   const model = document.querySelector("#lowxxyModel");
+  const characterRig = document.querySelector("#characterRig");
 
   const startOverlay = document.querySelector("#startOverlay");
   const startButton = document.querySelector("#startButton");
@@ -152,9 +156,8 @@ window.addEventListener("DOMContentLoaded", () => {
   let deferredInstallPrompt = null;
   let isPlaying = false;
 
-  const startPos = "0 -0.10 -0.18";
-  const endPos = "0 -0.02 0.14";
-  const modelScale = "25000 25000 25000";
+  const startPos = "0 -0.04 -0.18";
+  const endPos = "0 -0.02 0.10";
   const travelDuration = 1900;
 
   function resetModel() {
