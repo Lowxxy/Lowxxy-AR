@@ -1,4 +1,4 @@
-const CACHE_NAME = "lowxxy-ar-v12-transparent";
+const CACHE_NAME = "lowxxy-ar-v14-popout-v2";
 const APP_SHELL = [
   "./",
   "./index.html",
