@@ -7,8 +7,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <title>Lowxxy AR</title>
-<link rel="manifest" href="./manifest.webmanifest?v=5" />
-<link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=5" />
+<link rel="manifest" href="./manifest.webmanifest?v=6" />
+<link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=6" />
 <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
@@ -24,18 +24,22 @@
   <a-scene mindar-image="imageTargetSrc: ./assets/targets.mind; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.0001; filterBeta: 0.001; warmupTolerance: 8; missTolerance: 10;" embedded color-space="sRGB" renderer="colorManagement: true; alpha: true;" vr-mode-ui="enabled:false" device-orientation-permission-ui="enabled:false">
     <a-camera position="0 0 0" look-controls="enabled:false"></a-camera>
     <a-assets timeout="30000">
-      <a-asset-item id="lowxxyModelAsset" src="./assets/Lowxxy_AR_Scaled.glb?v=2"></a-asset-item>
+      <a-asset-item id="lowxxyModelAsset" src="./assets/Lowxxy_AR_Scaled.glb?v=6"></a-asset-item>
     </a-assets>
 
     <a-entity id="shirtTarget" mindar-image-target="targetIndex:0">
       <a-entity
-        id="popoutModel"
-        gltf-model="#lowxxyModelAsset"
-        animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1"
-        position="0 -0.10 0.05"
-        rotation="0 0 0"
-        scale="0.0025 0.0025 0.0025"
+        id="popoutWrapper"
+        position="0 -0.10 -0.18"
         visible="false">
+        <a-entity
+          id="popoutModel"
+          gltf-model="#lowxxyModelAsset"
+          animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1"
+          position="0 0 0"
+          rotation="0 0 0"
+          scale="0.0020 0.0020 0.0020">
+        </a-entity>
       </a-entity>
 
       <a-light type="ambient" intensity="2"></a-light>
@@ -48,6 +52,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const scene = document.querySelector('a-scene');
   const target = document.querySelector('#shirtTarget');
   const model = document.querySelector('#popoutModel');
+  const wrapper = document.querySelector('#popoutWrapper');
 
   const startOverlay = document.querySelector('#startOverlay');
   const startButton = document.querySelector('#startButton');
@@ -113,12 +118,26 @@ window.addEventListener('DOMContentLoaded', () => {
 
   target.addEventListener('targetFound', () => {
     statusBar.textContent = 'LOWXXY UNLOCKED';
-    model.setAttribute('visible', true);
+
+    wrapper.removeAttribute('animation__popout');
+    wrapper.setAttribute('position', '0 -0.10 -0.18');
+    wrapper.setAttribute('visible', true);
+
+    // Move the complete animated character from behind the tracked shirt
+    // toward the camera so it appears to pop out of the printed design.
+    requestAnimationFrame(() => {
+      wrapper.setAttribute(
+        'animation__popout',
+        'property: position; from: 0 -0.10 -0.18; to: 0 -0.10 0.10; dur: 1800; easing: easeOutCubic'
+      );
+    });
   });
 
   target.addEventListener('targetLost', () => {
     statusBar.textContent = 'Point the camera back at the design';
-    model.setAttribute('visible', false);
+    wrapper.setAttribute('visible', false);
+    wrapper.removeAttribute('animation__popout');
+    wrapper.setAttribute('position', '0 -0.10 -0.18');
   });
 
   startButton.addEventListener('click', async () => {
