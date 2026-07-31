@@ -7,8 +7,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Lowxxy AR</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=22" />
-  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=22" />
+  <link rel="manifest" href="./manifest.webmanifest?v=23" />
+  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=23" />
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
@@ -25,7 +25,7 @@
 </div>
 <script type="module">
 const ORIGINAL_TARGET_URL = 'https://raw.githubusercontent.com/Lowxxy/Lowxxy-AR/a13fc71930218423b720db30b430e2b4bf244775/assets/targets.mind';
-const GROUNDED_TARGET_URL = './assets/grounded-gains.mind?v=22';
+const GROUNDED_TARGET_URL = './assets/grounded-gains.mind?v=23';
 
 const startOverlay = document.querySelector('#startOverlay');
 const startButton = document.querySelector('#startButton');
@@ -89,8 +89,8 @@ function createScene(targetUrl) {
   <a-scene mindar-image="imageTargetSrc: ${targetUrl}; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.0001; filterBeta: 0.001; warmupTolerance: 8; missTolerance: 10;" embedded color-space="sRGB" renderer="colorManagement: true; alpha: true;" vr-mode-ui="enabled:false" device-orientation-permission-ui="enabled:false">
     <a-camera position="0 0 0" look-controls="enabled:false"></a-camera>
     <a-assets timeout="60000">
-      <a-asset-item id="originalModelAsset" src="./assets/Lowxxy_AR_Scaled.glb?v=22"></a-asset-item>
-      <a-asset-item id="groundedModelAsset" src="./assets/grounded-gains.glb?v=22"></a-asset-item>
+      <a-asset-item id="originalModelAsset" src="./assets/Lowxxy_AR_Scaled.glb?v=23"></a-asset-item>
+      <a-asset-item id="groundedModelAsset" src="./assets/grounded-gains.glb?v=23"></a-asset-item>
     </a-assets>
     <a-entity id="originalTarget" mindar-image-target="targetIndex:0">
       <a-entity id="originalWrapper" position="0 -0.10 -0.18" visible="false">
@@ -99,8 +99,8 @@ function createScene(targetUrl) {
       <a-light type="ambient" intensity="2"></a-light><a-light type="directional" intensity="2" position="1 2 3"></a-light>
     </a-entity>
     <a-entity id="groundedTarget" mindar-image-target="targetIndex:1">
-      <a-entity id="groundedWrapper" position="0 -0.10 -0.18" visible="false">
-        <a-entity id="groundedModel" gltf-model="#groundedModelAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1" position="0 0 0" rotation="0 0 0" scale="0.006 0.006 0.006"></a-entity>
+      <a-entity id="groundedWrapper" position="0 -0.20 -0.28" visible="false">
+        <a-entity id="groundedModel" gltf-model="#groundedModelAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1" position="0 0 0" rotation="0 0 0" scale="0.50 0.50 0.50"></a-entity>
       </a-entity>
       <a-light type="ambient" intensity="2"></a-light><a-light type="directional" intensity="2" position="1 2 3"></a-light>
     </a-entity>
@@ -108,7 +108,7 @@ function createScene(targetUrl) {
   scene = mount.querySelector('a-scene');
   scene.addEventListener('loaded', () => { arSystem = scene.systems['mindar-image-system']; });
   wireTarget(mount.querySelector('#originalTarget'), mount.querySelector('#originalWrapper'), '0 -0.10 -0.18', 'LOWXXY UNLOCKED');
-  wireTarget(mount.querySelector('#groundedTarget'), mount.querySelector('#groundedWrapper'), '0 -0.10 -0.18', 'GROUNDED GAINS UNLOCKED');
+  wireTarget(mount.querySelector('#groundedTarget'), mount.querySelector('#groundedWrapper'), '0 -0.20 -0.28', 'GROUNDED GAINS UNLOCKED');
   for (const [selector, label] of [['#originalModel','original Lowxxy'],['#groundedModel','Grounded Gains']]) {
     const model = mount.querySelector(selector);
     model.addEventListener('model-loaded', () => console.log(`${label} model loaded`));
