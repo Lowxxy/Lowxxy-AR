@@ -7,8 +7,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Lowxxy AR</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=24" />
-  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=24" />
+  <link rel="manifest" href="./manifest.webmanifest?v=25" />
+  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=25" />
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
@@ -25,7 +25,7 @@
 </div>
 <script type="module">
 const ORIGINAL_TARGET_URL = 'https://raw.githubusercontent.com/Lowxxy/Lowxxy-AR/a13fc71930218423b720db30b430e2b4bf244775/assets/targets.mind';
-const GROUNDED_TARGET_URL = './assets/grounded-gains.mind?v=24';
+const GROUNDED_TARGET_URL = './assets/grounded-gains.mind?v=25';
 
 const startOverlay = document.querySelector('#startOverlay');
 const startButton = document.querySelector('#startButton');
@@ -75,11 +75,11 @@ async function buildCombinedTarget() {
   const [originalBuffer, groundedBuffer] = await Promise.all([originalResponse.arrayBuffer(), groundedResponse.arrayBuffer()]);
   const originalCompiler = new Compiler();
   const groundedCompiler = new Compiler();
-  const originalData = originalCompiler.importData(originalBuffer);
-  const groundedData = groundedCompiler.importData(groundedBuffer);
+  const originalData = await originalCompiler.importData(originalBuffer);
+  const groundedData = await groundedCompiler.importData(groundedBuffer);
   if (!originalData.length || !groundedData.length) throw new Error('One of the target files could not be read.');
   originalCompiler.data = [...originalData, ...groundedData];
-  const mergedBuffer = originalCompiler.exportData();
+  const mergedBuffer = await originalCompiler.exportData();
   return URL.createObjectURL(new Blob([mergedBuffer], {type:'application/octet-stream'}));
 }
 
@@ -89,8 +89,8 @@ function createScene(targetUrl) {
   <a-scene mindar-image="imageTargetSrc: ${targetUrl}; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.0001; filterBeta: 0.001; warmupTolerance: 8; missTolerance: 10;" embedded color-space="sRGB" renderer="colorManagement: true; alpha: true;" vr-mode-ui="enabled:false" device-orientation-permission-ui="enabled:false">
     <a-camera position="0 0 0" look-controls="enabled:false"></a-camera>
     <a-assets timeout="60000">
-      <a-asset-item id="originalModelAsset" src="./assets/Lowxxy_AR_Scaled.glb?v=24"></a-asset-item>
-      <a-asset-item id="groundedModelAsset" src="./assets/grounded-gains.glb?v=24"></a-asset-item>
+      <a-asset-item id="originalModelAsset" src="./assets/Lowxxy_AR_Scaled.glb?v=25"></a-asset-item>
+      <a-asset-item id="groundedModelAsset" src="./assets/grounded-gains.glb?v=25"></a-asset-item>
     </a-assets>
     <a-entity id="originalTarget" mindar-image-target="targetIndex:0">
       <a-entity id="originalWrapper" position="0 -0.10 -0.18" visible="false">
