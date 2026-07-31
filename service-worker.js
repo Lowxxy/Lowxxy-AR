@@ -1,33 +1,29 @@
-const CACHE_NAME = 'lowxxy-ar-v20';
+const CACHE_NAME = 'lowxxy-ar-v21-grounded-gains';
 
 const APP_FILES = [
   './',
   './index.html',
-  './manifest.webmanifest?v=20',
-  './icons/lowxxy-character-192.png?v=20',
-  './icons/lowxxy-character-512.png?v=20',
+  './manifest.webmanifest?v=21',
+  './icons/lowxxy-character-192.png?v=21',
+  './icons/lowxxy-character-512.png?v=21',
   './icons/lowxxy-logo-white.png',
-  './assets/targets.mind'
+  './assets/targets.mind?v=21',
+  './assets/grounded-gains.glb?v=21'
 ];
 
 self.addEventListener('install', event => {
   self.skipWaiting();
-
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(APP_FILES))
+    caches.open(CACHE_NAME).then(async cache => {
+      await Promise.allSettled(APP_FILES.map(file => cache.add(file)));
+    })
   );
 });
 
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys()
-      .then(keys =>
-        Promise.all(
-          keys
-            .filter(key => key !== CACHE_NAME)
-            .map(key => caches.delete(key))
-        )
-      )
+      .then(keys => Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))))
       .then(() => self.clients.claim())
   );
 });
@@ -40,16 +36,11 @@ self.addEventListener('fetch', event => {
       fetch(request)
         .then(response => {
           const copy = response.clone();
-
-          caches.open(CACHE_NAME).then(cache => {
-            cache.put('./index.html', copy);
-          });
-
+          caches.open(CACHE_NAME).then(cache => cache.put('./index.html', copy));
           return response;
         })
         .catch(() => caches.match('./index.html'))
     );
-
     return;
   }
 
@@ -59,16 +50,11 @@ self.addEventListener('fetch', event => {
         .then(response => {
           if (response && response.status === 200) {
             const copy = response.clone();
-
-            caches.open(CACHE_NAME).then(cache => {
-              cache.put(request, copy);
-            });
+            caches.open(CACHE_NAME).then(cache => cache.put(request, copy));
           }
-
           return response;
         })
         .catch(() => cached);
-
       return cached || network;
     })
   );
