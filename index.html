@@ -7,8 +7,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Lowxxy AR</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=45" />
-  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=45" />
+  <link rel="manifest" href="./manifest.webmanifest?v=46" />
+  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=46" />
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
@@ -45,7 +45,7 @@
   <div id="shopBar" class="hidden"><div class="shop-copy"><span class="shop-title">Want to see more?</span><span class="shop-subtitle">Explore the latest Lowxxy designs.</span></div><button id="shopButton" class="shop-button">SHOP LOWXXY</button></div>
 
   <a-scene
-    mindar-image="imageTargetSrc: ./assets/targets.mind?v=45; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.0001; filterBeta: 0.001; warmupTolerance: 8; missTolerance: 10;"
+    mindar-image="imageTargetSrc: ./assets/targets.mind?v=46; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.0001; filterBeta: 0.001; warmupTolerance: 8; missTolerance: 10;"
     embedded
     color-space="sRGB"
     renderer="colorManagement: true; alpha: true; antialias: true; logarithmicDepthBuffer: true;"
@@ -55,16 +55,16 @@
     <a-camera position="0 0 0" near="0.01" far="1000" look-controls="enabled:false"></a-camera>
 
     <a-assets timeout="90000">
-      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=45"></a-asset-item>
-      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=45"></a-asset-item>
-      <a-asset-item id="hangAsset" src="./assets/hang.glb?v=45"></a-asset-item>
-      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=45"></a-asset-item>
+      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=46"></a-asset-item>
+      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=46"></a-asset-item>
+      <a-asset-item id="hangAsset" src="./assets/hang.glb?v=46"></a-asset-item>
+      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=46"></a-asset-item>
     </a-assets>
 
     <!-- Target 0: Pop Art. Placed first in the scanner database so the dotted comic-book print gets priority over the similar regular Chainmail artwork. -->
     <a-entity id="target-pop-art" class="ar-target" data-name="POP ART" mindar-image-target="targetIndex: 0">
       <a-entity class="model-wrapper" visible="false" position="0 -0.08 0.07">
-        <a-entity class="ar-model" gltf-model="#popArtAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1" position="-0.18 -0.22 0" rotation="0 0 0" scale="3 3 3"></a-entity>
+        <a-entity class="ar-model" gltf-model="#popArtAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1" position="-0.06 -0.08 0" rotation="0 0 0" scale="1 1 1"></a-entity>
       </a-entity>
     </a-entity>
 
@@ -85,7 +85,7 @@
     <!-- Target 3: Chainmail. Intentionally mapped to the Pop Art animation so both similar designs now trigger the Pop Art experience. -->
     <a-entity id="target-chainmail" class="ar-target" data-name="CHAINMAIL" mindar-image-target="targetIndex: 3">
       <a-entity class="model-wrapper" visible="false" position="0 -0.08 0.07">
-        <a-entity class="ar-model" gltf-model="#popArtAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1" position="-0.18 -0.22 0" rotation="0 0 0" scale="3 3 3"></a-entity>
+        <a-entity class="ar-model" gltf-model="#popArtAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1" position="-0.06 -0.08 0" rotation="0 0 0" scale="1 1 1"></a-entity>
       </a-entity>
     </a-entity>
 
@@ -214,7 +214,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=45'));
+    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=46'));
   }
 });
 </script>
