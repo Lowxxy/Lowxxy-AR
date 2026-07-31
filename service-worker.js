@@ -1,14 +1,14 @@
-const CACHE_NAME = 'lowxxy-ar-v24-grounded-extreme';
+const CACHE_NAME = 'lowxxy-ar-v25-multi-fixed';
 const APP_FILES = [
   './',
   './index.html',
-  './manifest.webmanifest?v=24',
-  './icons/lowxxy-character-192.png?v=24',
-  './icons/lowxxy-character-512.png?v=24',
+  './manifest.webmanifest?v=25',
+  './icons/lowxxy-character-192.png?v=25',
+  './icons/lowxxy-character-512.png?v=25',
   './icons/lowxxy-logo-white.png',
-  './assets/grounded-gains.mind?v=24',
-  './assets/Lowxxy_AR_Scaled.glb?v=24',
-  './assets/grounded-gains.glb?v=24'
+  './assets/grounded-gains.mind?v=25',
+  './assets/Lowxxy_AR_Scaled.glb?v=25',
+  './assets/grounded-gains.glb?v=25'
 ];
 self.addEventListener('install', event => { self.skipWaiting(); event.waitUntil(caches.open(CACHE_NAME).then(async cache => { await Promise.allSettled(APP_FILES.map(file => cache.add(file))); })); });
 self.addEventListener('activate', event => { event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key)))).then(() => self.clients.claim())); });
