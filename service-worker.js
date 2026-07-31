@@ -1,61 +1,25 @@
-const CACHE_NAME = 'lowxxy-ar-v21-grounded-gains';
-
+const CACHE_NAME = 'lowxxy-ar-v22-multi-design';
 const APP_FILES = [
   './',
   './index.html',
-  './manifest.webmanifest?v=21',
-  './icons/lowxxy-character-192.png?v=21',
-  './icons/lowxxy-character-512.png?v=21',
+  './manifest.webmanifest?v=22',
+  './icons/lowxxy-character-192.png?v=22',
+  './icons/lowxxy-character-512.png?v=22',
   './icons/lowxxy-logo-white.png',
-  './assets/targets.mind?v=21',
-  './assets/grounded-gains.glb?v=21'
+  './assets/grounded-gains.mind?v=22',
+  './assets/Lowxxy_AR_Scaled.glb?v=22',
+  './assets/grounded-gains.glb?v=22'
 ];
-
-self.addEventListener('install', event => {
-  self.skipWaiting();
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(async cache => {
-      await Promise.allSettled(APP_FILES.map(file => cache.add(file)));
-    })
-  );
-});
-
-self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys()
-      .then(keys => Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))))
-      .then(() => self.clients.claim())
-  );
-});
-
+self.addEventListener('install', event => { self.skipWaiting(); event.waitUntil(caches.open(CACHE_NAME).then(async cache => { await Promise.allSettled(APP_FILES.map(file => cache.add(file))); })); });
+self.addEventListener('activate', event => { event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key)))).then(() => self.clients.claim())); });
 self.addEventListener('fetch', event => {
   const request = event.request;
-
   if (request.mode === 'navigate') {
-    event.respondWith(
-      fetch(request)
-        .then(response => {
-          const copy = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put('./index.html', copy));
-          return response;
-        })
-        .catch(() => caches.match('./index.html'))
-    );
+    event.respondWith(fetch(request).then(response => { const copy=response.clone(); caches.open(CACHE_NAME).then(cache => cache.put('./index.html', copy)); return response; }).catch(() => caches.match('./index.html')));
     return;
   }
-
-  event.respondWith(
-    caches.match(request).then(cached => {
-      const network = fetch(request)
-        .then(response => {
-          if (response && response.status === 200) {
-            const copy = response.clone();
-            caches.open(CACHE_NAME).then(cache => cache.put(request, copy));
-          }
-          return response;
-        })
-        .catch(() => cached);
-      return cached || network;
-    })
-  );
+  event.respondWith(caches.match(request).then(cached => {
+    const network = fetch(request).then(response => { if (response && response.status === 200 && request.url.startsWith(self.location.origin)) { const copy=response.clone(); caches.open(CACHE_NAME).then(cache => cache.put(request, copy)); } return response; }).catch(() => cached);
+    return cached || network;
+  }));
 });
