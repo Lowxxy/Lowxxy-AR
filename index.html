@@ -7,40 +7,216 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Lowxxy AR</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=27" />
-  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=27" />
+  <link rel="manifest" href="./manifest.webmanifest?v=40" />
+  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=40" />
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
   <style>
-    :root{color-scheme:dark;font-family:Arial,Helvetica,sans-serif}*{box-sizing:border-box}html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#000}#app,a-scene{position:fixed;inset:0;width:100%;height:100%}.overlay{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:24px;background:radial-gradient(circle at 50% 30%,rgba(255,255,255,.08),transparent 40%),#000;text-align:center}.panel{width:min(460px,100%);padding:30px 24px;border:1px solid rgba(255,255,255,.18);border-radius:24px;background:rgba(10,10,10,.94);box-shadow:0 20px 60px rgba(0,0,0,.55)}.brand-logo{display:block;width:min(340px,100%);height:auto;margin:0 auto 14px}.subtitle{margin:0 0 22px;color:rgba(255,255,255,.75);font-size:16px;line-height:1.5}.button-stack{display:flex;flex-direction:column;gap:12px}button{width:100%;min-height:54px;border:0;border-radius:999px;padding:14px 22px;background:#fff;color:#000;font:inherit;font-weight:800;letter-spacing:.05em;cursor:pointer}button.secondary{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.22)}button:disabled{opacity:.5;cursor:wait}#installHelp,#errorText{display:none;margin:16px 0 0;font-size:14px;line-height:1.45}#installHelp{color:rgba(255,255,255,.72)}#errorText{color:#ffb4b4}#statusBar{position:fixed;z-index:900;left:50%;top:max(18px,env(safe-area-inset-top));transform:translateX(-50%);width:min(92%,430px);padding:11px 16px;border:1px solid rgba(255,255,255,.22);border-radius:999px;background:rgba(0,0,0,.72);color:#fff;text-align:center;font-size:14px;backdrop-filter:blur(12px);pointer-events:none}#shopBar{position:fixed;z-index:950;left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(92%,430px);padding:14px;display:flex;align-items:center;gap:12px;border-radius:24px;border:1px solid rgba(255,255,255,.15);background:rgba(0,0,0,.82);color:#fff;box-shadow:0 12px 36px rgba(0,0,0,.38);backdrop-filter:blur(14px)}.shop-copy{min-width:0;flex:1;text-align:left}.shop-title{display:block;font-size:14px;font-weight:800}.shop-subtitle{display:block;margin-top:3px;color:rgba(255,255,255,.68);font-size:12px}.shop-button{width:auto;min-height:42px;flex:0 0 auto;padding:10px 16px;font-size:12px}.hidden{display:none!important}
+    :root{color-scheme:dark;font-family:Arial,Helvetica,sans-serif}
+    *{box-sizing:border-box}
+    html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#000}
+    #app,a-scene{position:fixed;inset:0;width:100%;height:100%}
+    .overlay{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:24px;background:radial-gradient(circle at 50% 30%,rgba(255,255,255,.08),transparent 40%),#000;text-align:center}
+    .panel{width:min(460px,100%);padding:30px 24px;border:1px solid rgba(255,255,255,.18);border-radius:24px;background:rgba(10,10,10,.94);box-shadow:0 20px 60px rgba(0,0,0,.55)}
+    .brand-logo{display:block;width:min(340px,100%);height:auto;margin:0 auto 14px}
+    .subtitle{margin:0 0 22px;color:rgba(255,255,255,.75);font-size:16px;line-height:1.5}
+    .button-stack{display:flex;flex-direction:column;gap:12px}
+    button{width:100%;min-height:54px;border:0;border-radius:999px;padding:14px 22px;background:#fff;color:#000;font:inherit;font-weight:800;letter-spacing:.05em;cursor:pointer}
+    button.secondary{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.22)}
+    button:disabled{opacity:.5;cursor:wait}
+    #installHelp,#errorText{display:none;margin:16px 0 0;font-size:14px;line-height:1.45}
+    #installHelp{color:rgba(255,255,255,.72)}
+    #errorText{color:#ffb4b4}
+    #statusBar{position:fixed;z-index:900;left:50%;top:max(18px,env(safe-area-inset-top));transform:translateX(-50%);width:min(92%,430px);padding:11px 16px;border:1px solid rgba(255,255,255,.22);border-radius:999px;background:rgba(0,0,0,.72);color:#fff;text-align:center;font-size:14px;backdrop-filter:blur(12px);pointer-events:none}
+    #shopBar{position:fixed;z-index:950;left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(92%,430px);padding:14px;display:flex;align-items:center;gap:12px;border-radius:24px;border:1px solid rgba(255,255,255,.15);background:rgba(0,0,0,.82);color:#fff;box-shadow:0 12px 36px rgba(0,0,0,.38);backdrop-filter:blur(14px)}
+    .shop-copy{min-width:0;flex:1;text-align:left}.shop-title{display:block;font-size:14px;font-weight:800}.shop-subtitle{display:block;margin-top:3px;color:rgba(255,255,255,.68);font-size:12px}.shop-button{width:auto;min-height:42px;flex:0 0 auto;padding:10px 16px;font-size:12px}.hidden{display:none!important}
   </style>
 </head>
 <body>
 <div id="app">
-  <div id="startOverlay" class="overlay"><div class="panel"><img class="brand-logo" src="./icons/lowxxy-logo-white.png" alt="Lowxxy"/><p class="subtitle" id="startupMessage">Preparing both Lowxxy designs...</p><div class="button-stack"><button id="installButton" class="secondary">INSTALL LOWXXY APP</button><button id="startButton" disabled>PREPARING AR...</button></div><p id="installHelp"></p><p id="errorText"></p></div></div>
-  <div id="statusBar" class="hidden">Point the camera at a Lowxxy design</div>
+  <div id="startOverlay" class="overlay"><div class="panel">
+    <img class="brand-logo" src="./icons/lowxxy-logo-white.png" alt="Lowxxy" />
+    <p class="subtitle">Scan any of the four Lowxxy designs to unlock its 3D animation.</p>
+    <div class="button-stack"><button id="installButton" class="secondary">INSTALL LOWXXY APP</button><button id="startButton">START AR</button></div>
+    <p id="installHelp"></p><p id="errorText"></p>
+  </div></div>
+  <div id="statusBar" class="hidden">Point the camera at a full Lowxxy design</div>
   <div id="shopBar" class="hidden"><div class="shop-copy"><span class="shop-title">Want to see more?</span><span class="shop-subtitle">Explore the latest Lowxxy designs.</span></div><button id="shopButton" class="shop-button">SHOP LOWXXY</button></div>
-  <div id="sceneMount"></div>
+
+  <a-scene
+    mindar-image="imageTargetSrc: ./assets/targets.mind?v=40; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.0001; filterBeta: 0.001; warmupTolerance: 8; missTolerance: 10;"
+    embedded
+    color-space="sRGB"
+    renderer="colorManagement: true; alpha: true; antialias: true; logarithmicDepthBuffer: true;"
+    vr-mode-ui="enabled:false"
+    device-orientation-permission-ui="enabled:false">
+
+    <a-camera position="0 0 0" near="0.01" far="1000" look-controls="enabled:false"></a-camera>
+
+    <a-assets timeout="90000">
+      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=40"></a-asset-item>
+      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=40"></a-asset-item>
+      <a-asset-item id="hangAsset" src="./assets/hang.glb?v=40"></a-asset-item>
+      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=40"></a-asset-item>
+    </a-assets>
+
+    <!-- Target 0: Chainmail. Native scene is large, so this still fills the target at 0.26. -->
+    <a-entity id="target-chainmail" class="ar-target" data-name="CHAINMAIL" mindar-image-target="targetIndex: 0">
+      <a-entity class="model-wrapper" visible="false" position="0 -0.15 0.08">
+        <a-entity class="ar-model" gltf-model="#chainmailAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1" position="-0.05 -0.72 0" rotation="0 0 0" scale="0.26 0.26 0.26"></a-entity>
+      </a-entity>
+    </a-entity>
+
+    <!-- Target 1: Grounded Gains. Enlarged aggressively and centered over its taller artwork. -->
+    <a-entity id="target-grounded-gains" class="ar-target" data-name="GROUNDED GAINS" mindar-image-target="targetIndex: 1">
+      <a-entity class="model-wrapper" visible="false" position="0 -0.12 0.08">
+        <a-entity class="ar-model" gltf-model="#groundedGainsAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1" position="0 -0.28 0" rotation="0 0 0" scale="1.55 1.55 1.55"></a-entity>
+      </a-entity>
+    </a-entity>
+
+    <!-- Target 2: Hang. -->
+    <a-entity id="target-hang" class="ar-target" data-name="HANG" mindar-image-target="targetIndex: 2">
+      <a-entity class="model-wrapper" visible="false" position="0 -0.10 0.08">
+        <a-entity class="ar-model" gltf-model="#hangAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1" position="0 -0.90 0" rotation="0 0 0" scale="2.65 2.65 2.65"></a-entity>
+      </a-entity>
+    </a-entity>
+
+    <!-- Target 3: Pop Art. This is by far the smallest native GLB and receives the largest scale. -->
+    <a-entity id="target-pop-art" class="ar-target" data-name="POP ART" mindar-image-target="targetIndex: 3">
+      <a-entity class="model-wrapper" visible="false" position="0 -0.10 0.08">
+        <a-entity class="ar-model" gltf-model="#popArtAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1" position="-0.85 -0.95 0" rotation="0 0 0" scale="18 18 18"></a-entity>
+      </a-entity>
+    </a-entity>
+
+    <a-light type="ambient" intensity="2.2"></a-light>
+    <a-light type="directional" intensity="2.2" position="1 2 3"></a-light>
+  </a-scene>
 </div>
 <script>
-'use strict';
-const ORIGINAL_TARGET_URL='https://raw.githubusercontent.com/Lowxxy/Lowxxy-AR/a13fc71930218423b720db30b430e2b4bf244775/assets/targets.mind';
-const GROUNDED_TARGET_URL='./assets/grounded-gains.mind?v=27';
-const startOverlay=document.querySelector('#startOverlay'),startButton=document.querySelector('#startButton'),installButton=document.querySelector('#installButton'),installHelp=document.querySelector('#installHelp'),statusBar=document.querySelector('#statusBar'),shopBar=document.querySelector('#shopBar'),shopButton=document.querySelector('#shopButton'),errorText=document.querySelector('#errorText'),startupMessage=document.querySelector('#startupMessage');
-let scene=null,arSystem=null,combinedTargetUrl=null,deferredInstallPrompt=null;
+window.addEventListener('DOMContentLoaded', () => {
+  const scene = document.querySelector('a-scene');
+  const startOverlay = document.querySelector('#startOverlay');
+  const startButton = document.querySelector('#startButton');
+  const installButton = document.querySelector('#installButton');
+  const installHelp = document.querySelector('#installHelp');
+  const statusBar = document.querySelector('#statusBar');
+  const shopBar = document.querySelector('#shopBar');
+  const shopButton = document.querySelector('#shopButton');
+  const errorText = document.querySelector('#errorText');
+  const targets = [...document.querySelectorAll('.ar-target')];
+  let arSystem = null;
+  let deferredInstallPrompt = null;
+  let loadedModels = 0;
 
-// Minimal MessagePack codec. MindAR .mind files are MessagePack objects containing {v,dataList}.
-function decodeMsgPack(input){const b=input instanceof Uint8Array?input:new Uint8Array(input);const dv=new DataView(b.buffer,b.byteOffset,b.byteLength);let p=0;const td=new TextDecoder();function n(l){const s=b.subarray(p,p+l);p+=l;return s}function str(l){return td.decode(n(l))}function read(){const c=b[p++];if(c<=0x7f)return c;if(c>=0xe0)return c-256;if(c>=0xa0&&c<=0xbf)return str(c&31);if(c>=0x90&&c<=0x9f){const a=[];for(let i=0;i<(c&15);i++)a.push(read());return a}if(c>=0x80&&c<=0x8f){const o={};for(let i=0;i<(c&15);i++)o[read()]=read();return o}switch(c){case 0xc0:return null;case 0xc2:return false;case 0xc3:return true;case 0xc4:{const l=b[p++];return n(l)}case 0xc5:{const l=dv.getUint16(p);p+=2;return n(l)}case 0xc6:{const l=dv.getUint32(p);p+=4;return n(l)}case 0xca:{const v=dv.getFloat32(p);p+=4;return v}case 0xcb:{const v=dv.getFloat64(p);p+=8;return v}case 0xcc:return b[p++];case 0xcd:{const v=dv.getUint16(p);p+=2;return v}case 0xce:{const v=dv.getUint32(p);p+=4;return v}case 0xcf:{const v=Number(dv.getBigUint64(p));p+=8;return v}case 0xd0:return dv.getInt8(p++);case 0xd1:{const v=dv.getInt16(p);p+=2;return v}case 0xd2:{const v=dv.getInt32(p);p+=4;return v}case 0xd3:{const v=Number(dv.getBigInt64(p));p+=8;return v}case 0xd9:{const l=b[p++];return str(l)}case 0xda:{const l=dv.getUint16(p);p+=2;return str(l)}case 0xdb:{const l=dv.getUint32(p);p+=4;return str(l)}case 0xdc:{const l=dv.getUint16(p);p+=2;const a=[];for(let i=0;i<l;i++)a.push(read());return a}case 0xdd:{const l=dv.getUint32(p);p+=4;const a=[];for(let i=0;i<l;i++)a.push(read());return a}case 0xde:{const l=dv.getUint16(p);p+=2;const o={};for(let i=0;i<l;i++)o[read()]=read();return o}case 0xdf:{const l=dv.getUint32(p);p+=4;const o={};for(let i=0;i<l;i++)o[read()]=read();return o}default:throw new Error('Unsupported target-data marker 0x'+c.toString(16));}}return read()}
-function encodeMsgPack(value){const chunks=[];const te=new TextEncoder();const push=(...x)=>chunks.push(Uint8Array.from(x));const u16=(m,v)=>{const a=new Uint8Array(3),d=new DataView(a.buffer);a[0]=m;d.setUint16(1,v);chunks.push(a)};const u32=(m,v)=>{const a=new Uint8Array(5),d=new DataView(a.buffer);a[0]=m;d.setUint32(1,v);chunks.push(a)};function write(v){if(v===null||v===undefined){push(0xc0);return}if(v===false){push(0xc2);return}if(v===true){push(0xc3);return}if(typeof v==='number'){if(Number.isInteger(v)){if(v>=0&&v<=0x7f){push(v);return}if(v<0&&v>=-32){push(256+v);return}if(v>=0&&v<=0xff){push(0xcc,v);return}if(v>=0&&v<=0xffff){u16(0xcd,v);return}if(v>=0&&v<=0xffffffff){u32(0xce,v);return}if(v>=-128&&v<0){push(0xd0,256+v);return}if(v>=-32768&&v<0){const a=new Uint8Array(3),d=new DataView(a.buffer);a[0]=0xd1;d.setInt16(1,v);chunks.push(a);return}const a=new Uint8Array(5),d=new DataView(a.buffer);a[0]=0xd2;d.setInt32(1,v);chunks.push(a);return}const a=new Uint8Array(9),d=new DataView(a.buffer);a[0]=0xcb;d.setFloat64(1,v);chunks.push(a);return}if(typeof v==='string'){const s=te.encode(v),l=s.length;if(l<32)push(0xa0|l);else if(l<=255)push(0xd9,l);else if(l<=65535)u16(0xda,l);else u32(0xdb,l);chunks.push(s);return}if(v instanceof Uint8Array||ArrayBuffer.isView(v)||v instanceof ArrayBuffer){const a=v instanceof Uint8Array?v:v instanceof ArrayBuffer?new Uint8Array(v):new Uint8Array(v.buffer,v.byteOffset,v.byteLength),l=a.length;if(l<=255)push(0xc4,l);else if(l<=65535)u16(0xc5,l);else u32(0xc6,l);chunks.push(a);return}if(Array.isArray(v)){const l=v.length;if(l<16)push(0x90|l);else if(l<=65535)u16(0xdc,l);else u32(0xdd,l);for(const x of v)write(x);return}if(typeof v==='object'){const es=Object.entries(v),l=es.length;if(l<16)push(0x80|l);else if(l<=65535)u16(0xde,l);else u32(0xdf,l);for(const [k,x] of es){write(k);write(x)}return}throw new Error('Unsupported target-data value')}write(value);const total=chunks.reduce((s,a)=>s+a.length,0),out=new Uint8Array(total);let o=0;for(const a of chunks){out.set(a,o);o+=a.length}return out}
+  const isStandalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isAndroid = /android/i.test(navigator.userAgent);
+  if (isStandalone) installButton.classList.add('hidden');
 
-async function buildCombinedTarget(){const [a,b]=await Promise.all([fetch(ORIGINAL_TARGET_URL,{cache:'no-store'}),fetch(GROUNDED_TARGET_URL,{cache:'no-store'})]);if(!a.ok)throw new Error('Could not download the original Lowxxy scanner target.');if(!b.ok)throw new Error('Could not download the Grounded Gains scanner target.');const [ad,bd]=[decodeMsgPack(await a.arrayBuffer()),decodeMsgPack(await b.arrayBuffer())];if(!Array.isArray(ad.dataList)||!ad.dataList.length)throw new Error('The original target database is invalid.');if(!Array.isArray(bd.dataList)||!bd.dataList.length)throw new Error('The Grounded Gains target database is invalid.');const merged=encodeMsgPack({v:ad.v||bd.v||2,dataList:[ad.dataList[0],bd.dataList[0]]});return URL.createObjectURL(new Blob([merged],{type:'application/octet-stream'}))}
-function wireTarget(target,wrapper,resetPosition,text){target.addEventListener('targetFound',()=>{statusBar.textContent=text;wrapper.removeAttribute('animation__popout');wrapper.setAttribute('position',resetPosition);wrapper.setAttribute('visible',true);requestAnimationFrame(()=>wrapper.setAttribute('animation__popout',`property: position; from: ${resetPosition}; to: 0 -0.10 0.10; dur: 1800; easing: easeOutCubic`))});target.addEventListener('targetLost',()=>{statusBar.textContent='Point the camera back at a Lowxxy design';wrapper.setAttribute('visible',false);wrapper.removeAttribute('animation__popout');wrapper.setAttribute('position',resetPosition)})}
-function createScene(targetUrl){const mount=document.querySelector('#sceneMount');mount.innerHTML=`<a-scene mindar-image="imageTargetSrc: ${targetUrl}; autoStart:false; uiLoading:no; uiError:no; uiScanning:no; filterMinCF:0.0001; filterBeta:0.001; warmupTolerance:8; missTolerance:10" embedded color-space="sRGB" renderer="colorManagement:true; alpha:true" vr-mode-ui="enabled:false" device-orientation-permission-ui="enabled:false"><a-camera position="0 0 0" look-controls="enabled:false"></a-camera><a-assets timeout="60000"><a-asset-item id="originalModelAsset" src="./assets/Lowxxy_AR_Scaled.glb?v=27"></a-asset-item><a-asset-item id="groundedModelAsset" src="./assets/grounded-gains.glb?v=27"></a-asset-item></a-assets><a-entity id="originalTarget" mindar-image-target="targetIndex:0"><a-entity id="originalWrapper" position="0 -0.10 -0.18" visible="false"><a-entity id="originalModel" gltf-model="#originalModelAsset" animation-mixer="clip:*;loop:repeat;repetitions:Infinity" scale="0.002 0.002 0.002"></a-entity></a-entity><a-light type="ambient" intensity="2"></a-light><a-light type="directional" intensity="2" position="1 2 3"></a-light></a-entity><a-entity id="groundedTarget" mindar-image-target="targetIndex:1"><a-entity id="groundedWrapper" position="0 -0.20 -0.28" visible="false"><a-entity id="groundedModel" gltf-model="#groundedModelAsset" animation-mixer="clip:*;loop:repeat;repetitions:Infinity" scale="50 50 50"></a-entity></a-entity><a-light type="ambient" intensity="2"></a-light><a-light type="directional" intensity="2" position="1 2 3"></a-light></a-entity></a-scene>`;scene=mount.querySelector('a-scene');scene.addEventListener('loaded',()=>{arSystem=scene.systems['mindar-image-system'];startButton.disabled=false;startButton.textContent='START AR';startupMessage.textContent='Scan either Lowxxy design to unlock its matching animation.'});wireTarget(mount.querySelector('#originalTarget'),mount.querySelector('#originalWrapper'),'0 -0.10 -0.18','LOWXXY UNLOCKED');wireTarget(mount.querySelector('#groundedTarget'),mount.querySelector('#groundedWrapper'),'0 -0.20 -0.28','GROUNDED GAINS UNLOCKED')}
-const isStandalone=matchMedia('(display-mode:standalone)').matches||navigator.standalone===true,isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent),isAndroid=/android/i.test(navigator.userAgent);if(isStandalone)installButton.classList.add('hidden');window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstallPrompt=e;installButton.classList.remove('hidden')});installButton.addEventListener('click',async()=>{installHelp.style.display='block';if(deferredInstallPrompt){deferredInstallPrompt.prompt();await deferredInstallPrompt.userChoice;deferredInstallPrompt=null;return}installHelp.textContent=isIOS?'In Safari, tap Share, then Add to Home Screen, then Add.':isAndroid?'Use Chrome’s three-dot menu and choose Install app or Add to Home screen.':'Use your browser’s install option.'});shopButton.addEventListener('click',()=>location.href='https://lowxxy.myshopify.com');
-startButton.addEventListener('click',async()=>{startButton.disabled=true;startButton.textContent='OPENING CAMERA...';if(!arSystem&&scene)arSystem=scene.systems['mindar-image-system'];if(!arSystem){errorText.style.display='block';errorText.textContent='The AR engine did not finish loading. Refresh and try again.';startButton.disabled=false;startButton.textContent='TRY AGAIN';return}startOverlay.classList.add('hidden');statusBar.classList.remove('hidden');shopBar.classList.remove('hidden');try{await arSystem.start()}catch(e){console.error(e);startOverlay.classList.remove('hidden');statusBar.classList.add('hidden');shopBar.classList.add('hidden');errorText.style.display='block';errorText.textContent='Camera could not start. Allow camera access, then refresh.';startButton.disabled=false;startButton.textContent='TRY AGAIN'}});
-(async function init(){try{combinedTargetUrl=await buildCombinedTarget();createScene(combinedTargetUrl)}catch(e){console.error(e);startupMessage.textContent='The scanner could not prepare both designs.';errorText.style.display='block';errorText.textContent=e.message||'Refresh and try again.'}})();
-if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js?v=27'));window.addEventListener('beforeunload',()=>{if(combinedTargetUrl)URL.revokeObjectURL(combinedTargetUrl)});
+  window.addEventListener('beforeinstallprompt', event => {
+    event.preventDefault();
+    deferredInstallPrompt = event;
+    installButton.classList.remove('hidden');
+  });
+
+  installButton.addEventListener('click', async () => {
+    installHelp.style.display = 'block';
+    if (deferredInstallPrompt) {
+      deferredInstallPrompt.prompt();
+      await deferredInstallPrompt.userChoice;
+      deferredInstallPrompt = null;
+      return;
+    }
+    installHelp.textContent = isIOS
+      ? 'In Safari, tap Share, then Add to Home Screen, then Add.'
+      : isAndroid
+      ? 'Use Chrome’s three-dot menu and choose Install app or Add to Home screen.'
+      : 'Use your browser’s install option.';
+  });
+
+  shopButton.addEventListener('click', () => { location.href = 'https://lowxxy.myshopify.com'; });
+  scene.addEventListener('loaded', () => { arSystem = scene.systems['mindar-image-system']; });
+
+  document.querySelectorAll('.ar-model').forEach(model => {
+    model.addEventListener('model-loaded', () => {
+      loadedModels += 1;
+      console.log('Loaded AR model', loadedModels, 'of 4');
+    });
+    model.addEventListener('model-error', event => {
+      console.error('Model error', event);
+      errorText.style.display = 'block';
+      errorText.textContent = 'One of the 3D animations could not load. Confirm all four GLB files are inside the assets folder.';
+    });
+  });
+
+  const restartAnimation = model => {
+    const mixer = model.components['animation-mixer'];
+    if (mixer && mixer.mixer) {
+      mixer.mixer.stopAllAction();
+      mixer.mixer.setTime(0);
+      model.removeAttribute('animation-mixer');
+      requestAnimationFrame(() => model.setAttribute('animation-mixer', 'clip:*; loop:repeat; repetitions:Infinity; timeScale:1'));
+    }
+  };
+
+  targets.forEach(target => {
+    const wrapper = target.querySelector('.model-wrapper');
+    const model = target.querySelector('.ar-model');
+    const name = target.dataset.name;
+    target.addEventListener('targetFound', () => {
+      targets.forEach(other => {
+        if (other !== target) other.querySelector('.model-wrapper').setAttribute('visible', false);
+      });
+      restartAnimation(model);
+      wrapper.removeAttribute('animation__popout');
+      wrapper.setAttribute('visible', true);
+      wrapper.setAttribute('scale', '0.78 0.78 0.78');
+      requestAnimationFrame(() => {
+        wrapper.setAttribute('animation__popout', 'property: scale; from: 0.78 0.78 0.78; to: 1 1 1; dur: 650; easing: easeOutBack');
+      });
+      statusBar.textContent = name + ' UNLOCKED';
+    });
+    target.addEventListener('targetLost', () => {
+      wrapper.setAttribute('visible', false);
+      wrapper.removeAttribute('animation__popout');
+      statusBar.textContent = 'Point the camera back at the full design';
+    });
+  });
+
+  startButton.addEventListener('click', async () => {
+    startButton.disabled = true;
+    startButton.textContent = 'OPENING CAMERA...';
+    errorText.style.display = 'none';
+    if (!arSystem) arSystem = scene.systems['mindar-image-system'];
+    if (!arSystem) {
+      errorText.style.display = 'block';
+      errorText.textContent = 'The AR engine did not load. Refresh and try again.';
+      startButton.disabled = false;
+      startButton.textContent = 'TRY AGAIN';
+      return;
+    }
+    startOverlay.classList.add('hidden');
+    statusBar.classList.remove('hidden');
+    shopBar.classList.remove('hidden');
+    try {
+      await arSystem.start();
+    } catch (error) {
+      console.error(error);
+      startOverlay.classList.remove('hidden');
+      statusBar.classList.add('hidden');
+      shopBar.classList.add('hidden');
+      errorText.style.display = 'block';
+      errorText.textContent = 'Camera or scanner could not start. Allow camera access, confirm targets.mind was uploaded, then refresh.';
+      startButton.disabled = false;
+      startButton.textContent = 'TRY AGAIN';
+    }
+  });
+
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=40'));
+  }
+});
 </script>
 </body>
 </html>
