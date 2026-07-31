@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lowxxy-ar-v51-popart-large';
+const CACHE_NAME = 'lowxxy-ar-v53-popart-half-size';
 const APP_SHELL = [
   './',
   './index.html',
