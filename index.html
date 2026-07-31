@@ -1,183 +1,227 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<meta name="theme-color" content="#000000" />
-<meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-<title>Lowxxy AR</title>
-<link rel="manifest" href="./manifest.webmanifest?v=20" />
-<link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=20" />
-<script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
-<style>
-:root{color-scheme:dark;font-family:Arial,Helvetica,sans-serif}*{box-sizing:border-box}html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#000}#app,a-scene{position:fixed;inset:0;width:100%;height:100%}.overlay{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:24px;background:radial-gradient(circle at 50% 30%,rgba(255,255,255,.08),transparent 40%),#000;text-align:center}.panel{width:min(460px,100%);padding:30px 24px;border:1px solid rgba(255,255,255,.18);border-radius:24px;background:rgba(10,10,10,.94);box-shadow:0 20px 60px rgba(0,0,0,.55)}.brand-logo{display:block;width:min(340px,100%);height:auto;margin:0 auto 14px}.subtitle{margin:0 0 22px;color:rgba(255,255,255,.75);font-size:16px;line-height:1.5}.button-stack{display:flex;flex-direction:column;gap:12px}button{width:100%;min-height:54px;border:0;border-radius:999px;padding:14px 22px;background:#fff;color:#000;font:inherit;font-weight:800;letter-spacing:.05em;cursor:pointer}button.secondary{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.22)}button:disabled{opacity:.5;cursor:wait}#installHelp,#errorText{display:none;margin:16px 0 0;font-size:14px;line-height:1.45}#installHelp{color:rgba(255,255,255,.72)}#errorText{color:#ffb4b4}#statusBar{position:fixed;z-index:900;left:50%;top:max(18px,env(safe-area-inset-top));transform:translateX(-50%);width:min(92%,430px);padding:11px 16px;border:1px solid rgba(255,255,255,.22);border-radius:999px;background:rgba(0,0,0,.72);color:#fff;text-align:center;font-size:14px;backdrop-filter:blur(12px);pointer-events:none}#shopBar{position:fixed;z-index:950;left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(92%,430px);padding:14px;display:flex;align-items:center;gap:12px;border-radius:24px;border:1px solid rgba(255,255,255,.15);background:rgba(0,0,0,.82);color:#fff;box-shadow:0 12px 36px rgba(0,0,0,.38);backdrop-filter:blur(14px)}.shop-copy{min-width:0;flex:1;text-align:left}.shop-title{display:block;font-size:14px;font-weight:800}.shop-subtitle{display:block;margin-top:3px;color:rgba(255,255,255,.68);font-size:12px}.shop-button{width:auto;min-height:42px;flex:0 0 auto;padding:10px 16px;font-size:12px}.hidden{display:none!important}#animationCanvas{display:none}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Lowxxy AR</title>
+
+  <link rel="manifest" href="./manifest.webmanifest?v=21" />
+  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=21" />
+
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
+
+  <style>
+    :root { color-scheme: dark; font-family: Arial, Helvetica, sans-serif; }
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: #000; }
+    #app, a-scene { position: fixed; inset: 0; width: 100%; height: 100%; }
+    .overlay { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 24px; background: radial-gradient(circle at 50% 30%, rgba(255,255,255,.08), transparent 40%), #000; text-align: center; }
+    .panel { width: min(460px, 100%); padding: 30px 24px; border: 1px solid rgba(255,255,255,.18); border-radius: 24px; background: rgba(10,10,10,.94); box-shadow: 0 20px 60px rgba(0,0,0,.55); }
+    .brand-logo { display: block; width: min(340px,100%); height: auto; margin: 0 auto 14px; }
+    .brand-text { margin: 0 0 14px; font-size: 46px; font-weight: 900; letter-spacing: .12em; }
+    .subtitle { margin: 0 0 22px; color: rgba(255,255,255,.75); font-size: 16px; line-height: 1.5; }
+    .button-stack { display: flex; flex-direction: column; gap: 12px; }
+    button { width: 100%; min-height: 54px; border: 0; border-radius: 999px; padding: 14px 22px; background: #fff; color: #000; font: inherit; font-weight: 800; letter-spacing: .05em; cursor: pointer; }
+    button.secondary { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.22); }
+    button:disabled { opacity: .5; cursor: wait; }
+    #installHelp, #errorText { display: none; margin: 16px 0 0; font-size: 14px; line-height: 1.45; }
+    #installHelp { color: rgba(255,255,255,.72); }
+    #errorText { color: #ffb4b4; }
+    #statusBar { position: fixed; z-index: 900; left: 50%; top: max(18px,env(safe-area-inset-top)); transform: translateX(-50%); width: min(92%,430px); padding: 11px 16px; border: 1px solid rgba(255,255,255,.22); border-radius: 999px; background: rgba(0,0,0,.72); color: #fff; text-align: center; font-size: 14px; backdrop-filter: blur(12px); pointer-events: none; }
+    #shopBar { position: fixed; z-index: 950; left: 50%; bottom: max(18px,env(safe-area-inset-bottom)); transform: translateX(-50%); width: min(92%,430px); padding: 14px; display: flex; align-items: center; gap: 12px; border-radius: 24px; border: 1px solid rgba(255,255,255,.15); background: rgba(0,0,0,.82); color: #fff; box-shadow: 0 12px 36px rgba(0,0,0,.38); backdrop-filter: blur(14px); }
+    .shop-copy { min-width: 0; flex: 1; text-align: left; }
+    .shop-title { display: block; font-size: 14px; font-weight: 800; }
+    .shop-subtitle { display: block; margin-top: 3px; color: rgba(255,255,255,.68); font-size: 12px; }
+    .shop-button { width: auto; min-height: 42px; flex: 0 0 auto; padding: 10px 16px; font-size: 12px; }
+    .hidden { display: none !important; }
+  </style>
 </head>
 <body>
-<div id="app">
-  <div id="startOverlay" class="overlay"><div class="panel"><img class="brand-logo" src="./icons/lowxxy-logo-white.png" alt="Lowxxy"/><p class="subtitle">Install Lowxxy AR or start scanning now.</p><div class="button-stack"><button id="installButton" class="secondary">INSTALL LOWXXY APP</button><button id="startButton">START AR</button></div><p id="installHelp"></p><p id="errorText"></p></div></div>
-  <div id="statusBar" class="hidden">Point the camera at the Lowxxy design</div>
-  <div id="shopBar" class="hidden"><div class="shop-copy"><span class="shop-title">Want to see more?</span><span class="shop-subtitle">Explore the latest Lowxxy designs.</span></div><button id="shopButton" class="shop-button">SHOP LOWXXY</button></div>
-  <a-scene mindar-image="imageTargetSrc: ./assets/targets.mind; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.0001; filterBeta: 0.001; warmupTolerance: 8; missTolerance: 10;" embedded color-space="sRGB" renderer="colorManagement: true; alpha: true;" vr-mode-ui="enabled:false" device-orientation-permission-ui="enabled:false">
-    <a-camera position="0 0 0" look-controls="enabled:false"></a-camera>
-    <a-assets timeout="30000">
-      <a-asset-item id="lowxxyModelAsset" src="./assets/Lowxxy_AR_Scaled.glb?v=6"></a-asset-item>
-    </a-assets>
+  <div id="app">
+    <div id="startOverlay" class="overlay">
+      <div class="panel">
+        <img class="brand-logo" src="./icons/lowxxy-logo-white.png" alt="Lowxxy" onerror="this.classList.add('hidden');document.querySelector('.brand-text').classList.remove('hidden')" />
+        <h1 class="brand-text hidden">LOWXXY</h1>
+        <p class="subtitle">Tap Start AR, allow camera access, then point your phone at the complete Grounded Gains design.</p>
+        <div class="button-stack">
+          <button id="installButton" class="secondary" type="button">INSTALL LOWXXY APP</button>
+          <button id="startButton" type="button">START AR</button>
+        </div>
+        <p id="installHelp"></p>
+        <p id="errorText"></p>
+      </div>
+    </div>
 
-    <a-entity id="shirtTarget" mindar-image-target="targetIndex:0">
-      <a-entity
-        id="popoutWrapper"
-        position="0 -0.10 -0.18"
-        visible="false">
-        <a-entity
-          id="popoutModel"
-          gltf-model="#lowxxyModelAsset"
-          animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1"
-          position="0 0 0"
-          rotation="0 0 0"
-          scale="0.0020 0.0020 0.0020">
+    <div id="statusBar" class="hidden">Point the camera at the Grounded Gains design</div>
+
+    <div id="shopBar" class="hidden">
+      <div class="shop-copy">
+        <span class="shop-title">Want to see more?</span>
+        <span class="shop-subtitle">Explore the latest Lowxxy designs.</span>
+      </div>
+      <button id="shopButton" class="shop-button" type="button">SHOP LOWXXY</button>
+    </div>
+
+    <a-scene
+      mindar-image="imageTargetSrc: ./assets/targets.mind?v=21; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.0001; filterBeta: 0.001; warmupTolerance: 8; missTolerance: 10;"
+      embedded
+      color-space="sRGB"
+      renderer="colorManagement: true; physicallyCorrectLights: true; alpha: true;"
+      vr-mode-ui="enabled:false"
+      device-orientation-permission-ui="enabled:false">
+
+      <a-assets timeout="60000">
+        <a-asset-item id="groundedGainsModel" src="./assets/grounded-gains.glb?v=21"></a-asset-item>
+      </a-assets>
+
+      <a-camera position="0 0 0" look-controls="enabled:false"></a-camera>
+
+      <a-entity id="shirtTarget" mindar-image-target="targetIndex:0">
+        <a-entity id="popoutWrapper" position="0 -0.30 -0.12" visible="false">
+          <a-entity
+            id="popoutModel"
+            gltf-model="#groundedGainsModel"
+            animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1; clampWhenFinished:false"
+            position="0 0 0"
+            rotation="0 0 0"
+            scale="0.006 0.006 0.006">
+          </a-entity>
         </a-entity>
+
+        <a-light type="ambient" intensity="1.8"></a-light>
+        <a-light type="directional" intensity="2.2" position="1 2 3"></a-light>
+        <a-light type="directional" intensity="1.2" position="-1 1 2"></a-light>
       </a-entity>
+    </a-scene>
+  </div>
 
-      <a-light type="ambient" intensity="2"></a-light>
-      <a-light type="directional" intensity="2" position="1 2 3"></a-light>
-    </a-entity>
-  </a-scene>
-</div>
-<script>
-window.addEventListener('DOMContentLoaded', () => {
-  const scene = document.querySelector('a-scene');
-  const target = document.querySelector('#shirtTarget');
-  const model = document.querySelector('#popoutModel');
-  const wrapper = document.querySelector('#popoutWrapper');
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const scene = document.querySelector('a-scene');
+      const target = document.querySelector('#shirtTarget');
+      const model = document.querySelector('#popoutModel');
+      const wrapper = document.querySelector('#popoutWrapper');
+      const startOverlay = document.querySelector('#startOverlay');
+      const startButton = document.querySelector('#startButton');
+      const installButton = document.querySelector('#installButton');
+      const installHelp = document.querySelector('#installHelp');
+      const statusBar = document.querySelector('#statusBar');
+      const shopBar = document.querySelector('#shopBar');
+      const shopButton = document.querySelector('#shopButton');
+      const errorText = document.querySelector('#errorText');
 
-  const startOverlay = document.querySelector('#startOverlay');
-  const startButton = document.querySelector('#startButton');
-  const installButton = document.querySelector('#installButton');
-  const installHelp = document.querySelector('#installHelp');
-  const statusBar = document.querySelector('#statusBar');
-  const shopBar = document.querySelector('#shopBar');
-  const shopButton = document.querySelector('#shopButton');
-  const errorText = document.querySelector('#errorText');
+      let arSystem;
+      let deferredInstallPrompt = null;
+      let modelReady = false;
 
-  let arSystem;
-  let deferredInstallPrompt = null;
+      const isStandalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+      const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+      const isAndroid = /android/i.test(navigator.userAgent);
 
-  const isStandalone =
-    matchMedia('(display-mode: standalone)').matches ||
-    navigator.standalone === true;
-  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-  const isAndroid = /android/i.test(navigator.userAgent);
+      if (isStandalone) installButton.classList.add('hidden');
 
-  if (isStandalone) installButton.classList.add('hidden');
+      window.addEventListener('beforeinstallprompt', event => {
+        event.preventDefault();
+        deferredInstallPrompt = event;
+        installButton.classList.remove('hidden');
+      });
 
-  window.addEventListener('beforeinstallprompt', e => {
-    e.preventDefault();
-    deferredInstallPrompt = e;
-    installButton.classList.remove('hidden');
-  });
+      installButton.addEventListener('click', async () => {
+        installHelp.style.display = 'block';
+        if (deferredInstallPrompt) {
+          deferredInstallPrompt.prompt();
+          await deferredInstallPrompt.userChoice;
+          deferredInstallPrompt = null;
+          return;
+        }
+        installHelp.textContent = isIOS
+          ? 'In Safari, tap Share, then Add to Home Screen, then Add.'
+          : isAndroid
+            ? 'Open Chrome’s three-dot menu and choose Install app or Add to Home screen.'
+            : 'Use your browser’s install option.';
+      });
 
-  installButton.addEventListener('click', async () => {
-    installHelp.style.display = 'block';
+      shopButton.addEventListener('click', () => {
+        location.href = 'https://lowxxy.myshopify.com';
+      });
 
-    if (deferredInstallPrompt) {
-      deferredInstallPrompt.prompt();
-      await deferredInstallPrompt.userChoice;
-      deferredInstallPrompt = null;
-      return;
-    }
+      scene.addEventListener('loaded', () => {
+        arSystem = scene.systems['mindar-image-system'];
+      });
 
-    installHelp.textContent = isIOS
-      ? 'In Safari, tap Share, then Add to Home Screen, then Add.'
-      : isAndroid
-        ? 'Use Chrome’s three-dot menu and choose Install app or Add to Home screen.'
-        : 'Use your browser’s install option.';
-  });
+      model.addEventListener('model-loaded', () => {
+        modelReady = true;
+        console.log('Grounded Gains model and animation loaded.');
+      });
 
-  shopButton.addEventListener('click', () => {
-    location.href = 'https://lowxxy.myshopify.com';
-  });
+      model.addEventListener('model-error', event => {
+        console.error(event);
+        errorText.style.display = 'block';
+        errorText.textContent = 'The 3D animation could not load. Confirm grounded-gains.glb is inside the assets folder.';
+      });
 
-  scene.addEventListener('loaded', () => {
-    arSystem = scene.systems['mindar-image-system'];
-  });
+      target.addEventListener('targetFound', () => {
+        statusBar.textContent = modelReady ? 'GROUNDED GAINS UNLOCKED' : 'Loading animation…';
+        wrapper.removeAttribute('animation__popout');
+        wrapper.setAttribute('position', '0 -0.30 -0.12');
+        wrapper.setAttribute('visible', true);
 
-  model.addEventListener('model-loaded', () => {
-    console.log('Lowxxy 3D model loaded');
-  });
+        requestAnimationFrame(() => {
+          wrapper.setAttribute(
+            'animation__popout',
+            'property: position; from: 0 -0.30 -0.12; to: 0 -0.30 0.16; dur: 1500; easing: easeOutCubic'
+          );
+        });
+      });
 
-  model.addEventListener('model-error', event => {
-    console.error(event);
-    errorText.style.display = 'block';
-    errorText.textContent =
-      'The 3D model could not load. Confirm Lowxxy_AR_Scaled.glb is inside the assets folder.';
-  });
+      target.addEventListener('targetLost', () => {
+        statusBar.textContent = 'Point the camera back at the Grounded Gains design';
+        wrapper.setAttribute('visible', false);
+        wrapper.removeAttribute('animation__popout');
+        wrapper.setAttribute('position', '0 -0.30 -0.12');
+      });
 
-  target.addEventListener('targetFound', () => {
-    statusBar.textContent = 'LOWXXY UNLOCKED';
+      startButton.addEventListener('click', async () => {
+        startButton.disabled = true;
+        startButton.textContent = 'OPENING CAMERA…';
+        errorText.style.display = 'none';
 
-    wrapper.removeAttribute('animation__popout');
-    wrapper.setAttribute('position', '0 -0.10 -0.18');
-    wrapper.setAttribute('visible', true);
+        if (!arSystem) arSystem = scene.systems['mindar-image-system'];
+        if (!arSystem) {
+          errorText.style.display = 'block';
+          errorText.textContent = 'The AR engine did not load. Refresh and try again.';
+          startButton.disabled = false;
+          startButton.textContent = 'TRY AGAIN';
+          return;
+        }
 
-    // Move the complete animated character from behind the tracked shirt
-    // toward the camera so it appears to pop out of the printed design.
-    requestAnimationFrame(() => {
-      wrapper.setAttribute(
-        'animation__popout',
-        'property: position; from: 0 -0.10 -0.18; to: 0 -0.10 0.10; dur: 1800; easing: easeOutCubic'
-      );
+        startOverlay.classList.add('hidden');
+        statusBar.classList.remove('hidden');
+        shopBar.classList.remove('hidden');
+
+        try {
+          await arSystem.start();
+        } catch (error) {
+          console.error(error);
+          startOverlay.classList.remove('hidden');
+          statusBar.classList.add('hidden');
+          shopBar.classList.add('hidden');
+          errorText.style.display = 'block';
+          errorText.textContent = 'Camera could not start. Allow camera access, then refresh.';
+          startButton.disabled = false;
+          startButton.textContent = 'TRY AGAIN';
+        }
+      });
+
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=21'));
+      }
     });
-  });
-
-  target.addEventListener('targetLost', () => {
-    statusBar.textContent = 'Point the camera back at the design';
-    wrapper.setAttribute('visible', false);
-    wrapper.removeAttribute('animation__popout');
-    wrapper.setAttribute('position', '0 -0.10 -0.18');
-  });
-
-  startButton.addEventListener('click', async () => {
-    startButton.disabled = true;
-    startButton.textContent = 'OPENING CAMERA...';
-
-    if (!arSystem) arSystem = scene.systems['mindar-image-system'];
-
-    if (!arSystem) {
-      errorText.style.display = 'block';
-      errorText.textContent = 'The AR engine did not load. Refresh and try again.';
-      startButton.disabled = false;
-      startButton.textContent = 'TRY AGAIN';
-      return;
-    }
-
-    startOverlay.classList.add('hidden');
-    statusBar.classList.remove('hidden');
-    shopBar.classList.remove('hidden');
-
-    try {
-      await arSystem.start();
-    } catch (error) {
-      startOverlay.classList.remove('hidden');
-      statusBar.classList.add('hidden');
-      shopBar.classList.add('hidden');
-      errorText.style.display = 'block';
-      errorText.textContent =
-        'Camera could not start. Allow camera access, then refresh.';
-      startButton.disabled = false;
-      startButton.textContent = 'TRY AGAIN';
-    }
-  });
-
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./service-worker.js');
-    });
-  }
-});
-</script>
+  </script>
 </body>
 </html>
