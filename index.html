@@ -7,11 +7,73 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Lowxxy AR</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=60" />
-  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=60" />
+  <link rel="manifest" href="./manifest.webmanifest?v=61" />
+  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=61" />
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
+  <script>
+    AFRAME.registerComponent('auto-fit-model', {
+      schema: {
+        targetHeight: {type: 'number', default: 1.65},
+        bottomY: {type: 'number', default: -0.72},
+        zOffset: {type: 'number', default: 0}
+      },
+      init: function () {
+        this.el.addEventListener('model-loaded', () => {
+          requestAnimationFrame(() => requestAnimationFrame(() => this.fitModel()));
+        });
+      },
+      fitModel: function () {
+        const root = this.el.getObject3D('mesh');
+        if (!root) return;
+
+        root.traverse(node => {
+          node.frustumCulled = false;
+          if (node.isMesh || node.isSkinnedMesh) {
+            const materials = Array.isArray(node.material) ? node.material : [node.material];
+            materials.filter(Boolean).forEach(material => {
+              material.side = THREE.DoubleSide;
+              material.needsUpdate = true;
+            });
+          }
+        });
+
+        this.el.object3D.position.set(0, 0, 0);
+        this.el.object3D.scale.set(1, 1, 1);
+        root.updateMatrixWorld(true);
+
+        let box = new THREE.Box3().setFromObject(root, true);
+        if (box.isEmpty()) return;
+
+        const size = new THREE.Vector3();
+        box.getSize(size);
+        if (!Number.isFinite(size.y) || size.y <= 0) return;
+
+        const fitScale = this.data.targetHeight / size.y;
+        this.el.object3D.scale.setScalar(fitScale);
+        this.el.object3D.updateMatrixWorld(true);
+        root.updateMatrixWorld(true);
+
+        box = new THREE.Box3().setFromObject(root, true);
+        const center = new THREE.Vector3();
+        box.getCenter(center);
+
+        this.el.object3D.position.set(
+          -center.x,
+          this.data.bottomY - box.min.y,
+          this.data.zOffset - center.z
+        );
+        this.el.object3D.updateMatrixWorld(true);
+
+        console.log('Auto-fitted Hang model', {
+          scale: fitScale,
+          position: this.el.object3D.position.toArray(),
+          bounds: {min: box.min.toArray(), max: box.max.toArray()}
+        });
+      }
+    });
+  </script>
   <style>
     :root{color-scheme:dark;font-family:Arial,Helvetica,sans-serif}
     *{box-sizing:border-box}
@@ -45,7 +107,7 @@
   <div id="shopBar" class="hidden"><div class="shop-copy"><span class="shop-title">Want to see more?</span><span class="shop-subtitle">Explore the latest Lowxxy designs.</span></div><button id="shopButton" class="shop-button">SHOP LOWXXY</button></div>
 
   <a-scene
-    mindar-image="imageTargetSrc: ./assets/targets.mind?v=60; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.0001; filterBeta: 0.001; warmupTolerance: 8; missTolerance: 10;"
+    mindar-image="imageTargetSrc: ./assets/targets.mind?v=61; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.0001; filterBeta: 0.001; warmupTolerance: 8; missTolerance: 10;"
     embedded
     color-space="sRGB"
     renderer="colorManagement: true; alpha: true; antialias: true; logarithmicDepthBuffer: true;"
@@ -55,10 +117,10 @@
     <a-camera position="0 0 0" near="0.01" far="1000" look-controls="enabled:false"></a-camera>
 
     <a-assets timeout="90000">
-      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=60"></a-asset-item>
-      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=60"></a-asset-item>
-      <a-asset-item id="hangAsset" src="./assets/hang.glb?v=60"></a-asset-item>
-      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=60"></a-asset-item>
+      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=61"></a-asset-item>
+      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=61"></a-asset-item>
+      <a-asset-item id="hangAsset" src="./assets/hang.glb?v=61"></a-asset-item>
+      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=61"></a-asset-item>
     </a-assets>
 
     <!-- Target 0: Pop Art. Placed first in the scanner database so the dotted comic-book print gets priority over the similar regular Chainmail artwork. -->
@@ -75,10 +137,10 @@
       </a-entity>
     </a-entity>
 
-    <!-- Target 2: Hang. Replaced with the new Hang(1) animation and scaled/offset so the character sits over the scanned design at a similar visual size to the others. -->
+    <!-- Target 2: Hang. The app measures, centers, and scales this offset Maya export automatically after it loads. -->
     <a-entity id="target-hang" class="ar-target" data-name="HANG" mindar-image-target="targetIndex: 2">
       <a-entity class="model-wrapper" visible="false" position="0 -0.10 0.08">
-        <a-entity class="ar-model" gltf-model="#hangAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1" position="-20.8 -284.4 -24.4" rotation="0 0 0" scale="450 450 450"></a-entity>
+        <a-entity class="ar-model" gltf-model="#hangAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1" auto-fit-model="targetHeight: 1.65; bottomY: -0.72; zOffset: 0" position="0 0 0" rotation="0 0 0" scale="1 1 1"></a-entity>
       </a-entity>
     </a-entity>
 
@@ -232,7 +294,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=60'));
+    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=61'));
   }
 });
 </script>
