@@ -1,25 +1,5 @@
-const CACHE_NAME = 'lowxxy-ar-v25-multi-fixed';
-const APP_FILES = [
-  './',
-  './index.html',
-  './manifest.webmanifest?v=25',
-  './icons/lowxxy-character-192.png?v=25',
-  './icons/lowxxy-character-512.png?v=25',
-  './icons/lowxxy-logo-white.png',
-  './assets/grounded-gains.mind?v=25',
-  './assets/Lowxxy_AR_Scaled.glb?v=25',
-  './assets/grounded-gains.glb?v=25'
-];
-self.addEventListener('install', event => { self.skipWaiting(); event.waitUntil(caches.open(CACHE_NAME).then(async cache => { await Promise.allSettled(APP_FILES.map(file => cache.add(file))); })); });
-self.addEventListener('activate', event => { event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key)))).then(() => self.clients.claim())); });
-self.addEventListener('fetch', event => {
-  const request = event.request;
-  if (request.mode === 'navigate') {
-    event.respondWith(fetch(request).then(response => { const copy=response.clone(); caches.open(CACHE_NAME).then(cache => cache.put('./index.html', copy)); return response; }).catch(() => caches.match('./index.html')));
-    return;
-  }
-  event.respondWith(caches.match(request).then(cached => {
-    const network = fetch(request).then(response => { if (response && response.status === 200 && request.url.startsWith(self.location.origin)) { const copy=response.clone(); caches.open(CACHE_NAME).then(cache => cache.put(request, copy)); } return response; }).catch(() => cached);
-    return cached || network;
-  }));
-});
+const CACHE='lowxxy-ar-v27';
+const LOCAL=['./','./index.html','./manifest.webmanifest','./assets/grounded-gains.mind','./assets/grounded-gains.glb','./assets/Lowxxy_AR_Scaled.glb','./icons/lowxxy-logo-white.png','./icons/lowxxy-character-192.png','./icons/lowxxy-character-512.png'];
+self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(CACHE).then(c=>Promise.allSettled(LOCAL.map(u=>c.add(u)))))});
+self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
+self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;const u=new URL(e.request.url);if(u.origin!==location.origin){e.respondWith(fetch(e.request));return}if(e.request.mode==='navigate'||u.pathname.endsWith('/index.html')){e.respondWith(fetch(e.request).then(r=>{const c=r.clone();caches.open(CACHE).then(x=>x.put(e.request,c));return r}).catch(()=>caches.match('./index.html')));return}e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(n=>{const c=n.clone();caches.open(CACHE).then(x=>x.put(e.request,c));return n})))});
