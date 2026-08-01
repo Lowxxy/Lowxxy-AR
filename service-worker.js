@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lowxxy-ar-full-v115-rubberhose-ui';
+const CACHE_NAME = 'lowxxy-ar-full-v116-vintage-titlecard-ui';
 const APP_SHELL = [
   './',
   './index.html',
