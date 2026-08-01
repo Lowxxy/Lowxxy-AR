@@ -7,8 +7,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Lowxxy AR</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=118" />
-  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=118" />
+  <link rel="manifest" href="./manifest.webmanifest?v=119" />
+  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=119" />
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
@@ -185,9 +185,6 @@
     body.selfie-active #imageScene{display:block!important;position:fixed!important;inset:0!important;z-index:520!important;pointer-events:none;background:transparent!important}
     body.selfie-active #imageScene canvas{background:transparent!important}
     body.selfie-active video:not(#selfieVideo){opacity:0!important;visibility:hidden!important}
-    #shoulderGuide{position:fixed;z-index:720;left:13px;bottom:max(148px,calc(env(safe-area-inset-bottom) + 138px));
-      padding:8px 13px;border:2px solid #fff;border-radius:999px;background:rgba(0,0,0,.76);color:#fff;
-      font:900 10px/1 "Arial Rounded MT Bold",Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase;pointer-events:none}
     #selfieCallout{position:fixed;z-index:725;left:13px;right:13px;bottom:max(76px,calc(env(safe-area-inset-bottom) + 66px));
       max-width:390px;margin:auto;padding:10px 14px;border:2px solid #fff;border-radius:18px;background:rgba(0,0,0,.82);color:#fff;
       text-align:center;font:900 11px/1.35 "Arial Rounded MT Bold",Arial,sans-serif;letter-spacing:.04em;text-transform:uppercase}
@@ -216,12 +213,11 @@
   <button id="cameraFlipButton" class="hidden" aria-label="Flip camera" title="Flip camera">↺</button>
   <div id="selfieMode" class="hidden">
     <video id="selfieVideo" autoplay muted playsinline></video>
-    <div id="shoulderGuide">LOWXXY IS ON YOUR RIGHT SHOULDER!</div>
     <div id="selfieCallout">LET'S TAKE A PHOTO — BE SURE TO TAG US<br><a href="https://www.instagram.com/lowxxy.brand/" target="_blank" rel="noopener">@lowxxy.brand</a></div>
   </div>
 
   <a-scene id="imageScene"
-    mindar-image="imageTargetSrc: ./assets/targets.mind?v=118; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.00001; filterBeta: 0.0001; warmupTolerance: 15; missTolerance: 18;"
+    mindar-image="imageTargetSrc: ./assets/targets.mind?v=119; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.00001; filterBeta: 0.0001; warmupTolerance: 15; missTolerance: 18;"
     embedded
     color-space="sRGB"
     renderer="colorManagement: true; alpha: true; antialias: true; logarithmicDepthBuffer: true;"
@@ -229,15 +225,15 @@
     device-orientation-permission-ui="enabled:false">
 
     <a-camera position="0 0 0" near="0.01" far="1000" look-controls="enabled:false">
-      <a-entity id="shoulderLowxxy" visible="false" gltf-model="#shoulderLowxxyAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1" position="-0.48 -0.43 -1.15" rotation="0 0 0" scale="45 45 45"></a-entity>
+      <a-entity id="shoulderLowxxy" visible="false" gltf-model="#shoulderLowxxyAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1" position="0.42 -0.38 -1.15" rotation="0 0 0" scale="105 105 105"></a-entity>
     </a-camera>
 
     <a-assets timeout="90000">
-      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=118"></a-asset-item>
-      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=118"></a-asset-item>
-      <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=118"></a-asset-item>
-      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=118"></a-asset-item>
-      <a-asset-item id="shoulderLowxxyAsset" src="./assets/lowxxy-shoulder.glb?v=118"></a-asset-item>
+      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=119"></a-asset-item>
+      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=119"></a-asset-item>
+      <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=119"></a-asset-item>
+      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=119"></a-asset-item>
+      <a-asset-item id="shoulderLowxxyAsset" src="./assets/lowxxy-shoulder.glb?v=119"></a-asset-item>
     </a-assets>
 
     <!-- Target 0: Pop Art. Placed first in the scanner database so the dotted comic-book print gets priority over the similar regular Chainmail artwork. -->
@@ -301,7 +297,7 @@ window.addEventListener('DOMContentLoaded', () => {
       if (node.isMesh || node.isSkinnedMesh) {
         node.frustumCulled = false;
         const materials = Array.isArray(node.material) ? node.material : [node.material];
-        materials.filter(Boolean).forEach(material => { material.side = THREE.DoubleSide; material.needsUpdate = true; });
+        materials.filter(Boolean).forEach(material => { material.side = THREE.DoubleSide; material.depthTest = false; material.depthWrite = false; material.needsUpdate = true; node.renderOrder = 999; });
       }
     });
   });
@@ -483,7 +479,7 @@ window.addEventListener('DOMContentLoaded', () => {
       selfieActive = true;
       cameraFlipButton.classList.add('selfie-active');
       cameraFlipButton.textContent = '↻';
-      statusBar.textContent = 'LOWXXY IS ON YOUR RIGHT SHOULDER!';
+      statusBar.classList.add('hidden');
     } catch (error) {
       console.error(error);
       stopSelfieStream();
@@ -507,6 +503,7 @@ window.addEventListener('DOMContentLoaded', () => {
     selfieActive = false;
     cameraFlipButton.classList.remove('selfie-active');
     cameraFlipButton.textContent = '↺';
+    statusBar.classList.remove('hidden');
     statusBar.textContent = 'LOOKING FOR A LOWXXY DESIGN...';
     if (arSystem) await arSystem.start();
   };
@@ -552,7 +549,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=118'));
+    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=119'));
   }
 });
 </script>
