@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lowxxy-ar-full-v117-selfie-shoulder-vintage-titlecard-ui';
+const CACHE_NAME = 'lowxxy-ar-full-v118-real-shoulder-selfie-shoulder-vintage-titlecard-ui';
 const APP_SHELL = [
   './',
   './index.html',
@@ -8,6 +8,7 @@ const APP_SHELL = [
   './assets/grounded-gains.glb',
   './assets/hang-v77.glb',
   './assets/pop-art.glb',
+  './assets/lowxxy-shoulder.glb',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/lowxxy-character-192.png',
