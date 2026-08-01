@@ -2,46 +2,59 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#000000">
-<title>Lowxxy Shoulder Photo</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#111111">
+<title>Lowxxy Shoulder Camera</title>
 <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/GLTFLoader.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/face_detection.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/face_detection.js"></script>
 <style>
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000;font-family:"Cooper Black","Arial Rounded MT Bold",Arial,sans-serif}
-#video,#gl{position:fixed;inset:0;width:100%;height:100%}#video{object-fit:cover;transform:scaleX(-1);background:#000}#gl{pointer-events:none;z-index:2}
-#grain{position:fixed;inset:0;z-index:5;pointer-events:none;background:radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,.55) 100%);mix-blend-mode:multiply}
-#grain:after{content:"";position:absolute;inset:-30%;opacity:.13;background-image:radial-gradient(#fff 0 .7px,transparent 1px);background-size:11px 13px;animation:g .18s steps(2) infinite}@keyframes g{to{transform:translate(3%,-2%)}}
-.control{position:fixed;z-index:20;width:58px;height:58px;border-radius:50%;border:3px solid #fff;background:#111;color:#fff;font-size:27px;box-shadow:0 3px 0 #777;display:grid;place-items:center}
-#back{top:max(14px,env(safe-area-inset-top));left:14px}#shoot{bottom:max(24px,calc(env(safe-area-inset-bottom) + 18px));left:50%;transform:translateX(-50%);width:76px;height:76px;font-size:35px}
-#flip{top:max(14px,env(safe-area-inset-top));right:14px}
-#msg{position:fixed;z-index:15;left:12px;right:12px;bottom:max(112px,calc(env(safe-area-inset-bottom) + 105px));padding:11px 14px;text-align:center;color:#fff;background:rgba(0,0,0,.72);border:2px solid #fff;border-radius:18px;font-size:14px;letter-spacing:.04em;text-shadow:1px 1px #000}
-#msg a{color:#fff;text-decoration:underline}.hidden{display:none!important}#status{position:fixed;z-index:15;top:max(84px,calc(env(safe-area-inset-top) + 74px));left:50%;transform:translateX(-50%);padding:7px 13px;border-radius:20px;background:rgba(0,0,0,.72);color:#fff;font-size:12px;white-space:nowrap;border:1px solid #fff}
-#toast{position:fixed;z-index:40;left:50%;top:50%;transform:translate(-50%,-50%) scale(.8);padding:15px 20px;background:#050505;color:#fff;border:3px solid #fff;border-radius:18px;opacity:0;transition:.2s;pointer-events:none}#toast.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000;font-family:Arial Black,Arial,sans-serif}
+#camera,#threeCanvas{position:fixed;inset:0;width:100%;height:100%}#camera{object-fit:cover;transform:scaleX(-1);background:#000}#threeCanvas{z-index:2;pointer-events:none}
+#grain{position:fixed;inset:0;z-index:3;pointer-events:none;opacity:.14;background-image:radial-gradient(#fff 0.65px,transparent .8px),radial-gradient(#000 .7px,transparent .9px);background-position:0 0,5px 5px;background-size:8px 8px;mix-blend-mode:overlay;animation:flicker .18s infinite alternate}@keyframes flicker{from{opacity:.10}to{opacity:.17}}
+#topTitle{position:fixed;z-index:5;left:18px;right:18px;top:max(16px,env(safe-area-inset-top));text-align:center;background:#171717;color:#fff;border:4px solid #eee;border-radius:999px;padding:12px 70px;font-size:17px;letter-spacing:1px;box-shadow:0 0 0 3px #171717}
+.control{position:fixed;z-index:7;border:4px solid #eee;background:#171717;color:#fff;border-radius:50%;box-shadow:0 0 0 3px #171717,0 6px 0 rgba(0,0,0,.45);font-weight:900;display:grid;place-items:center;padding:0}.control:active{transform:translateY(3px)}
+#back{left:20px;top:max(26px,calc(env(safe-area-inset-top) + 10px));width:52px;height:52px;font-size:28px}#side{right:20px;top:max(26px,calc(env(safe-area-inset-top) + 10px));width:52px;height:52px;font-size:24px}
+#shoot{left:50%;bottom:max(118px,calc(env(safe-area-inset-bottom) + 106px));transform:translateX(-50%);width:78px;height:78px;font-size:44px;color:#fff}#shoot:active{transform:translateX(-50%) translateY(3px)}
+#message{position:fixed;z-index:6;left:18px;right:18px;bottom:max(20px,env(safe-area-inset-bottom));background:rgba(18,18,18,.9);color:#fff;border:4px solid #eee;border-radius:28px;padding:15px 18px;text-align:center;font-size:16px;line-height:1.35;box-shadow:0 0 0 3px #171717}#message a{display:block;color:#fff;font-size:23px;margin-top:5px;text-underline-offset:4px}
+#toast{position:fixed;z-index:9;left:50%;top:50%;transform:translate(-50%,-50%) scale(.85);opacity:0;background:#171717;color:#fff;border:4px solid #eee;border-radius:999px;padding:17px 24px;font-weight:900;transition:.2s;pointer-events:none}#toast.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
 </style>
 </head>
 <body>
-<video id="video" autoplay muted playsinline></video><canvas id="gl"></canvas><div id="grain"></div>
-<button id="back" class="control" aria-label="Back to scanner">←</button><button id="flip" class="control" aria-label="Flip shoulder side">↔</button><button id="shoot" class="control" aria-label="Take photo">●</button>
-<div id="status">LOOKING FOR YOUR FACE...</div>
-<div id="msg">LET'S TAKE A PHOTO — BE SURE TO TAG US<br><a href="https://www.instagram.com/lowxxy.brand/" target="_blank" rel="noopener">@lowxxy.brand</a></div><div id="toast">PHOTO READY!</div>
+<video id="camera" autoplay muted playsinline></video><canvas id="threeCanvas"></canvas><div id="grain"></div>
+<div id="topTitle">LOWXXY SELFIE CAMERA</div>
+<button id="back" class="control" aria-label="Back">←</button><button id="side" class="control" aria-label="Switch shoulder">↔</button><button id="shoot" class="control" aria-label="Take photo">●</button>
+<div id="message">LET'S TAKE A PHOTO — BE SURE TO TAG US<a href="https://www.instagram.com/lowxxy.brand/" target="_blank" rel="noopener">@LOWXXY.BRAND</a></div><div id="toast">PHOTO READY!</div>
 <script>
-(async()=>{
-const video=document.querySelector('#video'), canvas=document.querySelector('#gl'), status=document.querySelector('#status'), toast=document.querySelector('#toast');
-const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true,preserveDrawingBuffer:true});renderer.setClearColor(0x000000,0);renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.outputEncoding=THREE.sRGBEncoding;
-const scene=new THREE.Scene();const camera=new THREE.OrthographicCamera(-1,1,1,-1,0.01,100);camera.position.z=5;
-scene.add(new THREE.HemisphereLight(0xffffff,0x555555,2.4));const dl=new THREE.DirectionalLight(0xffffff,2.0);dl.position.set(2,3,4);scene.add(dl);
-let model=null,mixer=null,clock=new THREE.Clock(),face=null,side=-1,stream=null,detectBusy=false;
-function resize(){const w=innerWidth,h=innerHeight,aspect=w/h;renderer.setSize(w,h,false);camera.left=-aspect;camera.right=aspect;camera.top=1;camera.bottom=-1;camera.updateProjectionMatrix();place();}addEventListener('resize',resize);
-function place(){if(!model)return;const aspect=innerWidth/innerHeight;let x=side<0?-aspect*.48:aspect*.48,y=-.18,s=.48;if(face){const b=face;const fx=(b.xCenter-.5)*2*aspect;const fy=(.5-b.yCenter)*2;const shoulderOffset=Math.max(.34,b.width*aspect*.9);x=fx+(side<0?-shoulderOffset:shoulderOffset);y=fy-b.height*.70;s=Math.max(.38,Math.min(.72,b.height*1.55));}model.position.set(x,y,0);model.scale.setScalar(s);}
-new THREE.GLTFLoader().load('./assets/lowxxy-shoulder.glb?v=124',g=>{model=g.scene;scene.add(model);const box=new THREE.Box3().setFromObject(model),size=new THREE.Vector3();box.getSize(size);const center=new THREE.Vector3();box.getCenter(center);model.position.sub(center);const norm=1/Math.max(size.y,.00001);model.scale.setScalar(norm);const holder=new THREE.Group();scene.remove(model);holder.add(model);model=holder;scene.add(model);if(g.animations&&g.animations.length){mixer=new THREE.AnimationMixer(g.scene);g.animations.forEach(c=>mixer.clipAction(c).play());}place();status.textContent='LOWXXY IS READY!';},undefined,e=>{console.error(e);status.textContent='LOWXXY MODEL COULD NOT LOAD';});
-function animate(){requestAnimationFrame(animate);const dt=clock.getDelta();if(mixer)mixer.update(dt);place();renderer.render(scene,camera);}animate();resize();
-try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:1920},height:{ideal:1080}},audio:false});video.srcObject=stream;await video.play();}catch(e){status.textContent='FRONT CAMERA COULD NOT START';console.error(e);}
-try{const fd=new FaceDetection({locateFile:f=>`https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/${f}`});fd.setOptions({model:'short',minDetectionConfidence:.45,selfieMode:true});fd.onResults(r=>{const d=r.detections&&r.detections[0];if(d&&d.locationData&&d.locationData.relativeBoundingBox){face=d.locationData.relativeBoundingBox;status.textContent='FACE FOUND — LOWXXY IS ON YOUR SHOULDER';}else{face=null;status.textContent='LOOKING FOR YOUR FACE...';}});async function loop(){if(video.readyState>=2&&!detectBusy){detectBusy=true;try{await fd.send({image:video})}catch(e){console.warn(e)}detectBusy=false}setTimeout(loop,100)}loop();}catch(e){console.warn('Face detector unavailable; using fixed shoulder placement.',e);status.textContent='LOWXXY IS READY!';}
-document.querySelector('#flip').onclick=()=>{side*=-1;place()};document.querySelector('#back').onclick=()=>{if(stream)stream.getTracks().forEach(t=>t.stop());location.href='./index.html?v=124'};
-function drawCover(ctx,source,w,h,mirror){const sw=source.videoWidth||source.width,sh=source.videoHeight||source.height;if(!sw||!sh)return;const scale=Math.max(w/sw,h/sh),dw=sw*scale,dh=sh*scale,dx=(w-dw)/2,dy=(h-dh)/2;ctx.save();if(mirror){ctx.translate(w,0);ctx.scale(-1,1);ctx.drawImage(source,w-dx-dw,dy,dw,dh)}else ctx.drawImage(source,dx,dy,dw,dh);ctx.restore()}
-document.querySelector('#shoot').onclick=async()=>{if(video.readyState<2)return;renderer.render(scene,camera);const w=video.videoWidth||1280,h=video.videoHeight||720;const out=document.createElement('canvas');out.width=w;out.height=h;const c=out.getContext('2d');drawCover(c,video,w,h,true);c.drawImage(canvas,0,0,w,h);c.fillStyle='rgba(0,0,0,.72)';c.fillRect(0,h-70,w,70);c.fillStyle='#fff';c.textAlign='center';c.font=`bold ${Math.max(24,w*.03)}px Arial`;c.fillText('@LOWXXY.BRAND',w/2,h-24);const blob=await new Promise(r=>out.toBlob(r,'image/png',.95));if(!blob)return;const file=new File([blob],`lowxxy-${Date.now()}.png`,{type:'image/png'});try{if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]}))await navigator.share({files:[file],title:'Lowxxy Shoulder Photo'});else{const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=file.name;a.click();setTimeout(()=>URL.revokeObjectURL(u),4000)}}catch(e){if(e.name!=='AbortError')console.error(e)}toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1200)};
-})();
-</script>
-</body></html>
+const video=document.querySelector('#camera'),canvas=document.querySelector('#threeCanvas'),toast=document.querySelector('#toast');
+let stream=null,holder=null,mixer=null,faceBox=null,detectBusy=false,side=-1;
+const scene=new THREE.Scene();
+const camera=new THREE.OrthographicCamera(-1,1,1,-1,.01,100);camera.position.set(0,0,10);camera.lookAt(0,0,0);
+const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true,preserveDrawingBuffer:true});renderer.setClearColor(0x000000,0);renderer.outputEncoding=THREE.sRGBEncoding;renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+scene.add(new THREE.HemisphereLight(0xffffff,0x444444,2.5));const key=new THREE.DirectionalLight(0xffffff,3);key.position.set(2,3,5);scene.add(key);const fill=new THREE.DirectionalLight(0xffffff,1.5);fill.position.set(-3,1,4);scene.add(fill);
+function resize(){const w=innerWidth,h=innerHeight,aspect=w/h;camera.left=-aspect;camera.right=aspect;camera.top=1;camera.bottom=-1;camera.updateProjectionMatrix();renderer.setSize(w,h,false);placeModel()}addEventListener('resize',resize);
+function placeModel(){if(!holder)return;const aspect=innerWidth/innerHeight;let x=side<0?-aspect*.50:aspect*.50,y=-.36,s=.70;if(faceBox){const cx=faceBox.xCenter,cy=faceBox.yCenter;const fx=(cx-.5)*2*aspect,fy=(.5-cy)*2;const shoulderOffset=Math.max(.26,faceBox.width*aspect*.78);x=fx+(side<0?-shoulderOffset:shoulderOffset);y=fy-faceBox.height*.83;s=Math.max(.48,Math.min(.92,faceBox.height*1.8));}holder.position.set(x,y,0);holder.scale.setScalar(s);holder.rotation.y=side<0?0:Math.PI;}
+new THREE.GLTFLoader().load('./assets/lowxxy-shoulder.glb?v=200',g=>{
+  holder=new THREE.Group();
+  const model=g.scene;
+  // This GLB uses Z-up. Rotate it so the character stands upright in the browser's Y-up scene.
+  model.rotation.x=-Math.PI/2;
+  model.updateMatrixWorld(true);
+  let box=new THREE.Box3().setFromObject(model),size=new THREE.Vector3(),center=new THREE.Vector3();box.getSize(size);box.getCenter(center);
+  model.position.sub(center);
+  model.updateMatrixWorld(true);
+  box=new THREE.Box3().setFromObject(model);box.getSize(size);
+  const normalizer=1/Math.max(size.y,.000001);model.scale.setScalar(normalizer);
+  holder.add(model);scene.add(holder);
+  if(g.animations&&g.animations.length){mixer=new THREE.AnimationMixer(model);g.animations.forEach(clip=>mixer.clipAction(clip).reset().play())}
+  placeModel();
+},undefined,error=>{console.error('Shoulder GLB failed to load',error);document.querySelector('#topTitle').textContent='MODEL FAILED TO LOAD';});
+async function startCamera(){try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:1920},height:{ideal:1080}},audio:false});video.srcObject=stream;await video.play()}catch(error){console.error(error);document.querySelector('#topTitle').textContent='CAMERA PERMISSION NEEDED'}}
+async function startFaceDetection(){try{const detector=new FaceDetection({locateFile:file=>`https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/${file}`});detector.setOptions({model:'short',minDetectionConfidence:.45,selfieMode:true});detector.onResults(results=>{const detection=results.detections&&results.detections[0];faceBox=detection?.locationData?.relativeBoundingBox||null;placeModel()});async function loop(){if(video.readyState>=2&&!detectBusy){detectBusy=true;try{await detector.send({image:video})}catch(e){console.warn(e)}detectBusy=false}setTimeout(loop,120)}loop()}catch(error){console.warn('Face detection unavailable; fixed shoulder placement will be used.',error)}}
+const clock=new THREE.Clock();function animate(){requestAnimationFrame(animate);const dt=clock.getDelta();if(mixer)mixer.update(dt);renderer.render(scene,camera)}
+function drawCover(ctx,source,w,h,mirror){const sw=source.videoWidth||source.width,sh=source.videoHeight||source.height;if(!sw||!sh)return;const scale=Math.max(w/sw,h/sh),dw=sw*scale,dh=sh*scale,dx=(w-dw)/2,dy=(h-dh)/2;ctx.save();if(mirror){ctx.translate(w,0);ctx.scale(-1,1);ctx.drawImage(source,-dx-dw,dy,dw,dh)}else ctx.drawImage(source,dx,dy,dw,dh);ctx.restore()}
+async function savePhoto(){if(video.readyState<2)return;renderer.render(scene,camera);const w=video.videoWidth||1280,h=video.videoHeight||720,out=document.createElement('canvas');out.width=w;out.height=h;const ctx=out.getContext('2d');drawCover(ctx,video,w,h,true);ctx.drawImage(canvas,0,0,w,h);const footer=Math.max(70,h*.085);ctx.fillStyle='rgba(0,0,0,.74)';ctx.fillRect(0,h-footer,w,footer);ctx.fillStyle='#fff';ctx.textAlign='center';ctx.font=`900 ${Math.max(26,w*.035)}px Arial`;ctx.fillText('@LOWXXY.BRAND',w/2,h-footer*.34);const blob=await new Promise(r=>out.toBlob(r,'image/png',.96));if(!blob)return;const file=new File([blob],`lowxxy-selfie-${Date.now()}.png`,{type:'image/png'});toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1200);try{if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]}))await navigator.share({files:[file],title:'Lowxxy Shoulder Photo'});else{const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=file.name;a.click();setTimeout(()=>URL.revokeObjectURL(url),5000)}}catch(e){if(e.name!=='AbortError')console.error(e)}}
+document.querySelector('#back').onclick=()=>location.href='./index.html?v=200';document.querySelector('#side').onclick=()=>{side*=-1;placeModel()};document.querySelector('#shoot').onclick=savePhoto;
+resize();startCamera().then(startFaceDetection);animate();
+addEventListener('pagehide',()=>{if(stream)stream.getTracks().forEach(t=>t.stop())});
+</script></body></html>
