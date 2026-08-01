@@ -7,8 +7,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Lowxxy AR</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=119" />
-  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=119" />
+  <link rel="manifest" href="./manifest.webmanifest?v=120" />
+  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=120" />
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
@@ -180,6 +180,18 @@
       border:3px solid #050505;box-shadow:0 0 0 2px #fff,0 5px 0 #555,0 8px 14px rgba(0,0,0,.65)
     }
     #cameraFlipButton.selfie-active{background:#111;color:#fff;border-color:#fff}
+    #photoButton{
+      position:fixed;z-index:985;right:14px;bottom:max(88px,calc(env(safe-area-inset-bottom) + 78px));
+      width:58px;min-height:58px;padding:0;border-radius:50%;font-size:25px;line-height:1;
+      display:flex;align-items:center;justify-content:center;background:#f2f0e8;color:#050505;
+      border:4px solid #050505;box-shadow:0 0 0 3px #fff,0 5px 0 #555,0 8px 14px rgba(0,0,0,.65)
+    }
+    #photoButton:active{transform:translateY(3px);box-shadow:0 0 0 3px #fff,0 2px 0 #555}
+    #photoToast{position:fixed;z-index:1200;left:50%;top:50%;transform:translate(-50%,-50%) scale(.85);
+      padding:13px 20px;border:3px solid #fff;border-radius:999px;background:rgba(0,0,0,.9);color:#fff;
+      font:900 13px/1.1 "Arial Rounded MT Bold",Arial,sans-serif;letter-spacing:.06em;text-transform:uppercase;
+      opacity:0;pointer-events:none;transition:opacity .18s ease,transform .18s ease}
+    #photoToast.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
     #selfieMode{position:fixed;inset:0;z-index:450;background:#000;overflow:hidden}
     #selfieVideo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
     body.selfie-active #imageScene{display:block!important;position:fixed!important;inset:0!important;z-index:520!important;pointer-events:none;background:transparent!important}
@@ -211,13 +223,15 @@
 
 
   <button id="cameraFlipButton" class="hidden" aria-label="Flip camera" title="Flip camera">↺</button>
+  <button id="photoButton" class="hidden" aria-label="Take photo" title="Take photo">●</button>
+  <div id="photoToast">PHOTO READY!</div>
   <div id="selfieMode" class="hidden">
     <video id="selfieVideo" autoplay muted playsinline></video>
     <div id="selfieCallout">LET'S TAKE A PHOTO — BE SURE TO TAG US<br><a href="https://www.instagram.com/lowxxy.brand/" target="_blank" rel="noopener">@lowxxy.brand</a></div>
   </div>
 
   <a-scene id="imageScene"
-    mindar-image="imageTargetSrc: ./assets/targets.mind?v=119; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.00001; filterBeta: 0.0001; warmupTolerance: 15; missTolerance: 18;"
+    mindar-image="imageTargetSrc: ./assets/targets.mind?v=120; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.00001; filterBeta: 0.0001; warmupTolerance: 15; missTolerance: 18;"
     embedded
     color-space="sRGB"
     renderer="colorManagement: true; alpha: true; antialias: true; logarithmicDepthBuffer: true;"
@@ -225,15 +239,15 @@
     device-orientation-permission-ui="enabled:false">
 
     <a-camera position="0 0 0" near="0.01" far="1000" look-controls="enabled:false">
-      <a-entity id="shoulderLowxxy" visible="false" gltf-model="#shoulderLowxxyAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1" position="0.42 -0.38 -1.15" rotation="0 0 0" scale="105 105 105"></a-entity>
+      <a-entity id="shoulderLowxxy" visible="false" gltf-model="#shoulderLowxxyAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1" position="0.48 0.48 -1.15" rotation="0 0 0" scale="82 82 82"></a-entity>
     </a-camera>
 
     <a-assets timeout="90000">
-      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=119"></a-asset-item>
-      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=119"></a-asset-item>
-      <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=119"></a-asset-item>
-      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=119"></a-asset-item>
-      <a-asset-item id="shoulderLowxxyAsset" src="./assets/lowxxy-shoulder.glb?v=119"></a-asset-item>
+      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=120"></a-asset-item>
+      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=120"></a-asset-item>
+      <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=120"></a-asset-item>
+      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=120"></a-asset-item>
+      <a-asset-item id="shoulderLowxxyAsset" src="./assets/lowxxy-shoulder.glb?v=120"></a-asset-item>
     </a-assets>
 
     <!-- Target 0: Pop Art. Placed first in the scanner database so the dotted comic-book print gets priority over the similar regular Chainmail artwork. -->
@@ -272,6 +286,8 @@
 window.addEventListener('DOMContentLoaded', () => {
   const scene = document.querySelector('#imageScene');
   const cameraFlipButton = document.querySelector('#cameraFlipButton');
+  const photoButton = document.querySelector('#photoButton');
+  const photoToast = document.querySelector('#photoToast');
   const selfieMode = document.querySelector('#selfieMode');
   const selfieVideo = document.querySelector('#selfieVideo');
   const shoulderLowxxy = document.querySelector('#shoulderLowxxy');
@@ -453,6 +469,96 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  const drawVideoCover = (ctx, video, width, height, mirror = false) => {
+    if (!video || video.readyState < 2 || !video.videoWidth || !video.videoHeight) return false;
+    const sourceRatio = video.videoWidth / video.videoHeight;
+    const targetRatio = width / height;
+    let sx = 0, sy = 0, sw = video.videoWidth, sh = video.videoHeight;
+    if (sourceRatio > targetRatio) {
+      sw = video.videoHeight * targetRatio;
+      sx = (video.videoWidth - sw) / 2;
+    } else {
+      sh = video.videoWidth / targetRatio;
+      sy = (video.videoHeight - sh) / 2;
+    }
+    ctx.save();
+    if (mirror) {
+      ctx.translate(width, 0);
+      ctx.scale(-1, 1);
+    }
+    ctx.drawImage(video, sx, sy, sw, sh, 0, 0, width, height);
+    ctx.restore();
+    return true;
+  };
+
+  const showPhotoToast = message => {
+    photoToast.textContent = message;
+    photoToast.classList.add('show');
+    setTimeout(() => photoToast.classList.remove('show'), 1500);
+  };
+
+  const takePhoto = async () => {
+    photoButton.disabled = true;
+    try {
+      const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+      const width = Math.round(window.innerWidth * pixelRatio);
+      const height = Math.round(window.innerHeight * pixelRatio);
+      const output = document.createElement('canvas');
+      output.width = width;
+      output.height = height;
+      const ctx = output.getContext('2d');
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, 0, width, height);
+
+      let video = selfieActive ? selfieVideo : null;
+      if (!video) {
+        video = [...document.querySelectorAll('video')].find(item => item !== selfieVideo && item.srcObject && item.readyState >= 2);
+      }
+      drawVideoCover(ctx, video, width, height, selfieActive);
+
+      const arCanvas = scene.canvas || scene.querySelector('canvas');
+      if (arCanvas && arCanvas.width && arCanvas.height) {
+        ctx.drawImage(arCanvas, 0, 0, width, height);
+      }
+
+      // Small vintage footer so shared photos point back to the brand.
+      ctx.save();
+      ctx.fillStyle = 'rgba(0,0,0,.66)';
+      ctx.fillRect(0, height - Math.round(42 * pixelRatio), width, Math.round(42 * pixelRatio));
+      ctx.fillStyle = '#fff';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.font = `900 ${Math.round(15 * pixelRatio)}px Arial`;
+      ctx.fillText('@LOWXXY.BRAND', width / 2, height - Math.round(21 * pixelRatio));
+      ctx.restore();
+
+      const blob = await new Promise(resolve => output.toBlob(resolve, 'image/png', 0.95));
+      if (!blob) throw new Error('Could not create photo');
+      const file = new File([blob], `lowxxy-${Date.now()}.png`, { type: 'image/png' });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file], title: 'Lowxxy AR Photo', text: 'Tag @lowxxy.brand' });
+        showPhotoToast('PHOTO READY!');
+      } else {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = file.name;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 5000);
+        showPhotoToast('PHOTO SAVED!');
+      }
+    } catch (error) {
+      console.error(error);
+      if (error?.name !== 'AbortError') showPhotoToast('PHOTO FAILED — TRY AGAIN');
+    } finally {
+      photoButton.disabled = false;
+    }
+  };
+
+  photoButton.addEventListener('click', takePhoto);
+
   const stopSelfieStream = () => {
     if (selfieStream) selfieStream.getTracks().forEach(track => track.stop());
     selfieStream = null;
@@ -532,6 +638,7 @@ window.addEventListener('DOMContentLoaded', () => {
     shopBar.classList.remove('hidden');
     scanFrame.classList.remove('hidden');
     cameraFlipButton.classList.remove('hidden');
+    photoButton.classList.remove('hidden');
     try {
       await arSystem.start();
     } catch (error) {
@@ -541,6 +648,7 @@ window.addEventListener('DOMContentLoaded', () => {
       shopBar.classList.add('hidden');
       scanFrame.classList.add('hidden');
       cameraFlipButton.classList.add('hidden');
+      photoButton.classList.add('hidden');
       errorText.style.display = 'block';
       errorText.textContent = 'Camera or scanner could not start. Allow camera access, confirm targets.mind was uploaded, then refresh.';
       startButton.disabled = false;
@@ -549,7 +657,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=119'));
+    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=120'));
   }
 });
 </script>
