@@ -6,19 +6,20 @@
   <meta name="theme-color" content="#000000" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <title>Lowxxy AR - Hang</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=71" />
+  <title>Lowxxy AR</title>
+  <link rel="manifest" href="./manifest.webmanifest?v=72" />
+  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=72" />
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
-  <style>
+ <style>
     :root{color-scheme:dark;font-family:Arial,Helvetica,sans-serif}
     *{box-sizing:border-box}
     html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#000}
     #app,a-scene{position:fixed;inset:0;width:100%;height:100%}
     .overlay{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:24px;background:radial-gradient(circle at 50% 30%,rgba(255,255,255,.08),transparent 40%),#000;text-align:center}
     .panel{width:min(460px,100%);padding:30px 24px;border:1px solid rgba(255,255,255,.18);border-radius:24px;background:rgba(10,10,10,.94);box-shadow:0 20px 60px rgba(0,0,0,.55)}
-    h1{margin:0 0 12px;font-size:32px;letter-spacing:.06em}
+    .brand-logo{display:block;width:min(340px,100%);height:auto;margin:0 auto 14px}
     .subtitle{margin:0 0 22px;color:rgba(255,255,255,.75);font-size:16px;line-height:1.5}
     .button-stack{display:flex;flex-direction:column;gap:12px}
     button{width:100%;min-height:54px;border:0;border-radius:999px;padding:14px 22px;background:#fff;color:#000;font:inherit;font-weight:800;letter-spacing:.05em;cursor:pointer}
@@ -35,29 +36,56 @@
 <body>
 <div id="app">
   <div id="startOverlay" class="overlay"><div class="panel">
-    <h1>LOWXXY AR</h1>
-    <p class="subtitle">Fresh Hang-only build. Scan the Hang design to unlock its 3D animation.</p>
+    <img class="brand-logo" src="./icons/lowxxy-logo-white.png" alt="Lowxxy" />
+    <p class="subtitle">Scan any of the four Lowxxy designs to unlock its matching 3D animation.</p>
     <div class="button-stack"><button id="installButton" class="secondary">INSTALL LOWXXY APP</button><button id="startButton">START AR</button></div>
     <p id="installHelp"></p><p id="errorText"></p>
   </div></div>
-  <div id="statusBar" class="hidden">Point the camera at the full Hang design</div>
+  <div id="statusBar" class="hidden">Point the camera at a full Lowxxy design</div>
   <div id="shopBar" class="hidden"><div class="shop-copy"><span class="shop-title">Want to see more?</span><span class="shop-subtitle">Explore the latest Lowxxy designs.</span></div><button id="shopButton" class="shop-button">SHOP LOWXXY</button></div>
 
   <a-scene
-    mindar-image="imageTargetSrc: ./assets/targets-v71.mind?v=71; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.0001; filterBeta: 0.001; warmupTolerance: 8; missTolerance: 10;"
-    embedded color-space="sRGB"
+    mindar-image="imageTargetSrc: ./assets/targets.mind?v=72; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.0001; filterBeta: 0.001; warmupTolerance: 8; missTolerance: 10;"
+    embedded
+    color-space="sRGB"
     renderer="colorManagement: true; alpha: true; antialias: true; logarithmicDepthBuffer: true;"
-    vr-mode-ui="enabled:false" device-orientation-permission-ui="enabled:false">
+    vr-mode-ui="enabled:false"
+    device-orientation-permission-ui="enabled:false">
 
     <a-camera position="0 0 0" near="0.01" far="1000" look-controls="enabled:false"></a-camera>
 
     <a-assets timeout="90000">
-      <a-asset-item id="hangAsset" src="./assets/hang-v71.glb?v=71"></a-asset-item>
+      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=72"></a-asset-item>
+      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=72"></a-asset-item>
+      <a-asset-item id="hangAsset" src="./assets/hang-visible-v72.glb?v=72"></a-asset-item>
+      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=72"></a-asset-item>
     </a-assets>
 
-    <a-entity id="target-hang" class="ar-target" data-name="HANG" mindar-image-target="targetIndex: 0">
-      <a-entity class="model-wrapper" visible="false" position="0 -0.05 0.08">
-        <a-entity class="ar-model" gltf-model="#hangAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1" position="0.000001 0.00615 -0.001433" rotation="0 28 0" scale="6500000 6500000 6500000"></a-entity>
+    <!-- Target 0: Pop Art. Placed first in the scanner database so the dotted comic-book print gets priority over the similar regular Chainmail artwork. -->
+    <a-entity id="target-pop-art" class="ar-target" data-name="POP ART" mindar-image-target="targetIndex: 0">
+      <a-entity class="model-wrapper" visible="false" position="0 -0.08 0.07">
+        <a-entity class="ar-model" gltf-model="#popArtAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1" position="-0.193 -0.238 0" rotation="0 0 0" scale="3.4 3.4 3.4"></a-entity>
+      </a-entity>
+    </a-entity>
+
+    <!-- Target 1: Grounded Gains. Enlarged aggressively and centered over its taller artwork. -->
+    <a-entity id="target-grounded-gains" class="ar-target" data-name="GROUNDED GAINS" mindar-image-target="targetIndex: 1">
+      <a-entity class="model-wrapper" visible="false" position="0 -0.12 0.08">
+        <a-entity class="ar-model" gltf-model="#groundedGainsAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1" position="0 -0.28 0" rotation="0 0 0" scale="1.55 1.55 1.55"></a-entity>
+      </a-entity>
+    </a-entity>
+
+    <!-- Target 2: Hang. Replaced with Hang(3).glb, scaled extremely large, and recentered over the design using its tiny local bounds. -->
+    <a-entity id="target-hang" class="ar-target" data-name="HANG" mindar-image-target="targetIndex: 2">
+      <a-entity class="model-wrapper" visible="false" position="0 -0.03 0.08">
+        <a-entity class="ar-model" gltf-model="#hangAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1" position="0.000001 0.006571 -0.001433" rotation="0 0 0" scale="2200000 2200000 2200000"></a-entity>
+      </a-entity>
+    </a-entity>
+
+    <!-- Target 3: Chainmail. Intentionally mapped to the Pop Art animation so both similar designs now trigger the Pop Art experience. -->
+    <a-entity id="target-chainmail" class="ar-target" data-name="CHAINMAIL" mindar-image-target="targetIndex: 3">
+      <a-entity class="model-wrapper" visible="false" position="0 -0.08 0.07">
+        <a-entity class="ar-model" gltf-model="#popArtAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1" position="-0.193 -0.238 0" rotation="0 0 0" scale="3.4 3.4 3.4"></a-entity>
       </a-entity>
     </a-entity>
 
@@ -76,9 +104,11 @@ window.addEventListener('DOMContentLoaded', () => {
   const shopBar = document.querySelector('#shopBar');
   const shopButton = document.querySelector('#shopButton');
   const errorText = document.querySelector('#errorText');
-  const target = document.querySelector('#target-hang');
+  const targets = [...document.querySelectorAll('.ar-target')];
   let arSystem = null;
   let deferredInstallPrompt = null;
+  let loadedModels = 0;
+
   const isStandalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
   const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
   const isAndroid = /android/i.test(navigator.userAgent);
@@ -98,37 +128,47 @@ window.addEventListener('DOMContentLoaded', () => {
       deferredInstallPrompt = null;
       return;
     }
-    installHelp.textContent = isIOS ? 'In Safari, tap Share, then Add to Home Screen, then Add.' : isAndroid ? 'Use Chrome’s three-dot menu and choose Install app or Add to Home screen.' : 'Use your browser’s install option.';
+    installHelp.textContent = isIOS
+      ? 'In Safari, tap Share, then Add to Home Screen, then Add.'
+      : isAndroid
+      ? 'Use Chrome’s three-dot menu and choose Install app or Add to Home screen.'
+      : 'Use your browser’s install option.';
   });
 
   shopButton.addEventListener('click', () => { location.href = 'https://lowxxy.myshopify.com'; });
   scene.addEventListener('loaded', () => { arSystem = scene.systems['mindar-image-system']; });
 
-  const model = document.querySelector('.ar-model');
-  model.addEventListener('model-loaded', () => {
-    const modelObject = model.getObject3D('mesh');
-    if (modelObject) {
-      modelObject.traverse(node => {
-        if (node.isMesh || node.isSkinnedMesh) {
-          node.frustumCulled = false;
-          const materials = Array.isArray(node.material) ? node.material : [node.material];
-          materials.filter(Boolean).forEach(material => {
-            material.side = THREE.DoubleSide;
-            material.needsUpdate = true;
-          });
-        }
-      });
-    }
-    console.log('Hang AR model loaded');
-  });
-  model.addEventListener('model-error', event => {
-    console.error('Model error', event);
-    errorText.style.display = 'block';
-    errorText.textContent = 'The Hang 3D animation could not load. Confirm hang-v71.glb is inside the assets folder.';
+  document.querySelectorAll('.ar-model').forEach(model => {
+    model.addEventListener('model-loaded', () => {
+      loadedModels += 1;
+
+      // Animated skinned meshes can otherwise disappear when a moving limb
+      // leaves the mesh's original static bounding box. Keep every model part
+      // renderable for the full animation and show both sides of thin geometry.
+      const modelObject = model.getObject3D('mesh');
+      if (modelObject) {
+        modelObject.traverse(node => {
+          if (node.isMesh || node.isSkinnedMesh) {
+            node.frustumCulled = false;
+            const materials = Array.isArray(node.material) ? node.material : [node.material];
+            materials.filter(Boolean).forEach(material => {
+              material.side = THREE.DoubleSide;
+              material.needsUpdate = true;
+            });
+          }
+        });
+      }
+
+      console.log('Loaded AR model', loadedModels, 'of 4');
+    });
+    model.addEventListener('model-error', event => {
+      console.error('Model error', event);
+      errorText.style.display = 'block';
+      errorText.textContent = 'One of the 3D animations could not load. Confirm all four GLB files are inside the assets folder.';
+    });
   });
 
-  const wrapper = target.querySelector('.model-wrapper');
-  const restartAnimation = () => {
+  const restartAnimation = model => {
     const mixer = model.components['animation-mixer'];
     if (mixer && mixer.mixer) {
       mixer.mixer.stopAllAction();
@@ -138,19 +178,28 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  target.addEventListener('targetFound', () => {
-    restartAnimation();
-    wrapper.removeAttribute('animation__popout');
-    wrapper.setAttribute('visible', true);
-    wrapper.setAttribute('scale', '0.78 0.78 0.78');
-    requestAnimationFrame(() => wrapper.setAttribute('animation__popout', 'property: scale; from: 0.78 0.78 0.78; to: 1 1 1; dur: 650; easing: easeOutBack'));
-    statusBar.textContent = 'HANG UNLOCKED';
-  });
-
-  target.addEventListener('targetLost', () => {
-    wrapper.setAttribute('visible', false);
-    wrapper.removeAttribute('animation__popout');
-    statusBar.textContent = 'Point the camera back at the full Hang design';
+  targets.forEach(target => {
+    const wrapper = target.querySelector('.model-wrapper');
+    const model = target.querySelector('.ar-model');
+    const name = target.dataset.name;
+    target.addEventListener('targetFound', () => {
+      targets.forEach(other => {
+        if (other !== target) other.querySelector('.model-wrapper').setAttribute('visible', false);
+      });
+      restartAnimation(model);
+      wrapper.removeAttribute('animation__popout');
+      wrapper.setAttribute('visible', true);
+      wrapper.setAttribute('scale', '0.78 0.78 0.78');
+      requestAnimationFrame(() => {
+        wrapper.setAttribute('animation__popout', 'property: scale; from: 0.78 0.78 0.78; to: 1 1 1; dur: 650; easing: easeOutBack');
+      });
+      statusBar.textContent = name + ' UNLOCKED';
+    });
+    target.addEventListener('targetLost', () => {
+      wrapper.setAttribute('visible', false);
+      wrapper.removeAttribute('animation__popout');
+      statusBar.textContent = 'Point the camera back at the full design';
+    });
   });
 
   startButton.addEventListener('click', async () => {
@@ -176,14 +225,14 @@ window.addEventListener('DOMContentLoaded', () => {
       statusBar.classList.add('hidden');
       shopBar.classList.add('hidden');
       errorText.style.display = 'block';
-      errorText.textContent = 'Camera or scanner could not start. Allow camera access, confirm targets-v71.mind was uploaded, then refresh.';
+      errorText.textContent = 'Camera or scanner could not start. Allow camera access, confirm targets.mind was uploaded, then refresh.';
       startButton.disabled = false;
       startButton.textContent = 'TRY AGAIN';
     }
   });
 
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=71'));
+    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=72'));
   }
 });
 </script>
