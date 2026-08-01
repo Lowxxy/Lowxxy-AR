@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lowxxy-ar-full-v120-shoulder-photo-fixed';
+const CACHE_NAME = 'lowxxy-ar-full-v121-face-tracked-shoulder';
 const APP_SHELL = [
   './',
   './index.html',
