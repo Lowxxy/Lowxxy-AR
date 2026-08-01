@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lowxxy-ar-full-v110-popart-true-center';
+const CACHE_NAME = 'lowxxy-ar-full-v111-popart-true-center';
 const APP_SHELL = [
   './',
   './index.html',
