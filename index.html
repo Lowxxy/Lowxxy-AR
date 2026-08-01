@@ -7,8 +7,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Lowxxy AR</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=112" />
-  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=112" />
+  <link rel="manifest" href="./manifest.webmanifest?v=115" />
+  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=115" />
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
@@ -52,39 +52,117 @@
     });
   </script>
   <style>
-    :root{color-scheme:dark;font-family:Arial,Helvetica,sans-serif}
+    :root{
+      color-scheme:dark;
+      --ink:#11100d;
+      --paper:#eee2bd;
+      --paper2:#d8c894;
+      --white:#fff9df;
+      font-family:"Arial Black","Trebuchet MS",Arial,sans-serif
+    }
     *{box-sizing:border-box}
-    html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#000}
+    html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#080806}
     #app,a-scene{position:fixed;inset:0;width:100%;height:100%}
-    .overlay{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:24px;background:radial-gradient(circle at 50% 30%,rgba(255,255,255,.08),transparent 40%),#000;text-align:center}
-    .panel{width:min(460px,100%);padding:30px 24px;border:1px solid rgba(255,255,255,.18);border-radius:24px;background:rgba(10,10,10,.94);box-shadow:0 20px 60px rgba(0,0,0,.55)}
-    .brand-logo{display:block;width:min(340px,100%);height:auto;margin:0 auto 14px}
-    .subtitle{margin:0 0 22px;color:rgba(255,255,255,.75);font-size:16px;line-height:1.5}
+    .hidden{display:none!important}
+
+    /* Old-film treatment. It is decorative and never blocks taps. */
+    #filmOverlay{position:fixed;inset:0;z-index:800;pointer-events:none;overflow:hidden}
+    #filmOverlay::before{
+      content:"";position:absolute;inset:-45%;opacity:.12;mix-blend-mode:screen;
+      background-image:
+        radial-gradient(circle at 20% 30%,#fff 0 1px,transparent 1.5px),
+        radial-gradient(circle at 75% 65%,#fff 0 1px,transparent 1.5px),
+        radial-gradient(circle at 45% 80%,#fff 0 .8px,transparent 1.3px);
+      background-size:63px 71px,97px 83px,51px 59px;
+      animation:grain .22s steps(2) infinite
+    }
+    #filmOverlay::after{
+      content:"";position:absolute;inset:0;
+      background:
+        linear-gradient(90deg,transparent 0 16%,rgba(255,255,255,.07) 16.2%,transparent 16.5% 71%,rgba(255,255,255,.05) 71.2%,transparent 71.5%),
+        radial-gradient(ellipse at center,transparent 46%,rgba(0,0,0,.58) 100%);
+      opacity:.48;animation:flicker 2.6s infinite
+    }
+    @keyframes grain{0%{transform:translate(0,0)}25%{transform:translate(3%,-2%)}50%{transform:translate(-2%,3%)}75%{transform:translate(2%,2%)}100%{transform:translate(-3%,-2%)}}
+    @keyframes flicker{0%,100%{opacity:.45}8%{opacity:.52}9%{opacity:.38}36%{opacity:.47}37%{opacity:.58}68%{opacity:.43}}
+
+    .overlay{
+      position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;
+      padding:22px;text-align:center;color:var(--ink);
+      background:
+        radial-gradient(circle at 50% 35%,rgba(255,255,255,.34),transparent 34%),
+        repeating-radial-gradient(circle at 50% 50%,rgba(0,0,0,.025) 0 1px,transparent 1px 4px),
+        var(--paper)
+    }
+    .panel{
+      position:relative;width:min(460px,100%);padding:30px 24px 26px;border:5px solid var(--ink);
+      border-radius:46% 54% 48% 52% / 8% 10% 9% 11%;background:var(--paper);
+      box-shadow:0 0 0 5px var(--paper),0 0 0 9px var(--ink),12px 14px 0 rgba(0,0,0,.28);
+      animation:panelWobble 3.8s ease-in-out infinite
+    }
+    .panel::before,.panel::after{content:"";position:absolute;width:20px;height:20px;border:4px solid var(--ink);border-radius:50%;background:var(--paper)}
+    .panel::before{left:-15px;top:22%}.panel::after{right:-15px;bottom:22%}
+    @keyframes panelWobble{0%,100%{transform:rotate(-.25deg)}50%{transform:rotate(.25deg)}}
+    .eyebrow{margin:0 0 7px;font-size:12px;font-weight:900;letter-spacing:.24em;text-transform:uppercase}
+    .brand-logo{display:block;width:min(330px,92%);height:auto;margin:0 auto 10px;filter:invert(1);transform:rotate(-1deg)}
+    .show-title{margin:2px 0 4px;font-size:clamp(25px,7vw,39px);line-height:.95;letter-spacing:.035em;text-transform:uppercase;text-shadow:2px 2px 0 var(--paper),4px 4px 0 rgba(0,0,0,.16)}
+    .subtitle{margin:12px auto 21px;max-width:330px;color:var(--ink);font-family:Georgia,serif;font-size:16px;font-weight:700;line-height:1.35}
     .button-stack{display:flex;flex-direction:column;gap:12px}
-    button{width:100%;min-height:54px;border:0;border-radius:999px;padding:14px 22px;background:#fff;color:#000;font:inherit;font-weight:800;letter-spacing:.05em;cursor:pointer}
-    button.secondary{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.22)}
-    button:disabled{opacity:.5;cursor:wait}
-    #installHelp,#errorText{display:none;margin:16px 0 0;font-size:14px;line-height:1.45}
-    #installHelp{color:rgba(255,255,255,.72)}
-    #errorText{color:#ffb4b4}
-    #statusBar{position:fixed;z-index:900;left:50%;top:max(18px,env(safe-area-inset-top));transform:translateX(-50%);width:min(92%,430px);padding:11px 16px;border:1px solid rgba(255,255,255,.22);border-radius:999px;background:rgba(0,0,0,.72);color:#fff;text-align:center;font-size:14px;backdrop-filter:blur(12px);pointer-events:none}
-    #shopBar{position:fixed;z-index:950;left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(92%,430px);padding:14px;display:flex;align-items:center;gap:12px;border-radius:24px;border:1px solid rgba(255,255,255,.15);background:rgba(0,0,0,.82);color:#fff;box-shadow:0 12px 36px rgba(0,0,0,.38);backdrop-filter:blur(14px)}
-    .shop-copy{min-width:0;flex:1;text-align:left}.shop-title{display:block;font-size:14px;font-weight:800}.shop-subtitle{display:block;margin-top:3px;color:rgba(255,255,255,.68);font-size:12px}.shop-button{width:auto;min-height:42px;flex:0 0 auto;padding:10px 16px;font-size:12px}.hidden{display:none!important}
+    button{
+      width:100%;min-height:56px;border:4px solid var(--ink);border-radius:48% 52% 46% 54% / 42% 46% 54% 58%;
+      padding:12px 20px;background:var(--ink);color:var(--white);font:900 15px/1 "Arial Black",Arial,sans-serif;
+      letter-spacing:.07em;cursor:pointer;box-shadow:0 6px 0 #5a5039;transition:transform .12s ease,box-shadow .12s ease
+    }
+    button:active{transform:translateY(5px) scale(.97,.92);box-shadow:0 1px 0 #5a5039}
+    button.secondary{background:var(--paper);color:var(--ink);border:4px solid var(--ink);box-shadow:0 6px 0 #7b6d4e}
+    button:disabled{opacity:.55;cursor:wait}
+    #installHelp,#errorText{display:none;margin:16px 0 0;font-family:Georgia,serif;font-size:14px;font-weight:700;line-height:1.45}
+    #errorText{color:#7a1717}
+
+    #scanFrame{position:fixed;z-index:700;left:50%;top:50%;transform:translate(-50%,-52%);width:min(74vw,390px);aspect-ratio:3/4;pointer-events:none}
+    #scanFrame::before,#scanFrame::after{content:"";position:absolute;inset:0;border:5px solid rgba(255,249,223,.9);border-radius:44% 56% 48% 52% / 7% 9% 8% 10%;filter:drop-shadow(0 2px 0 #111);animation:frameWiggle 1.7s steps(2) infinite}
+    #scanFrame::after{inset:7px;border-width:2px;opacity:.6;animation-delay:.35s}
+    .frame-label{position:absolute;left:50%;bottom:-39px;transform:translateX(-50%) rotate(-1deg);white-space:nowrap;padding:7px 15px;border:3px solid var(--ink);border-radius:50%;background:var(--paper);color:var(--ink);font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;box-shadow:3px 4px 0 rgba(0,0,0,.45)}
+    @keyframes frameWiggle{0%,100%{transform:rotate(-.3deg) scaleX(.998)}50%{transform:rotate(.3deg) scaleX(1.002)}}
+
+    #statusBar{
+      position:fixed;z-index:900;left:50%;top:max(16px,env(safe-area-inset-top));transform:translateX(-50%) rotate(-.5deg);
+      width:min(92%,430px);padding:11px 16px;border:4px solid var(--ink);border-radius:48% 52% 46% 54% / 45% 50% 50% 55%;
+      background:var(--paper);color:var(--ink);text-align:center;font-size:13px;font-weight:900;letter-spacing:.055em;text-transform:uppercase;
+      box-shadow:4px 5px 0 rgba(0,0,0,.55);pointer-events:none
+    }
+    #statusBar.scan-pop{animation:scanPop .62s cubic-bezier(.18,.9,.25,1.35)}
+    @keyframes scanPop{0%{transform:translateX(-50%) scale(.25,.65) rotate(-5deg)}55%{transform:translateX(-50%) scale(1.13,.88) rotate(2deg)}100%{transform:translateX(-50%) scale(1) rotate(-.5deg)}}
+
+    #shopBar{
+      position:fixed;z-index:950;left:50%;bottom:max(16px,env(safe-area-inset-bottom));transform:translateX(-50%) rotate(.35deg);
+      width:min(92%,430px);padding:11px 12px;display:flex;align-items:center;gap:10px;border:4px solid var(--ink);
+      border-radius:42% 58% 48% 52% / 24% 29% 26% 31%;background:var(--paper);color:var(--ink);
+      box-shadow:5px 6px 0 rgba(0,0,0,.55)
+    }
+    .shop-copy{min-width:0;flex:1;text-align:left;padding-left:5px}.shop-title{display:block;font-size:13px;font-weight:900;text-transform:uppercase}.shop-subtitle{display:block;margin-top:3px;font-family:Georgia,serif;font-size:11px;font-weight:700}.shop-button{width:auto;min-height:42px;flex:0 0 auto;padding:9px 14px;font-size:11px;box-shadow:0 4px 0 #5a5039}
+
+    @media (max-height:690px){.panel{padding:21px 20px 20px}.brand-logo{width:min(270px,84%)}.subtitle{margin:9px auto 15px}.button-stack{gap:9px}button{min-height:49px}.show-title{font-size:27px}}
+    @media (prefers-reduced-motion:reduce){*{animation:none!important}}
   </style>
 </head>
 <body>
 <div id="app">
+  <div id="filmOverlay"></div>
+  <div id="scanFrame" class="hidden"><span class="frame-label">Line up the full design</span></div>
   <div id="startOverlay" class="overlay"><div class="panel">
+    <p class="eyebrow">An interactive picture show</p>
     <img class="brand-logo" src="./icons/lowxxy-logo-white.png" alt="Lowxxy" />
-    <p class="subtitle">Scan any of the four Lowxxy designs to unlock its matching 3D animation.</p>
-    <div class="button-stack"><button id="installButton" class="secondary">INSTALL LOWXXY APP</button><button id="startButton">START AR</button></div>
+    <h1 class="show-title">The Lowxxy Picture Show</h1>
+    <p class="subtitle">Point your camera at a Lowxxy design and watch the ink come alive.</p>
+    <div class="button-stack"><button id="installButton" class="secondary">ADD TO HOME SCREEN</button><button id="startButton">START THE SHOW</button></div>
     <p id="installHelp"></p><p id="errorText"></p>
   </div></div>
-  <div id="statusBar" class="hidden">Point the camera at a full Lowxxy design</div>
-  <div id="shopBar" class="hidden"><div class="shop-copy"><span class="shop-title">Want to see more?</span><span class="shop-subtitle">Explore the latest Lowxxy designs.</span></div><button id="shopButton" class="shop-button">SHOP LOWXXY</button></div>
+  <div id="statusBar" class="hidden">Looking for a Lowxxy design...</div>
+  <div id="shopBar" class="hidden"><div class="shop-copy"><span class="shop-title">More from Lowxxy</span><span class="shop-subtitle">See the latest designs.</span></div><button id="shopButton" class="shop-button">VISIT THE SHOP</button></div>
 
   <a-scene
-    mindar-image="imageTargetSrc: ./assets/targets.mind?v=112; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.00001; filterBeta: 0.0001; warmupTolerance: 15; missTolerance: 18;"
+    mindar-image="imageTargetSrc: ./assets/targets.mind?v=115; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.00001; filterBeta: 0.0001; warmupTolerance: 15; missTolerance: 18;"
     embedded
     color-space="sRGB"
     renderer="colorManagement: true; alpha: true; antialias: true; logarithmicDepthBuffer: true;"
@@ -94,10 +172,10 @@
     <a-camera position="0 0 0" near="0.01" far="1000" look-controls="enabled:false"></a-camera>
 
     <a-assets timeout="90000">
-      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=112"></a-asset-item>
-      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=112"></a-asset-item>
-      <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=112"></a-asset-item>
-      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=113"></a-asset-item>
+      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=115"></a-asset-item>
+      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=115"></a-asset-item>
+      <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=115"></a-asset-item>
+      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=115"></a-asset-item>
     </a-assets>
 
     <!-- Target 0: Pop Art. Placed first in the scanner database so the dotted comic-book print gets priority over the similar regular Chainmail artwork. -->
@@ -140,6 +218,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const installButton = document.querySelector('#installButton');
   const installHelp = document.querySelector('#installHelp');
   const statusBar = document.querySelector('#statusBar');
+  const scanFrame = document.querySelector('#scanFrame');
   const shopBar = document.querySelector('#shopBar');
   const shopButton = document.querySelector('#shopButton');
   const errorText = document.querySelector('#errorText');
@@ -242,7 +321,7 @@ window.addEventListener('DOMContentLoaded', () => {
       wrapper.removeAttribute('animation__popout');
       isActive = false;
       target._stickyActive = false;
-      statusBar.textContent = 'Ready — scan another Lowxxy design';
+      statusBar.textContent = 'Looking for another Lowxxy design...';
     };
 
     target.addEventListener('targetFound', () => {
@@ -275,7 +354,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
       isActive = true;
       target._stickyActive = true;
-      statusBar.textContent = name + ' LOCKED — MOVE AROUND IT';
+      statusBar.textContent = 'LOWXXY DESIGN SCANNED!';
+      statusBar.classList.remove('scan-pop');
+      void statusBar.offsetWidth;
+      statusBar.classList.add('scan-pop');
     });
 
     target.addEventListener('targetLost', () => {
@@ -290,7 +372,7 @@ window.addEventListener('DOMContentLoaded', () => {
       // Avoid an almost-instant cutoff when tracking is lost right at the end.
       if (remainingSeconds < 0.65) remainingSeconds += durationSeconds;
 
-      statusBar.textContent = name + ' FINISHING — NEXT DESIGN READY SOON';
+      statusBar.textContent = 'THE CARTOON IS FINISHING...';
       finishTimer = setTimeout(releaseTarget, remainingSeconds * 1000);
       target._finishTimer = finishTimer;
     });
@@ -298,19 +380,20 @@ window.addEventListener('DOMContentLoaded', () => {
 
   startButton.addEventListener('click', async () => {
     startButton.disabled = true;
-    startButton.textContent = 'OPENING CAMERA...';
+    startButton.textContent = 'WARMING UP THE PROJECTOR...';
     errorText.style.display = 'none';
     if (!arSystem) arSystem = scene.systems['mindar-image-system'];
     if (!arSystem) {
       errorText.style.display = 'block';
       errorText.textContent = 'The AR engine did not load. Refresh and try again.';
       startButton.disabled = false;
-      startButton.textContent = 'TRY AGAIN';
+      startButton.textContent = 'RUN IT BACK';
       return;
     }
     startOverlay.classList.add('hidden');
     statusBar.classList.remove('hidden');
     shopBar.classList.remove('hidden');
+    scanFrame.classList.remove('hidden');
     try {
       await arSystem.start();
     } catch (error) {
@@ -318,15 +401,16 @@ window.addEventListener('DOMContentLoaded', () => {
       startOverlay.classList.remove('hidden');
       statusBar.classList.add('hidden');
       shopBar.classList.add('hidden');
+      scanFrame.classList.add('hidden');
       errorText.style.display = 'block';
       errorText.textContent = 'Camera or scanner could not start. Allow camera access, confirm targets.mind was uploaded, then refresh.';
       startButton.disabled = false;
-      startButton.textContent = 'TRY AGAIN';
+      startButton.textContent = 'RUN IT BACK';
     }
   });
 
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=112'));
+    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=115'));
   }
 });
 </script>
