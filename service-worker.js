@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lowxxy-ar-full-v75-hang-centered';
+const CACHE_NAME = 'lowxxy-ar-full-v76-hang7';
 const APP_SHELL = [
   './',
   './index.html',
@@ -6,7 +6,7 @@ const APP_SHELL = [
   './assets/targets.mind',
   './assets/chainmail.glb',
   './assets/grounded-gains.glb',
-  './assets/hang.glb',
+  './assets/hang-v76.glb',
   './assets/pop-art.glb',
   './icons/icon-192.png',
   './icons/icon-512.png',
