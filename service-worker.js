@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lowxxy-ar-full-v85-hang7-fit';
+const CACHE_NAME = 'lowxxy-ar-full-v86-hang7-fit';
 const APP_SHELL = [
   './',
   './index.html',
