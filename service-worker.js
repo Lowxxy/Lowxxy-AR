@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lowxxy-ar-v65-popart-scale-2-4';
+const CACHE_NAME = 'lowxxy-ar-v69-hard-reset';
 const APP_SHELL = [
   './',
   './index.html',
@@ -6,7 +6,7 @@ const APP_SHELL = [
   './assets/targets.mind',
   './assets/chainmail.glb',
   './assets/grounded-gains.glb',
-  './assets/hang.glb',
+  './assets/hang-v69.glb',
   './assets/pop-art.glb',
   './icons/lowxxy-logo-white.png',
   './icons/lowxxy-character-192.png',
