@@ -7,8 +7,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Lowxxy AR</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=117" />
-  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=117" />
+  <link rel="manifest" href="./manifest.webmanifest?v=118" />
+  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=118" />
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
@@ -182,11 +182,16 @@
     #cameraFlipButton.selfie-active{background:#111;color:#fff;border-color:#fff}
     #selfieMode{position:fixed;inset:0;z-index:450;background:#000;overflow:hidden}
     #selfieVideo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
-    #selfieScene{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;pointer-events:none;background:transparent!important}
-    #selfieScene canvas{background:transparent!important}
-    #shoulderGuide{position:fixed;z-index:720;left:13px;bottom:max(95px,calc(env(safe-area-inset-bottom) + 86px));
-      padding:7px 12px;border:2px solid #fff;border-radius:999px;background:rgba(0,0,0,.72);color:#fff;
+    body.selfie-active #imageScene{display:block!important;position:fixed!important;inset:0!important;z-index:520!important;pointer-events:none;background:transparent!important}
+    body.selfie-active #imageScene canvas{background:transparent!important}
+    body.selfie-active video:not(#selfieVideo){opacity:0!important;visibility:hidden!important}
+    #shoulderGuide{position:fixed;z-index:720;left:13px;bottom:max(148px,calc(env(safe-area-inset-bottom) + 138px));
+      padding:8px 13px;border:2px solid #fff;border-radius:999px;background:rgba(0,0,0,.76);color:#fff;
       font:900 10px/1 "Arial Rounded MT Bold",Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase;pointer-events:none}
+    #selfieCallout{position:fixed;z-index:725;left:13px;right:13px;bottom:max(76px,calc(env(safe-area-inset-bottom) + 66px));
+      max-width:390px;margin:auto;padding:10px 14px;border:2px solid #fff;border-radius:18px;background:rgba(0,0,0,.82);color:#fff;
+      text-align:center;font:900 11px/1.35 "Arial Rounded MT Bold",Arial,sans-serif;letter-spacing:.04em;text-transform:uppercase}
+    #selfieCallout a{display:inline-block;margin-top:5px;color:#fff;font-size:14px;text-decoration:underline;text-underline-offset:3px;pointer-events:auto}
 
     @media (max-height:690px){.panel{padding:27px 20px 23px}.brand-logo{width:min(255px,78%)}.subtitle{margin:11px auto 17px}.button-stack{gap:9px}button{min-height:49px}.show-title{font-size:31px}}
     @media (prefers-reduced-motion:reduce){*{animation:none!important}}
@@ -211,32 +216,28 @@
   <button id="cameraFlipButton" class="hidden" aria-label="Flip camera" title="Flip camera">↺</button>
   <div id="selfieMode" class="hidden">
     <video id="selfieVideo" autoplay muted playsinline></video>
-    <div id="shoulderGuide">LOWXXY SHOULDER MODE</div>
-    <a-scene id="selfieScene" embedded renderer="alpha:true; antialias:true; colorManagement:true" vr-mode-ui="enabled:false" device-orientation-permission-ui="enabled:false" loading-screen="enabled:false">
-      <a-assets timeout="90000"><a-asset-item id="shoulderLowxxyAsset" src="./assets/pop-art.glb?v=117"></a-asset-item></a-assets>
-      <a-camera position="0 0 0" look-controls="enabled:false">
-        <a-entity id="shoulderLowxxy" gltf-model="#shoulderLowxxyAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:0.35" position="-0.48 -0.43 -1.15" rotation="0 180 0" scale="2.05 2.05 2.05" animation__bob="property:position; from:-0.48 -0.43 -1.15; to:-0.48 -0.40 -1.15; dir:alternate; loop:true; dur:1200; easing:easeInOutSine"></a-entity>
-      </a-camera>
-      <a-light type="ambient" intensity="2.6"></a-light>
-      <a-light type="directional" intensity="2.4" position="1 2 3"></a-light>
-    </a-scene>
+    <div id="shoulderGuide">LOWXXY IS ON YOUR RIGHT SHOULDER!</div>
+    <div id="selfieCallout">LET'S TAKE A PHOTO — BE SURE TO TAG US<br><a href="https://www.instagram.com/lowxxy.brand/" target="_blank" rel="noopener">@lowxxy.brand</a></div>
   </div>
 
   <a-scene id="imageScene"
-    mindar-image="imageTargetSrc: ./assets/targets.mind?v=117; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.00001; filterBeta: 0.0001; warmupTolerance: 15; missTolerance: 18;"
+    mindar-image="imageTargetSrc: ./assets/targets.mind?v=118; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.00001; filterBeta: 0.0001; warmupTolerance: 15; missTolerance: 18;"
     embedded
     color-space="sRGB"
     renderer="colorManagement: true; alpha: true; antialias: true; logarithmicDepthBuffer: true;"
     vr-mode-ui="enabled:false"
     device-orientation-permission-ui="enabled:false">
 
-    <a-camera position="0 0 0" near="0.01" far="1000" look-controls="enabled:false"></a-camera>
+    <a-camera position="0 0 0" near="0.01" far="1000" look-controls="enabled:false">
+      <a-entity id="shoulderLowxxy" visible="false" gltf-model="#shoulderLowxxyAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1" position="-0.48 -0.43 -1.15" rotation="0 0 0" scale="45 45 45"></a-entity>
+    </a-camera>
 
     <a-assets timeout="90000">
-      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=117"></a-asset-item>
-      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=117"></a-asset-item>
-      <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=117"></a-asset-item>
-      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=117"></a-asset-item>
+      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=118"></a-asset-item>
+      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=118"></a-asset-item>
+      <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=118"></a-asset-item>
+      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=118"></a-asset-item>
+      <a-asset-item id="shoulderLowxxyAsset" src="./assets/lowxxy-shoulder.glb?v=118"></a-asset-item>
     </a-assets>
 
     <!-- Target 0: Pop Art. Placed first in the scanner database so the dotted comic-book print gets priority over the similar regular Chainmail artwork. -->
@@ -277,6 +278,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const cameraFlipButton = document.querySelector('#cameraFlipButton');
   const selfieMode = document.querySelector('#selfieMode');
   const selfieVideo = document.querySelector('#selfieVideo');
+  const shoulderLowxxy = document.querySelector('#shoulderLowxxy');
   const startOverlay = document.querySelector('#startOverlay');
   const startButton = document.querySelector('#startButton');
   const installButton = document.querySelector('#installButton');
@@ -292,6 +294,17 @@ window.addEventListener('DOMContentLoaded', () => {
   let loadedModels = 0;
   let selfieStream = null;
   let selfieActive = false;
+
+  shoulderLowxxy.addEventListener('model-loaded', () => {
+    const object = shoulderLowxxy.getObject3D('mesh');
+    if (object) object.traverse(node => {
+      if (node.isMesh || node.isSkinnedMesh) {
+        node.frustumCulled = false;
+        const materials = Array.isArray(node.material) ? node.material : [node.material];
+        materials.filter(Boolean).forEach(material => { material.side = THREE.DoubleSide; material.needsUpdate = true; });
+      }
+    });
+  });
 
   const isStandalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
   const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
@@ -454,10 +467,13 @@ window.addEventListener('DOMContentLoaded', () => {
     try {
       if (arSystem) await arSystem.stop();
       targets.forEach(target => target.querySelector('.model-wrapper').setAttribute('visible', false));
-      scene.classList.add('hidden');
       scanFrame.classList.add('hidden');
       shopBar.classList.add('hidden');
       selfieMode.classList.remove('hidden');
+      document.body.classList.add('selfie-active');
+      shoulderLowxxy.setAttribute('visible', true);
+      shoulderLowxxy.removeAttribute('animation-mixer');
+      requestAnimationFrame(() => shoulderLowxxy.setAttribute('animation-mixer', 'clip:*; loop:repeat; repetitions:Infinity; timeScale:1'));
       selfieStream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } },
         audio: false
@@ -467,12 +483,13 @@ window.addEventListener('DOMContentLoaded', () => {
       selfieActive = true;
       cameraFlipButton.classList.add('selfie-active');
       cameraFlipButton.textContent = '↻';
-      statusBar.textContent = 'LOWXXY IS ON YOUR LEFT SHOULDER!';
+      statusBar.textContent = 'LOWXXY IS ON YOUR RIGHT SHOULDER!';
     } catch (error) {
       console.error(error);
       stopSelfieStream();
       selfieMode.classList.add('hidden');
-      scene.classList.remove('hidden');
+      document.body.classList.remove('selfie-active');
+      shoulderLowxxy.setAttribute('visible', false);
       scanFrame.classList.remove('hidden');
       shopBar.classList.remove('hidden');
       statusBar.textContent = 'SELFIE CAMERA COULD NOT START';
@@ -483,7 +500,8 @@ window.addEventListener('DOMContentLoaded', () => {
   const exitSelfieMode = async () => {
     stopSelfieStream();
     selfieMode.classList.add('hidden');
-    scene.classList.remove('hidden');
+    document.body.classList.remove('selfie-active');
+    shoulderLowxxy.setAttribute('visible', false);
     scanFrame.classList.remove('hidden');
     shopBar.classList.remove('hidden');
     selfieActive = false;
@@ -534,7 +552,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=117'));
+    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=118'));
   }
 });
 </script>
