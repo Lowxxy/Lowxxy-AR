@@ -4,63 +4,33 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#111111">
-<title>Lowxxy Shoulder Camera v202</title>
-<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/GLTFLoader.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/face_detection.js"></script>
+<title>Lowxxy Selfie Camera</title>
 <style>
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000;font-family:Arial Black,Arial,sans-serif}
-#camera,#threeCanvas{position:fixed;inset:0;width:100%;height:100%}
-#camera{z-index:0;display:block;object-fit:cover;transform:scaleX(-1);background:#000}
-#threeCanvas{z-index:1;display:block;pointer-events:none;background:transparent!important;opacity:1}
-#grain{position:fixed;inset:0;z-index:3;pointer-events:none;opacity:.14;background-image:radial-gradient(#fff 0.65px,transparent .8px),radial-gradient(#000 .7px,transparent .9px);background-position:0 0,5px 5px;background-size:8px 8px;mix-blend-mode:overlay;animation:flicker .18s infinite alternate}@keyframes flicker{from{opacity:.10}to{opacity:.17}}
-#topTitle{position:fixed;z-index:5;left:18px;right:18px;top:max(16px,env(safe-area-inset-top));text-align:center;background:#171717;color:#fff;border:4px solid #eee;border-radius:999px;padding:12px 70px;font-size:17px;letter-spacing:1px;box-shadow:0 0 0 3px #171717}
-.control{position:fixed;z-index:7;border:4px solid #eee;background:#171717;color:#fff;border-radius:50%;box-shadow:0 0 0 3px #171717,0 6px 0 rgba(0,0,0,.45);font-weight:900;display:grid;place-items:center;padding:0}.control:active{transform:translateY(3px)}
-#back{left:20px;top:max(26px,calc(env(safe-area-inset-top) + 10px));width:52px;height:52px;font-size:28px}#side{right:20px;top:max(26px,calc(env(safe-area-inset-top) + 10px));width:52px;height:52px;font-size:24px}
-#shoot{left:50%;bottom:max(118px,calc(env(safe-area-inset-bottom) + 106px));transform:translateX(-50%);width:78px;height:78px;font-size:44px;color:#fff}#shoot:active{transform:translateX(-50%) translateY(3px)}
-#message{position:fixed;z-index:6;left:18px;right:18px;bottom:max(20px,env(safe-area-inset-bottom));background:rgba(18,18,18,.9);color:#fff;border:4px solid #eee;border-radius:28px;padding:15px 18px;text-align:center;font-size:16px;line-height:1.35;box-shadow:0 0 0 3px #171717}#message a{display:block;color:#fff;font-size:23px;margin-top:5px;text-underline-offset:4px}
-#toast{position:fixed;z-index:9;left:50%;top:50%;transform:translate(-50%,-50%) scale(.85);opacity:0;background:#171717;color:#fff;border:4px solid #eee;border-radius:999px;padding:17px 24px;font-weight:900;transition:.2s;pointer-events:none}#toast.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+#camera{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1);background:#000}
+#grain{position:fixed;inset:0;pointer-events:none;opacity:.10;background-image:radial-gradient(#fff .6px,transparent .8px),radial-gradient(#000 .7px,transparent .9px);background-position:0 0,5px 5px;background-size:8px 8px;mix-blend-mode:overlay;animation:flicker .18s infinite alternate}@keyframes flicker{from{opacity:.07}to{opacity:.13}}
+#title{position:fixed;left:18px;right:18px;top:max(16px,env(safe-area-inset-top));z-index:3;text-align:center;background:rgba(17,17,17,.92);color:#fff;border:4px solid #eee;border-radius:999px;padding:13px 68px;font-size:18px;letter-spacing:1.5px;box-shadow:0 0 0 3px #171717}
+.control{position:fixed;z-index:5;border:4px solid #eee;background:#171717;color:#fff;border-radius:50%;box-shadow:0 0 0 3px #171717,0 6px 0 rgba(0,0,0,.45);font-weight:900;display:grid;place-items:center;padding:0}.control:active{transform:translateY(3px)}
+#back{left:20px;top:max(26px,calc(env(safe-area-inset-top) + 10px));width:52px;height:52px;font-size:28px}
+#shoot{left:50%;bottom:max(146px,calc(env(safe-area-inset-bottom) + 134px));transform:translateX(-50%);width:82px;height:82px;font-size:44px}#shoot:active{transform:translateX(-50%) translateY(3px)}
+#message{position:fixed;z-index:4;left:18px;right:18px;bottom:max(20px,env(safe-area-inset-bottom));background:rgba(18,18,18,.9);color:#fff;border:4px solid #eee;border-radius:28px;padding:16px 18px;text-align:center;font-size:16px;line-height:1.35;box-shadow:0 0 0 3px #171717}
+#message a{display:block;color:#fff;font-size:23px;margin-top:7px;text-underline-offset:4px}
+#toast{position:fixed;z-index:7;left:50%;top:50%;transform:translate(-50%,-50%) scale(.85);opacity:0;background:#171717;color:#fff;border:4px solid #eee;border-radius:999px;padding:17px 24px;font-weight:900;transition:.2s;pointer-events:none}#toast.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
 </style>
 </head>
 <body>
-<video id="camera" autoplay muted playsinline></video><canvas id="threeCanvas"></canvas><div id="grain"></div>
-<div id="topTitle">LOWXXY SELFIE CAMERA</div>
-<button id="back" class="control" aria-label="Back">←</button><button id="side" class="control" aria-label="Switch shoulder">↔</button><button id="shoot" class="control" aria-label="Take photo">●</button>
-<div id="message">LET'S TAKE A PHOTO — BE SURE TO TAG US<a href="https://www.instagram.com/lowxxy.brand/" target="_blank" rel="noopener">@LOWXXY.BRAND</a></div><div id="toast">PHOTO READY!</div>
+<video id="camera" autoplay muted playsinline></video>
+<div id="grain"></div>
+<div id="title">LOWXXY SELFIE CAMERA</div>
+<button id="back" class="control" aria-label="Back">←</button>
+<button id="shoot" class="control" aria-label="Take photo">●</button>
+<div id="message">TAKE A PHOTO IN YOUR LOWXXY SHIRT AND TAG US FOR A CHANCE TO BE FEATURED ON OUR INSTAGRAM.<a href="https://www.instagram.com/lowxxy.brand/" target="_blank" rel="noopener">@LOWXXY.BRAND</a></div>
+<div id="toast">PHOTO READY!</div>
 <script>
-const video=document.querySelector('#camera'),canvas=document.querySelector('#threeCanvas'),toast=document.querySelector('#toast');
-let stream=null,holder=null,mixer=null,faceBox=null,detectBusy=false,side=-1;
-const scene=new THREE.Scene();scene.background=null;
-const camera=new THREE.OrthographicCamera(-1,1,1,-1,.01,100);camera.position.set(0,0,10);camera.lookAt(0,0,0);
-const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true,preserveDrawingBuffer:true,premultipliedAlpha:true});renderer.setClearColor(0x000000,0);renderer.setClearAlpha(0);renderer.outputEncoding=THREE.sRGBEncoding;renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-scene.add(new THREE.HemisphereLight(0xffffff,0x444444,2.5));const key=new THREE.DirectionalLight(0xffffff,3);key.position.set(2,3,5);scene.add(key);const fill=new THREE.DirectionalLight(0xffffff,1.5);fill.position.set(-3,1,4);scene.add(fill);
-function resize(){const w=innerWidth,h=innerHeight,aspect=w/h;camera.left=-aspect;camera.right=aspect;camera.top=1;camera.bottom=-1;camera.updateProjectionMatrix();renderer.setSize(w,h,false);placeModel()}addEventListener('resize',resize);
-function placeModel(){if(!holder)return;const aspect=innerWidth/innerHeight;let x=side<0?-aspect*.48:aspect*.48,y=-.42,s=.56;if(faceBox){const cx=(faceBox.xCenter??(faceBox.xMin+faceBox.width/2)??.5),cy=(faceBox.yCenter??(faceBox.yMin+faceBox.height/2)??.5);const fw=faceBox.width||.24,fh=faceBox.height||.30;const fx=(cx-.5)*2*aspect,fy=(.5-cy)*2;const shoulderOffset=Math.max(.24,fw*aspect*.72);x=fx+(side<0?-shoulderOffset:shoulderOffset);y=fy-fh*.92;s=Math.max(.42,Math.min(.70,fh*1.35));}holder.position.set(x,y,0);holder.scale.setScalar(s);holder.rotation.y=side<0?0:Math.PI;}
-new THREE.GLTFLoader().load('./assets/lowxxy-shoulder.glb?v=202',g=>{
-  holder=new THREE.Group();
-  const model=g.scene;
-  // The shoulder GLB is already Y-up. Keep its original orientation.
-  model.rotation.set(0,0,0);
-  model.updateMatrixWorld(true);
-  let box=new THREE.Box3().setFromObject(model),size=new THREE.Vector3(),center=new THREE.Vector3();
-  box.getSize(size);box.getCenter(center);
-  // Center the complete character without changing the skeleton or animation.
-  model.position.set(-center.x,-center.y,-center.z);
-  model.updateMatrixWorld(true);
-  box=new THREE.Box3().setFromObject(model);box.getSize(size);
-  // Normalize by true character height so no mesh can cover the camera.
-  const normalizer=.92/Math.max(size.y,.000001);
-  model.scale.setScalar(normalizer);
-  holder.add(model);scene.add(holder);
-  if(g.animations&&g.animations.length){mixer=new THREE.AnimationMixer(model);g.animations.forEach(clip=>mixer.clipAction(clip).reset().play())}
-  placeModel();
-},undefined,error=>{console.error('Shoulder GLB failed to load',error);document.querySelector('#topTitle').textContent='MODEL FAILED TO LOAD';});
-async function startCamera(){try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:1920},height:{ideal:1080}},audio:false});video.srcObject=stream;await video.play()}catch(error){console.error(error);document.querySelector('#topTitle').textContent='CAMERA PERMISSION NEEDED'}}
-async function startFaceDetection(){try{const detector=new FaceDetection({locateFile:file=>`https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/${file}`});detector.setOptions({model:'short',minDetectionConfidence:.45,selfieMode:true});detector.onResults(results=>{const detection=results.detections&&results.detections[0];faceBox=detection?.locationData?.relativeBoundingBox||null;placeModel()});async function loop(){if(video.readyState>=2&&!detectBusy){detectBusy=true;try{await detector.send({image:video})}catch(e){console.warn(e)}detectBusy=false}setTimeout(loop,120)}loop()}catch(error){console.warn('Face detection unavailable; fixed shoulder placement will be used.',error)}}
-const clock=new THREE.Clock();function animate(){requestAnimationFrame(animate);const dt=clock.getDelta();if(mixer)mixer.update(dt);renderer.setClearColor(0x000000,0);renderer.setClearAlpha(0);renderer.clear(true,true,true);renderer.render(scene,camera)}
+const video=document.querySelector('#camera'),toast=document.querySelector('#toast');let stream=null;
+async function startCamera(){try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:1920},height:{ideal:1080}},audio:false});video.srcObject=stream;await video.play()}catch(error){console.error(error);document.querySelector('#title').textContent='CAMERA PERMISSION NEEDED'}}
 function drawCover(ctx,source,w,h,mirror){const sw=source.videoWidth||source.width,sh=source.videoHeight||source.height;if(!sw||!sh)return;const scale=Math.max(w/sw,h/sh),dw=sw*scale,dh=sh*scale,dx=(w-dw)/2,dy=(h-dh)/2;ctx.save();if(mirror){ctx.translate(w,0);ctx.scale(-1,1);ctx.drawImage(source,-dx-dw,dy,dw,dh)}else ctx.drawImage(source,dx,dy,dw,dh);ctx.restore()}
-async function savePhoto(){if(video.readyState<2)return;renderer.render(scene,camera);const w=video.videoWidth||1280,h=video.videoHeight||720,out=document.createElement('canvas');out.width=w;out.height=h;const ctx=out.getContext('2d');drawCover(ctx,video,w,h,true);ctx.drawImage(canvas,0,0,w,h);const footer=Math.max(70,h*.085);ctx.fillStyle='rgba(0,0,0,.74)';ctx.fillRect(0,h-footer,w,footer);ctx.fillStyle='#fff';ctx.textAlign='center';ctx.font=`900 ${Math.max(26,w*.035)}px Arial`;ctx.fillText('@LOWXXY.BRAND',w/2,h-footer*.34);const blob=await new Promise(r=>out.toBlob(r,'image/png',.96));if(!blob)return;const file=new File([blob],`lowxxy-selfie-${Date.now()}.png`,{type:'image/png'});toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1200);try{if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]}))await navigator.share({files:[file],title:'Lowxxy Shoulder Photo'});else{const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=file.name;a.click();setTimeout(()=>URL.revokeObjectURL(url),5000)}}catch(e){if(e.name!=='AbortError')console.error(e)}}
-document.querySelector('#back').onclick=()=>location.href='./index.html?v=202';document.querySelector('#side').onclick=()=>{side*=-1;placeModel()};document.querySelector('#shoot').onclick=savePhoto;
-resize();startCamera().then(startFaceDetection);animate();
-addEventListener('pagehide',()=>{if(stream)stream.getTracks().forEach(t=>t.stop())});
-</script></body></html>
+async function savePhoto(){if(video.readyState<2)return;const w=video.videoWidth||1280,h=video.videoHeight||720,out=document.createElement('canvas');out.width=w;out.height=h;const ctx=out.getContext('2d');drawCover(ctx,video,w,h,true);const footer=Math.max(80,h*.09);ctx.fillStyle='rgba(0,0,0,.78)';ctx.fillRect(0,h-footer,w,footer);ctx.fillStyle='#fff';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font=`900 ${Math.max(28,w*.038)}px Arial`;ctx.fillText('@LOWXXY.BRAND',w/2,h-footer/2);const blob=await new Promise(r=>out.toBlob(r,'image/png',.96));if(!blob)return;const file=new File([blob],`lowxxy-selfie-${Date.now()}.png`,{type:'image/png'});toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1200);try{if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]}))await navigator.share({files:[file],title:'Lowxxy Selfie'});else{const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=file.name;a.click();setTimeout(()=>URL.revokeObjectURL(url),5000)}}catch(e){if(e.name!=='AbortError')console.error(e)}}
+document.querySelector('#back').onclick=()=>location.href='./index.html?v=203';document.querySelector('#shoot').onclick=savePhoto;startCamera();addEventListener('pagehide',()=>{if(stream)stream.getTracks().forEach(t=>t.stop())});
+</script>
+</body></html>
