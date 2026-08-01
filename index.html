@@ -7,8 +7,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Lowxxy AR</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=122" />
-  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=122" />
+  <link rel="manifest" href="./manifest.webmanifest?v=124" />
+  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=124" />
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
@@ -196,9 +196,10 @@
     #photoToast.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
     #selfieMode{position:fixed;inset:0;z-index:450;background:#000;overflow:hidden}
     #selfieVideo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
-    body.selfie-active #imageScene{visibility:hidden!important;pointer-events:none!important}
+    body.selfie-active #imageScene{visibility:visible!important;pointer-events:none!important;z-index:600!important;background:transparent!important}
+    body.selfie-active #imageScene canvas{background:transparent!important}
     body.selfie-active video:not(#selfieVideo){opacity:0!important;visibility:hidden!important}
-    #shoulderCanvas{position:absolute;inset:0;width:100%;height:100%;z-index:610;pointer-events:none}
+    #shoulderCanvas{display:none!important}
     #selfieCallout{position:fixed;z-index:725;left:13px;right:13px;bottom:max(76px,calc(env(safe-area-inset-bottom) + 66px));
       max-width:390px;margin:auto;padding:10px 14px;border:2px solid #fff;border-radius:18px;background:rgba(0,0,0,.82);color:#fff;
       text-align:center;font:900 11px/1.35 "Arial Rounded MT Bold",Arial,sans-serif;letter-spacing:.04em;text-transform:uppercase}
@@ -234,19 +235,24 @@
   </div>
 
   <a-scene id="imageScene"
-    mindar-image="imageTargetSrc: ./assets/targets.mind?v=122; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.00001; filterBeta: 0.0001; warmupTolerance: 15; missTolerance: 18;"
+    mindar-image="imageTargetSrc: ./assets/targets.mind?v=124; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.00001; filterBeta: 0.0001; warmupTolerance: 15; missTolerance: 18;"
     embedded
     color-space="sRGB"
     renderer="colorManagement: true; alpha: true; antialias: true; logarithmicDepthBuffer: true;"
     vr-mode-ui="enabled:false"
     device-orientation-permission-ui="enabled:false">
-    <a-camera position="0 0 0" near="0.01" far="1000" look-controls="enabled:false"></a-camera>
+    <a-camera id="mainCamera" position="0 0 0" near="0.01" far="1000" look-controls="enabled:false">
+      <a-entity id="shoulderModel" visible="false" gltf-model="#shoulderAsset"
+        animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1"
+        position="-0.45 -0.35 -1.2" rotation="0 180 0" scale="110 110 110"></a-entity>
+    </a-camera>
 
     <a-assets timeout="90000">
-      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=122"></a-asset-item>
-      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=122"></a-asset-item>
-      <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=122"></a-asset-item>
-      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=122"></a-asset-item>
+      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=124"></a-asset-item>
+      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=124"></a-asset-item>
+      <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=124"></a-asset-item>
+      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=124"></a-asset-item>
+      <a-asset-item id="shoulderAsset" src="./assets/lowxxy-shoulder.glb?v=124"></a-asset-item>
     </a-assets>
 
     <!-- Target 0: Pop Art. Placed first in the scanner database so the dotted comic-book print gets priority over the similar regular Chainmail artwork. -->
@@ -290,6 +296,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const selfieMode = document.querySelector('#selfieMode');
   const selfieVideo = document.querySelector('#selfieVideo');
   const shoulderCanvas = document.querySelector('#shoulderCanvas');
+  const shoulderModel = document.querySelector('#shoulderModel');
   const startOverlay = document.querySelector('#startOverlay');
   const startButton = document.querySelector('#startButton');
   const installButton = document.querySelector('#installButton');
@@ -309,110 +316,60 @@ window.addEventListener('DOMContentLoaded', () => {
   let faceLoopRunning = false;
   let faceSendBusy = false;
   let lastFaceTime = 0;
-  let shoulderRenderer = null;
-  let shoulderScene = null;
-  let shoulderCamera = null;
-  let shoulderGroup = null;
-  let shoulderMixer = null;
-  let shoulderClock = null;
-  let shoulderBaseHeight = 1;
+  let shoulderBaseHeight = 0.0047;
   let shoulderModelReady = false;
-  const shoulderTarget = { x: 0, y: 0, scale: 1, visible: false };
+  const shoulderTarget = { x: -0.45, y: -0.35, scale: 110, visible: false };
 
-  const resizeShoulderRenderer = () => {
-    if (!shoulderRenderer || !shoulderCamera) return;
-    const width = Math.max(1, window.innerWidth);
-    const height = Math.max(1, window.innerHeight);
-    const aspect = width / height;
-    shoulderRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-    shoulderRenderer.setSize(width, height, false);
-    shoulderCamera.left = -aspect;
-    shoulderCamera.right = aspect;
-    shoulderCamera.top = 1;
-    shoulderCamera.bottom = -1;
-    shoulderCamera.updateProjectionMatrix();
-  };
-
-  const initShoulderRenderer = () => {
-    if (shoulderRenderer) return;
-    shoulderRenderer = new THREE.WebGLRenderer({ canvas: shoulderCanvas, alpha: true, antialias: true, preserveDrawingBuffer: true });
-    shoulderRenderer.setClearColor(0x000000, 0);
-    shoulderRenderer.outputEncoding = THREE.sRGBEncoding;
-    shoulderScene = new THREE.Scene();
-    shoulderCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.01, 100);
-    shoulderCamera.position.set(0, 0, 10);
-    shoulderCamera.lookAt(0, 0, 0);
-    shoulderClock = new THREE.Clock();
-    shoulderGroup = new THREE.Group();
-    shoulderGroup.visible = false;
-    shoulderScene.add(shoulderGroup);
-    shoulderScene.add(new THREE.HemisphereLight(0xffffff, 0x555555, 2.2));
-    const key = new THREE.DirectionalLight(0xffffff, 2.2);
-    key.position.set(2, 4, 6);
-    shoulderScene.add(key);
-    resizeShoulderRenderer();
-    window.addEventListener('resize', resizeShoulderRenderer);
-
-    const loader = new THREE.GLTFLoader();
-    loader.load('./assets/lowxxy-shoulder.glb?v=122', gltf => {
-      const model = gltf.scene;
-      model.traverse(node => {
-        if (node.isMesh || node.isSkinnedMesh) {
-          node.frustumCulled = false;
-          const materials = Array.isArray(node.material) ? node.material : [node.material];
-          materials.filter(Boolean).forEach(material => {
-            material.side = THREE.DoubleSide;
-            material.transparent = material.transparent || material.opacity < 1;
-            material.needsUpdate = true;
-          });
-        }
-      });
-      const box = new THREE.Box3().setFromObject(model);
-      const size = box.getSize(new THREE.Vector3());
-      const center = box.getCenter(new THREE.Vector3());
-      shoulderBaseHeight = Math.max(size.y, 0.001);
-      model.position.set(-center.x, -box.min.y, -center.z);
-      shoulderGroup.add(model);
-      shoulderMixer = new THREE.AnimationMixer(model);
-      (gltf.animations || []).forEach(clip => shoulderMixer.clipAction(clip).reset().play());
-      shoulderModelReady = true;
-      // Show a visible fallback immediately while face detection locks on.
-      const aspect = window.innerWidth / Math.max(window.innerHeight, 1);
-      shoulderTarget.x = -0.58 * aspect;
-      shoulderTarget.y = -0.28;
-      shoulderTarget.scale = 0.62 / shoulderBaseHeight;
-      shoulderTarget.visible = true;
-    }, undefined, error => {
-      console.error('Shoulder model failed to load', error);
-    });
-
-    const renderShoulder = () => {
-      requestAnimationFrame(renderShoulder);
-      const dt = Math.min(0.05, shoulderClock.getDelta());
-      if (shoulderMixer && selfieActive) shoulderMixer.update(dt);
-      if (shoulderGroup) {
-        shoulderGroup.visible = selfieActive && shoulderModelReady && shoulderTarget.visible;
-        if (shoulderGroup.visible) {
-          shoulderGroup.position.x += (shoulderTarget.x - shoulderGroup.position.x) * 0.22;
-          shoulderGroup.position.y += (shoulderTarget.y - shoulderGroup.position.y) * 0.22;
-          const s = shoulderGroup.scale.x + (shoulderTarget.scale - shoulderGroup.scale.x) * 0.18;
-          shoulderGroup.scale.setScalar(s);
-        }
+  const initShoulderEntity = () => {
+    if (!shoulderModel) return;
+    const markReady = () => {
+      const obj = shoulderModel.getObject3D('mesh');
+      if (obj) {
+        const box = new THREE.Box3().setFromObject(obj);
+        const size = box.getSize(new THREE.Vector3());
+        if (size.y > 0.00001) shoulderBaseHeight = size.y / Math.max(shoulderModel.object3D.scale.y, 0.00001);
+        obj.traverse(node => {
+          if (node.isMesh || node.isSkinnedMesh) {
+            node.frustumCulled = false;
+            const materials = Array.isArray(node.material) ? node.material : [node.material];
+            materials.filter(Boolean).forEach(material => {
+              material.side = THREE.DoubleSide;
+              material.needsUpdate = true;
+            });
+          }
+        });
       }
-      shoulderRenderer.render(shoulderScene, shoulderCamera);
+      shoulderModelReady = true;
+      shoulderTarget.visible = true;
+      shoulderModel.setAttribute('visible', selfieActive);
     };
-    renderShoulder();
+    if (shoulderModel.getObject3D('mesh')) markReady();
+    else shoulderModel.addEventListener('model-loaded', markReady, { once: true });
+
+    const updateShoulder = () => {
+      requestAnimationFrame(updateShoulder);
+      if (!shoulderModel) return;
+      const show = selfieActive && shoulderModelReady && shoulderTarget.visible;
+      shoulderModel.setAttribute('visible', show);
+      if (!show) return;
+      const obj = shoulderModel.object3D;
+      obj.position.x += (shoulderTarget.x - obj.position.x) * 0.25;
+      obj.position.y += (shoulderTarget.y - obj.position.y) * 0.25;
+      obj.position.z = -1.2;
+      const s = obj.scale.x + (shoulderTarget.scale - obj.scale.x) * 0.2;
+      obj.scale.setScalar(s);
+    };
+    updateShoulder();
   };
 
   const handleFaceResults = results => {
     const detection = results?.detections?.[0];
-    if (!detection || !shoulderCamera) {
+    if (!detection) {
       // Keep the model visible at a sensible shoulder fallback until a face locks.
       if (selfieActive && shoulderModelReady) {
-        const aspect = window.innerWidth / Math.max(window.innerHeight, 1);
-        shoulderTarget.x = -0.58 * aspect;
-        shoulderTarget.y = -0.28;
-        shoulderTarget.scale = 0.62 / shoulderBaseHeight;
+        shoulderTarget.x = -0.45;
+        shoulderTarget.y = -0.34;
+        shoulderTarget.scale = 110;
         shoulderTarget.visible = true;
       }
       return;
@@ -421,17 +378,15 @@ window.addEventListener('DOMContentLoaded', () => {
     if (!box) return;
     lastFaceTime = performance.now();
     shoulderTarget.visible = true;
-    const aspect = window.innerWidth / Math.max(window.innerHeight, 1);
     const faceX = box.xCenter;
     const faceTop = box.yCenter - box.height / 2;
-    // In mirrored selfie view, the person's right shoulder is screen-left.
-    // The uploaded character leans screen-right, toward the person's head.
-    const shoulderX = faceX - box.width * 0.82;
-    const shoulderY = faceTop + box.height * 1.12;
-    shoulderTarget.x = (shoulderX - 0.5) * 2 * aspect;
-    shoulderTarget.y = (0.5 - shoulderY) * 2;
-    const desiredHeightWorld = Math.max(0.58, box.height * 2.7);
-    shoulderTarget.scale = desiredHeightWorld / shoulderBaseHeight;
+    // Mirrored selfie: person's right shoulder is screen-left.
+    const shoulderX = faceX - box.width * 0.78;
+    const shoulderY = faceTop + box.height * 1.20;
+    // Camera-child coordinates calibrated for z=-1.2 and the phone portrait view.
+    shoulderTarget.x = (shoulderX - 0.5) * 1.38;
+    shoulderTarget.y = (0.5 - shoulderY) * 1.38;
+    shoulderTarget.scale = Math.max(90, Math.min(165, box.height * 430));
   };
 
   const initFaceDetector = async () => {
@@ -661,15 +616,9 @@ window.addEventListener('DOMContentLoaded', () => {
       }
       drawVideoCover(ctx, video, width, height, selfieActive);
 
-      if (selfieActive) {
-        if (shoulderCanvas && shoulderCanvas.width && shoulderCanvas.height) {
-          ctx.drawImage(shoulderCanvas, 0, 0, width, height);
-        }
-      } else {
-        const arCanvas = scene.canvas || scene.querySelector('canvas');
-        if (arCanvas && arCanvas.width && arCanvas.height) {
-          ctx.drawImage(arCanvas, 0, 0, width, height);
-        }
+      const arCanvas = scene.canvas || scene.querySelector('canvas');
+      if (arCanvas && arCanvas.width && arCanvas.height) {
+        ctx.drawImage(arCanvas, 0, 0, width, height);
       }
 
       // Small vintage footer so shared photos point back to the brand.
@@ -724,7 +673,7 @@ window.addEventListener('DOMContentLoaded', () => {
       shopBar.classList.add('hidden');
       selfieMode.classList.remove('hidden');
       document.body.classList.add('selfie-active');
-      initShoulderRenderer();
+      initShoulderEntity();
       await initFaceDetector();
       selfieStream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } },
@@ -766,11 +715,8 @@ window.addEventListener('DOMContentLoaded', () => {
     if (arSystem) await arSystem.start();
   };
 
-  cameraFlipButton.addEventListener('click', async () => {
-    cameraFlipButton.disabled = true;
-    if (selfieActive) await exitSelfieMode();
-    else await enterSelfieMode();
-    cameraFlipButton.disabled = false;
+  cameraFlipButton.addEventListener('click', () => {
+    window.location.href = './selfie.html?v=124';
   });
 
   startButton.addEventListener('click', async () => {
@@ -809,7 +755,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=122'));
+    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=124'));
   }
 });
 </script>
