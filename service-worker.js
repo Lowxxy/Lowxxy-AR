@@ -1,7 +1,8 @@
-const CACHE_NAME = 'lowxxy-ar-full-v122-shoulder-render-fix';
+const CACHE_NAME = 'lowxxy-ar-full-v124-dedicated-selfie';
 const APP_SHELL = [
   './',
   './index.html',
+  './selfie.html',
   './manifest.webmanifest',
   './assets/targets.mind',
   './assets/chainmail.glb',
