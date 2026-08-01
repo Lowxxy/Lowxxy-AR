@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lowxxy-ar-full-v118-real-shoulder-selfie-shoulder-vintage-titlecard-ui';
+const CACHE_NAME = 'lowxxy-ar-full-v119-real-shoulder-selfie-shoulder-vintage-titlecard-ui';
 const APP_SHELL = [
   './',
   './index.html',
