@@ -2,7 +2,7 @@
   "name": "Lowxxy AR",
   "short_name": "Lowxxy AR",
   "description": "Official Lowxxy augmented reality experience",
-  "start_url": "./index.html?v=89",
+  "start_url": "./index.html?v=90",
   "scope": "./",
   "display": "standalone",
   "background_color": "#000000",
