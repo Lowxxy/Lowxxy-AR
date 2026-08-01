@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lowxxy-ar-v72-popart-scale-2-4';
+const CACHE_NAME = 'lowxxy-ar-full-v73';
 const APP_SHELL = [
   './',
   './index.html',
@@ -6,17 +6,17 @@ const APP_SHELL = [
   './assets/targets.mind',
   './assets/chainmail.glb',
   './assets/grounded-gains.glb',
-  './assets/hang-visible-v72.glb',
+  './assets/hang.glb',
   './assets/pop-art.glb',
-  './icons/lowxxy-logo-white.png',
+  './icons/icon-192.png',
+  './icons/icon-512.png',
   './icons/lowxxy-character-192.png',
-  './icons/lowxxy-character-512.png'
+  './icons/lowxxy-character-512.png',
+  './icons/lowxxy-logo-white.png'
 ];
-
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()));
 });
-
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys()
@@ -24,7 +24,6 @@ self.addEventListener('activate', event => {
       .then(() => self.clients.claim())
   );
 });
-
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
   const url = new URL(event.request.url);
