@@ -7,11 +7,50 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Lowxxy AR</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=90" />
-  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=90" />
+  <link rel="manifest" href="./manifest.webmanifest?v=91" />
+  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=91" />
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
+  <script>
+    AFRAME.registerComponent('face-camera-upright', {
+      schema: { smoothing: { default: 0.22 } },
+      init() {
+        this.worldPosition = new THREE.Vector3();
+        this.cameraPosition = new THREE.Vector3();
+        this.up = new THREE.Vector3(0, 1, 0);
+        this.lookMatrix = new THREE.Matrix4();
+        this.worldQuaternion = new THREE.Quaternion();
+        this.parentQuaternion = new THREE.Quaternion();
+        this.localQuaternion = new THREE.Quaternion();
+      },
+      tick() {
+        const object = this.el.object3D;
+        const camera = this.el.sceneEl.camera;
+        if (!camera || !object.visible) return;
+
+        object.getWorldPosition(this.worldPosition);
+        camera.getWorldPosition(this.cameraPosition);
+
+        // Keep the model upright. Only turn left/right toward the audience,
+        // preventing diagonal or downward-facing scans.
+        this.cameraPosition.y = this.worldPosition.y;
+        if (this.cameraPosition.distanceToSquared(this.worldPosition) < 0.000001) return;
+
+        this.lookMatrix.lookAt(this.worldPosition, this.cameraPosition, this.up);
+        this.worldQuaternion.setFromRotationMatrix(this.lookMatrix);
+
+        if (object.parent) {
+          object.parent.getWorldQuaternion(this.parentQuaternion).invert();
+          this.localQuaternion.copy(this.parentQuaternion).multiply(this.worldQuaternion);
+        } else {
+          this.localQuaternion.copy(this.worldQuaternion);
+        }
+
+        object.quaternion.slerp(this.localQuaternion, this.data.smoothing);
+      }
+    });
+  </script>
   <style>
     :root{color-scheme:dark;font-family:Arial,Helvetica,sans-serif}
     *{box-sizing:border-box}
@@ -45,7 +84,7 @@
   <div id="shopBar" class="hidden"><div class="shop-copy"><span class="shop-title">Want to see more?</span><span class="shop-subtitle">Explore the latest Lowxxy designs.</span></div><button id="shopButton" class="shop-button">SHOP LOWXXY</button></div>
 
   <a-scene
-    mindar-image="imageTargetSrc: ./assets/targets.mind?v=90; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.00005; filterBeta: 0.0005; warmupTolerance: 10; missTolerance: 120;"
+    mindar-image="imageTargetSrc: ./assets/targets.mind?v=91; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.00001; filterBeta: 0.0001; warmupTolerance: 15; missTolerance: 18;"
     embedded
     color-space="sRGB"
     renderer="colorManagement: true; alpha: true; antialias: true; logarithmicDepthBuffer: true;"
@@ -55,36 +94,36 @@
     <a-camera position="0 0 0" near="0.01" far="1000" look-controls="enabled:false"></a-camera>
 
     <a-assets timeout="90000">
-      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=90"></a-asset-item>
-      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=90"></a-asset-item>
-      <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=90"></a-asset-item>
-      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=90"></a-asset-item>
+      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=91"></a-asset-item>
+      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=91"></a-asset-item>
+      <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=91"></a-asset-item>
+      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=91"></a-asset-item>
     </a-assets>
 
     <!-- Target 0: Pop Art. Placed first in the scanner database so the dotted comic-book print gets priority over the similar regular Chainmail artwork. -->
     <a-entity id="target-pop-art" class="ar-target" data-name="POP ART" mindar-image-target="targetIndex: 0">
-      <a-entity class="model-wrapper" visible="false" position="0 -0.08 0.07">
+      <a-entity class="model-wrapper" visible="false" face-camera-upright="smoothing: 0.22" position="0 -0.08 0.07">
         <a-entity class="ar-model" gltf-model="#popArtAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1" position="-0.193 -0.238 0" rotation="0 0 0" scale="3.4 3.4 3.4"></a-entity>
       </a-entity>
     </a-entity>
 
     <!-- Target 1: Grounded Gains. Enlarged aggressively and centered over its taller artwork. -->
     <a-entity id="target-grounded-gains" class="ar-target" data-name="GROUNDED GAINS" mindar-image-target="targetIndex: 1">
-      <a-entity class="model-wrapper" visible="false" position="0 -0.12 0.08">
+      <a-entity class="model-wrapper" visible="false" face-camera-upright="smoothing: 0.22" position="0 -0.12 0.08">
         <a-entity class="ar-model" gltf-model="#groundedGainsAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1" position="0 -0.28 0" rotation="0 0 0" scale="1.25 1.25 1.25"></a-entity>
       </a-entity>
     </a-entity>
 
     <!-- Target 2: Hang. Uses the same grouped Hang(7).glb with a major size reduction and centroid-based recentering. -->
     <a-entity id="target-hang" class="ar-target" data-name="HANG" mindar-image-target="targetIndex: 2">
-      <a-entity class="model-wrapper" visible="false" position="0 -0.03 0.08">
+      <a-entity class="model-wrapper" visible="false" face-camera-upright="smoothing: 0.22" position="0 -0.03 0.08">
         <a-entity class="ar-model" gltf-model="#hangAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1" position="0 -0.68 -0.013" rotation="0 0 0" scale="7 7 7"></a-entity>
       </a-entity>
     </a-entity>
 
     <!-- Target 3: Chainmail. Intentionally mapped to the Pop Art animation so both similar designs now trigger the Pop Art experience. -->
     <a-entity id="target-chainmail" class="ar-target" data-name="CHAINMAIL" mindar-image-target="targetIndex: 3">
-      <a-entity class="model-wrapper" visible="false" position="0 -0.08 0.07">
+      <a-entity class="model-wrapper" visible="false" face-camera-upright="smoothing: 0.22" position="0 -0.08 0.07">
         <a-entity class="ar-model" gltf-model="#popArtAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1" position="-0.193 -0.238 0" rotation="0 0 0" scale="3.4 3.4 3.4"></a-entity>
       </a-entity>
     </a-entity>
@@ -159,7 +198,12 @@ window.addEventListener('DOMContentLoaded', () => {
         });
       }
 
-      console.log('Loaded AR model', loadedModels, 'of 4');
+      const clips = modelObject?.animations || [];
+      model._animationDuration = clips.length
+        ? Math.max(...clips.map(clip => clip.duration || 0))
+        : 5;
+
+      console.log('Loaded AR model', loadedModels, 'of 4', 'duration:', model._animationDuration);
     });
     model.addEventListener('model-error', event => {
       console.error('Model error', event);
@@ -178,28 +222,40 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // Sticky image tracking: brief tracking losses no longer hide or restart the
-  // model. The target keeps its last known pose while the animation continues
-  // looping, giving the camera time to move around the design and reacquire it.
-  const STICKY_HOLD_MS = 8000;
-
+  // Smooth-release behavior:
+  // - models stay upright and camera-facing while anchored to the design
+  // - brief tracking wobble is smoothed by MindAR's filter
+  // - when the design leaves frame, the current loop finishes once
+  // - the model then hides automatically so the next design can be scanned
   targets.forEach(target => {
     const wrapper = target.querySelector('.model-wrapper');
     const model = target.querySelector('.ar-model');
     const name = target.dataset.name;
-    let hideTimer = null;
+    let finishTimer = null;
     let isActive = false;
 
+    const releaseTarget = () => {
+      if (finishTimer) clearTimeout(finishTimer);
+      finishTimer = null;
+      target._finishTimer = null;
+      wrapper.setAttribute('visible', false);
+      wrapper.removeAttribute('animation__popout');
+      isActive = false;
+      target._stickyActive = false;
+      statusBar.textContent = 'Ready — scan another Lowxxy design';
+    };
+
     target.addEventListener('targetFound', () => {
-      if (hideTimer) {
-        clearTimeout(hideTimer);
-        hideTimer = null;
+      if (finishTimer) {
+        clearTimeout(finishTimer);
+        finishTimer = null;
+        target._finishTimer = null;
       }
 
       targets.forEach(other => {
         if (other !== target) {
-          if (other._stickyHideTimer) clearTimeout(other._stickyHideTimer);
-          other._stickyHideTimer = null;
+          if (other._finishTimer) clearTimeout(other._finishTimer);
+          other._finishTimer = null;
           other._stickyActive = false;
           other.querySelector('.model-wrapper').setAttribute('visible', false);
         }
@@ -223,21 +279,20 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
     target.addEventListener('targetLost', () => {
-      // Do not stop the mixer or hide immediately. MindAR retains the last
-      // tracked transform, so the model appears to stay in place through short
-      // tracking interruptions and resumes smoothly when the design is found.
-      statusBar.textContent = name + ' HOLDING POSITION — KEEP DESIGN NEAR FRAME';
-      if (hideTimer) clearTimeout(hideTimer);
-      hideTimer = setTimeout(() => {
-        wrapper.setAttribute('visible', false);
-        wrapper.removeAttribute('animation__popout');
-        isActive = false;
-        target._stickyActive = false;
-        hideTimer = null;
-        target._stickyHideTimer = null;
-        statusBar.textContent = 'Point the camera back at the full design';
-      }, STICKY_HOLD_MS);
-      target._stickyHideTimer = hideTimer;
+      if (!isActive) return;
+      if (finishTimer) clearTimeout(finishTimer);
+
+      const durationSeconds = Math.max(0.8, model._animationDuration || 5);
+      const mixerComponent = model.components['animation-mixer'];
+      const mixerTime = mixerComponent?.mixer?.time || 0;
+      let remainingSeconds = durationSeconds - (mixerTime % durationSeconds);
+
+      // Avoid an almost-instant cutoff when tracking is lost right at the end.
+      if (remainingSeconds < 0.65) remainingSeconds += durationSeconds;
+
+      statusBar.textContent = name + ' FINISHING — NEXT DESIGN READY SOON';
+      finishTimer = setTimeout(releaseTarget, remainingSeconds * 1000);
+      target._finishTimer = finishTimer;
     });
   });
 
@@ -271,7 +326,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=90'));
+    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=91'));
   }
 });
 </script>
