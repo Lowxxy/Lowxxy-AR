@@ -7,8 +7,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Lowxxy AR</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=91" />
-  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=91" />
+  <link rel="manifest" href="./manifest.webmanifest?v=92" />
+  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=92" />
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
@@ -84,7 +84,7 @@
   <div id="shopBar" class="hidden"><div class="shop-copy"><span class="shop-title">Want to see more?</span><span class="shop-subtitle">Explore the latest Lowxxy designs.</span></div><button id="shopButton" class="shop-button">SHOP LOWXXY</button></div>
 
   <a-scene
-    mindar-image="imageTargetSrc: ./assets/targets.mind?v=91; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.00001; filterBeta: 0.0001; warmupTolerance: 15; missTolerance: 18;"
+    mindar-image="imageTargetSrc: ./assets/targets.mind?v=92; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.00001; filterBeta: 0.0001; warmupTolerance: 15; missTolerance: 18;"
     embedded
     color-space="sRGB"
     renderer="colorManagement: true; alpha: true; antialias: true; logarithmicDepthBuffer: true;"
@@ -94,37 +94,37 @@
     <a-camera position="0 0 0" near="0.01" far="1000" look-controls="enabled:false"></a-camera>
 
     <a-assets timeout="90000">
-      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=91"></a-asset-item>
-      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=91"></a-asset-item>
-      <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=91"></a-asset-item>
-      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=91"></a-asset-item>
+      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=92"></a-asset-item>
+      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=92"></a-asset-item>
+      <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=92"></a-asset-item>
+      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=92"></a-asset-item>
     </a-assets>
 
     <!-- Target 0: Pop Art. Placed first in the scanner database so the dotted comic-book print gets priority over the similar regular Chainmail artwork. -->
     <a-entity id="target-pop-art" class="ar-target" data-name="POP ART" mindar-image-target="targetIndex: 0">
       <a-entity class="model-wrapper" visible="false" face-camera-upright="smoothing: 0.22" position="0 -0.08 0.07">
-        <a-entity class="ar-model" gltf-model="#popArtAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1" position="-0.193 -0.238 0" rotation="0 0 0" scale="3.4 3.4 3.4"></a-entity>
+        <a-entity class="ar-model" gltf-model="#popArtAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1" position="-0.193 -0.238 0" rotation="0 180 0" scale="3.4 3.4 3.4"></a-entity>
       </a-entity>
     </a-entity>
 
     <!-- Target 1: Grounded Gains. Enlarged aggressively and centered over its taller artwork. -->
     <a-entity id="target-grounded-gains" class="ar-target" data-name="GROUNDED GAINS" mindar-image-target="targetIndex: 1">
       <a-entity class="model-wrapper" visible="false" face-camera-upright="smoothing: 0.22" position="0 -0.12 0.08">
-        <a-entity class="ar-model" gltf-model="#groundedGainsAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1" position="0 -0.28 0" rotation="0 0 0" scale="1.25 1.25 1.25"></a-entity>
+        <a-entity class="ar-model" gltf-model="#groundedGainsAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1" position="0 -0.28 0" rotation="0 180 0" scale="1.25 1.25 1.25"></a-entity>
       </a-entity>
     </a-entity>
 
     <!-- Target 2: Hang. Uses the same grouped Hang(7).glb with a major size reduction and centroid-based recentering. -->
     <a-entity id="target-hang" class="ar-target" data-name="HANG" mindar-image-target="targetIndex: 2">
       <a-entity class="model-wrapper" visible="false" face-camera-upright="smoothing: 0.22" position="0 -0.03 0.08">
-        <a-entity class="ar-model" gltf-model="#hangAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1" position="0 -0.68 -0.013" rotation="0 0 0" scale="7 7 7"></a-entity>
+        <a-entity class="ar-model" gltf-model="#hangAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1" position="0 -0.68 -0.013" rotation="0 180 0" scale="7 7 7"></a-entity>
       </a-entity>
     </a-entity>
 
     <!-- Target 3: Chainmail. Intentionally mapped to the Pop Art animation so both similar designs now trigger the Pop Art experience. -->
     <a-entity id="target-chainmail" class="ar-target" data-name="CHAINMAIL" mindar-image-target="targetIndex: 3">
       <a-entity class="model-wrapper" visible="false" face-camera-upright="smoothing: 0.22" position="0 -0.08 0.07">
-        <a-entity class="ar-model" gltf-model="#popArtAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1" position="-0.193 -0.238 0" rotation="0 0 0" scale="3.4 3.4 3.4"></a-entity>
+        <a-entity class="ar-model" gltf-model="#popArtAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1" position="-0.193 -0.238 0" rotation="0 180 0" scale="3.4 3.4 3.4"></a-entity>
       </a-entity>
     </a-entity>
 
@@ -326,7 +326,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=91'));
+    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=92'));
   }
 });
 </script>
