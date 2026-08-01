@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lowxxy-ar-full-v73';
+const CACHE_NAME = 'lowxxy-ar-full-v74';
 const APP_SHELL = [
   './',
   './index.html',
