@@ -7,8 +7,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Lowxxy AR</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=116" />
-  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=116" />
+  <link rel="manifest" href="./manifest.webmanifest?v=117" />
+  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=117" />
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
@@ -172,6 +172,22 @@
     }
     .shop-copy{min-width:0;flex:1;text-align:left;padding-left:5px}.shop-title{display:block;font:900 13px/1 "Arial Rounded MT Bold",Arial,sans-serif;text-transform:uppercase}.shop-subtitle{display:block;margin-top:4px;font:italic 700 11px/1.2 Georgia,serif;color:#d0d0d0}.shop-button{width:auto;min-height:42px;flex:0 0 auto;padding:9px 14px;font-size:11px;box-shadow:0 3px 0 #555,0 5px 0 #000}
 
+
+    #cameraFlipButton{
+      position:fixed;z-index:980;right:14px;top:max(76px,calc(env(safe-area-inset-top) + 65px));
+      width:52px;min-height:52px;padding:0;border-radius:50%;font-size:23px;line-height:1;
+      display:flex;align-items:center;justify-content:center;background:#f2f0e8;color:#050505;
+      border:3px solid #050505;box-shadow:0 0 0 2px #fff,0 5px 0 #555,0 8px 14px rgba(0,0,0,.65)
+    }
+    #cameraFlipButton.selfie-active{background:#111;color:#fff;border-color:#fff}
+    #selfieMode{position:fixed;inset:0;z-index:450;background:#000;overflow:hidden}
+    #selfieVideo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+    #selfieScene{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;pointer-events:none;background:transparent!important}
+    #selfieScene canvas{background:transparent!important}
+    #shoulderGuide{position:fixed;z-index:720;left:13px;bottom:max(95px,calc(env(safe-area-inset-bottom) + 86px));
+      padding:7px 12px;border:2px solid #fff;border-radius:999px;background:rgba(0,0,0,.72);color:#fff;
+      font:900 10px/1 "Arial Rounded MT Bold",Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase;pointer-events:none}
+
     @media (max-height:690px){.panel{padding:27px 20px 23px}.brand-logo{width:min(255px,78%)}.subtitle{margin:11px auto 17px}.button-stack{gap:9px}button{min-height:49px}.show-title{font-size:31px}}
     @media (prefers-reduced-motion:reduce){*{animation:none!important}}
   </style>
@@ -191,8 +207,23 @@
   <div id="statusBar" class="hidden">Looking for a Lowxxy design...</div>
   <div id="shopBar" class="hidden"><div class="shop-copy"><span class="shop-title">More from Lowxxy</span><span class="shop-subtitle">See the latest designs.</span></div><button id="shopButton" class="shop-button">VISIT THE SHOP</button></div>
 
-  <a-scene
-    mindar-image="imageTargetSrc: ./assets/targets.mind?v=116; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.00001; filterBeta: 0.0001; warmupTolerance: 15; missTolerance: 18;"
+
+  <button id="cameraFlipButton" class="hidden" aria-label="Flip camera" title="Flip camera">↺</button>
+  <div id="selfieMode" class="hidden">
+    <video id="selfieVideo" autoplay muted playsinline></video>
+    <div id="shoulderGuide">LOWXXY SHOULDER MODE</div>
+    <a-scene id="selfieScene" embedded renderer="alpha:true; antialias:true; colorManagement:true" vr-mode-ui="enabled:false" device-orientation-permission-ui="enabled:false" loading-screen="enabled:false">
+      <a-assets timeout="90000"><a-asset-item id="shoulderLowxxyAsset" src="./assets/pop-art.glb?v=117"></a-asset-item></a-assets>
+      <a-camera position="0 0 0" look-controls="enabled:false">
+        <a-entity id="shoulderLowxxy" gltf-model="#shoulderLowxxyAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:0.35" position="-0.48 -0.43 -1.15" rotation="0 180 0" scale="2.05 2.05 2.05" animation__bob="property:position; from:-0.48 -0.43 -1.15; to:-0.48 -0.40 -1.15; dir:alternate; loop:true; dur:1200; easing:easeInOutSine"></a-entity>
+      </a-camera>
+      <a-light type="ambient" intensity="2.6"></a-light>
+      <a-light type="directional" intensity="2.4" position="1 2 3"></a-light>
+    </a-scene>
+  </div>
+
+  <a-scene id="imageScene"
+    mindar-image="imageTargetSrc: ./assets/targets.mind?v=117; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.00001; filterBeta: 0.0001; warmupTolerance: 15; missTolerance: 18;"
     embedded
     color-space="sRGB"
     renderer="colorManagement: true; alpha: true; antialias: true; logarithmicDepthBuffer: true;"
@@ -202,10 +233,10 @@
     <a-camera position="0 0 0" near="0.01" far="1000" look-controls="enabled:false"></a-camera>
 
     <a-assets timeout="90000">
-      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=116"></a-asset-item>
-      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=116"></a-asset-item>
-      <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=116"></a-asset-item>
-      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=116"></a-asset-item>
+      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=117"></a-asset-item>
+      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=117"></a-asset-item>
+      <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=117"></a-asset-item>
+      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=117"></a-asset-item>
     </a-assets>
 
     <!-- Target 0: Pop Art. Placed first in the scanner database so the dotted comic-book print gets priority over the similar regular Chainmail artwork. -->
@@ -242,7 +273,10 @@
 </div>
 <script>
 window.addEventListener('DOMContentLoaded', () => {
-  const scene = document.querySelector('a-scene');
+  const scene = document.querySelector('#imageScene');
+  const cameraFlipButton = document.querySelector('#cameraFlipButton');
+  const selfieMode = document.querySelector('#selfieMode');
+  const selfieVideo = document.querySelector('#selfieVideo');
   const startOverlay = document.querySelector('#startOverlay');
   const startButton = document.querySelector('#startButton');
   const installButton = document.querySelector('#installButton');
@@ -256,6 +290,8 @@ window.addEventListener('DOMContentLoaded', () => {
   let arSystem = null;
   let deferredInstallPrompt = null;
   let loadedModels = 0;
+  let selfieStream = null;
+  let selfieActive = false;
 
   const isStandalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
   const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
@@ -408,6 +444,62 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  const stopSelfieStream = () => {
+    if (selfieStream) selfieStream.getTracks().forEach(track => track.stop());
+    selfieStream = null;
+    selfieVideo.srcObject = null;
+  };
+
+  const enterSelfieMode = async () => {
+    try {
+      if (arSystem) await arSystem.stop();
+      targets.forEach(target => target.querySelector('.model-wrapper').setAttribute('visible', false));
+      scene.classList.add('hidden');
+      scanFrame.classList.add('hidden');
+      shopBar.classList.add('hidden');
+      selfieMode.classList.remove('hidden');
+      selfieStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } },
+        audio: false
+      });
+      selfieVideo.srcObject = selfieStream;
+      await selfieVideo.play();
+      selfieActive = true;
+      cameraFlipButton.classList.add('selfie-active');
+      cameraFlipButton.textContent = '↻';
+      statusBar.textContent = 'LOWXXY IS ON YOUR LEFT SHOULDER!';
+    } catch (error) {
+      console.error(error);
+      stopSelfieStream();
+      selfieMode.classList.add('hidden');
+      scene.classList.remove('hidden');
+      scanFrame.classList.remove('hidden');
+      shopBar.classList.remove('hidden');
+      statusBar.textContent = 'SELFIE CAMERA COULD NOT START';
+      if (arSystem) await arSystem.start();
+    }
+  };
+
+  const exitSelfieMode = async () => {
+    stopSelfieStream();
+    selfieMode.classList.add('hidden');
+    scene.classList.remove('hidden');
+    scanFrame.classList.remove('hidden');
+    shopBar.classList.remove('hidden');
+    selfieActive = false;
+    cameraFlipButton.classList.remove('selfie-active');
+    cameraFlipButton.textContent = '↺';
+    statusBar.textContent = 'LOOKING FOR A LOWXXY DESIGN...';
+    if (arSystem) await arSystem.start();
+  };
+
+  cameraFlipButton.addEventListener('click', async () => {
+    cameraFlipButton.disabled = true;
+    if (selfieActive) await exitSelfieMode();
+    else await enterSelfieMode();
+    cameraFlipButton.disabled = false;
+  });
+
   startButton.addEventListener('click', async () => {
     startButton.disabled = true;
     startButton.textContent = 'WARMING UP THE PROJECTOR...';
@@ -424,6 +516,7 @@ window.addEventListener('DOMContentLoaded', () => {
     statusBar.classList.remove('hidden');
     shopBar.classList.remove('hidden');
     scanFrame.classList.remove('hidden');
+    cameraFlipButton.classList.remove('hidden');
     try {
       await arSystem.start();
     } catch (error) {
@@ -432,6 +525,7 @@ window.addEventListener('DOMContentLoaded', () => {
       statusBar.classList.add('hidden');
       shopBar.classList.add('hidden');
       scanFrame.classList.add('hidden');
+      cameraFlipButton.classList.add('hidden');
       errorText.style.display = 'block';
       errorText.textContent = 'Camera or scanner could not start. Allow camera access, confirm targets.mind was uploaded, then refresh.';
       startButton.disabled = false;
@@ -440,7 +534,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=116'));
+    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=117'));
   }
 });
 </script>
