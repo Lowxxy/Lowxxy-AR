@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lowxxy-ar-full-v106-popart-reset-sticky-hang7-fit';
+const CACHE_NAME = 'lowxxy-ar-full-v107-popart-reset-sticky-hang7-fit';
 const APP_SHELL = [
   './',
   './index.html',
