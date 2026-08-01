@@ -7,8 +7,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Lowxxy AR</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=74" />
-  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=74" />
+  <link rel="manifest" href="./manifest.webmanifest?v=75" />
+  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=75" />
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
@@ -45,7 +45,7 @@
   <div id="shopBar" class="hidden"><div class="shop-copy"><span class="shop-title">Want to see more?</span><span class="shop-subtitle">Explore the latest Lowxxy designs.</span></div><button id="shopButton" class="shop-button">SHOP LOWXXY</button></div>
 
   <a-scene
-    mindar-image="imageTargetSrc: ./assets/targets.mind?v=74; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.0001; filterBeta: 0.001; warmupTolerance: 8; missTolerance: 10;"
+    mindar-image="imageTargetSrc: ./assets/targets.mind?v=75; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.0001; filterBeta: 0.001; warmupTolerance: 8; missTolerance: 10;"
     embedded
     color-space="sRGB"
     renderer="colorManagement: true; alpha: true; antialias: true; logarithmicDepthBuffer: true;"
@@ -55,10 +55,10 @@
     <a-camera position="0 0 0" near="0.01" far="1000" look-controls="enabled:false"></a-camera>
 
     <a-assets timeout="90000">
-      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=74"></a-asset-item>
-      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=74"></a-asset-item>
-      <a-asset-item id="hangAsset" src="./assets/hang.glb?v=74"></a-asset-item>
-      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=74"></a-asset-item>
+      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=75"></a-asset-item>
+      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=75"></a-asset-item>
+      <a-asset-item id="hangAsset" src="./assets/hang.glb?v=75"></a-asset-item>
+      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=75"></a-asset-item>
     </a-assets>
 
     <!-- Target 0: Pop Art. Placed first in the scanner database so the dotted comic-book print gets priority over the similar regular Chainmail artwork. -->
@@ -75,10 +75,10 @@
       </a-entity>
     </a-entity>
 
-    <!-- Target 2: Hang. Updated to Hang(6).glb with a controlled larger scale and small recenter correction. -->
+    <!-- Target 2: Hang. Hang(6).glb recentered using its true scaled mesh offset so it stays on the scanner instead of moving off-screen. -->
     <a-entity id="target-hang" class="ar-target" data-name="HANG" mindar-image-target="targetIndex: 2">
       <a-entity class="model-wrapper" visible="false" position="0 -0.03 0.08">
-        <a-entity class="ar-model" gltf-model="#hangAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1" position="0.054 0.0066 -0.0087" rotation="0 0 0" scale="100 100 100"></a-entity>
+        <a-entity class="ar-model" gltf-model="#hangAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1" position="5.383754 0.660793 -0.865416" rotation="0 0 0" scale="100 100 100"></a-entity>
       </a-entity>
     </a-entity>
 
@@ -232,7 +232,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=74'));
+    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=75'));
   }
 });
 </script>
