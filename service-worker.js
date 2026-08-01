@@ -1,43 +1,15 @@
-const CACHE_NAME = 'lowxxy-ar-v69-hard-reset';
-const APP_SHELL = [
-  './',
-  './index.html',
-  './manifest.webmanifest',
-  './assets/targets.mind',
-  './assets/chainmail.glb',
-  './assets/grounded-gains.glb',
-  './assets/hang-v69.glb',
-  './assets/pop-art.glb',
-  './icons/lowxxy-logo-white.png',
-  './icons/lowxxy-character-192.png',
-  './icons/lowxxy-character-512.png'
-];
-
-self.addEventListener('install', event => {
-  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()));
-});
-
-self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys()
-      .then(keys => Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))))
-      .then(() => self.clients.claim())
-  );
-});
-
-self.addEventListener('fetch', event => {
-  if (event.request.method !== 'GET') return;
-  const url = new URL(event.request.url);
-  if (url.origin !== self.location.origin) return;
-  event.respondWith(
-    fetch(event.request)
-      .then(response => {
-        if (response && response.ok) {
-          const copy = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
-        }
-        return response;
-      })
-      .catch(() => caches.match(event.request).then(hit => hit || caches.match('./index.html')))
-  );
-});
+{
+  "name": "Lowxxy AR",
+  "short_name": "Lowxxy AR",
+  "description": "Scan Lowxxy designs and unlock animated AR experiences.",
+  "start_url": "./?v=40",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "icons": [
+    {"src":"./icons/lowxxy-character-192.png?v=40","sizes":"192x192","type":"image/png","purpose":"any maskable"},
+    {"src":"./icons/lowxxy-character-512.png?v=40","sizes":"512x512","type":"image/png","purpose":"any maskable"}
+  ]
+}
