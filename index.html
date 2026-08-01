@@ -7,8 +7,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Lowxxy AR</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=121" />
-  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=121" />
+  <link rel="manifest" href="./manifest.webmanifest?v=122" />
+  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=122" />
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
@@ -234,7 +234,7 @@
   </div>
 
   <a-scene id="imageScene"
-    mindar-image="imageTargetSrc: ./assets/targets.mind?v=121; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.00001; filterBeta: 0.0001; warmupTolerance: 15; missTolerance: 18;"
+    mindar-image="imageTargetSrc: ./assets/targets.mind?v=122; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.00001; filterBeta: 0.0001; warmupTolerance: 15; missTolerance: 18;"
     embedded
     color-space="sRGB"
     renderer="colorManagement: true; alpha: true; antialias: true; logarithmicDepthBuffer: true;"
@@ -243,10 +243,10 @@
     <a-camera position="0 0 0" near="0.01" far="1000" look-controls="enabled:false"></a-camera>
 
     <a-assets timeout="90000">
-      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=121"></a-asset-item>
-      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=121"></a-asset-item>
-      <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=121"></a-asset-item>
-      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=121"></a-asset-item>
+      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=122"></a-asset-item>
+      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=122"></a-asset-item>
+      <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=122"></a-asset-item>
+      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=122"></a-asset-item>
     </a-assets>
 
     <!-- Target 0: Pop Art. Placed first in the scanner database so the dotted comic-book print gets priority over the similar regular Chainmail artwork. -->
@@ -354,7 +354,7 @@ window.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('resize', resizeShoulderRenderer);
 
     const loader = new THREE.GLTFLoader();
-    loader.load('./assets/lowxxy-shoulder.glb?v=121', gltf => {
+    loader.load('./assets/lowxxy-shoulder.glb?v=122', gltf => {
       const model = gltf.scene;
       model.traverse(node => {
         if (node.isMesh || node.isSkinnedMesh) {
@@ -376,6 +376,12 @@ window.addEventListener('DOMContentLoaded', () => {
       shoulderMixer = new THREE.AnimationMixer(model);
       (gltf.animations || []).forEach(clip => shoulderMixer.clipAction(clip).reset().play());
       shoulderModelReady = true;
+      // Show a visible fallback immediately while face detection locks on.
+      const aspect = window.innerWidth / Math.max(window.innerHeight, 1);
+      shoulderTarget.x = -0.58 * aspect;
+      shoulderTarget.y = -0.28;
+      shoulderTarget.scale = 0.62 / shoulderBaseHeight;
+      shoulderTarget.visible = true;
     }, undefined, error => {
       console.error('Shoulder model failed to load', error);
     });
@@ -385,7 +391,7 @@ window.addEventListener('DOMContentLoaded', () => {
       const dt = Math.min(0.05, shoulderClock.getDelta());
       if (shoulderMixer && selfieActive) shoulderMixer.update(dt);
       if (shoulderGroup) {
-        shoulderGroup.visible = selfieActive && shoulderModelReady && shoulderTarget.visible && (performance.now() - lastFaceTime < 650);
+        shoulderGroup.visible = selfieActive && shoulderModelReady && shoulderTarget.visible;
         if (shoulderGroup.visible) {
           shoulderGroup.position.x += (shoulderTarget.x - shoulderGroup.position.x) * 0.22;
           shoulderGroup.position.y += (shoulderTarget.y - shoulderGroup.position.y) * 0.22;
@@ -401,7 +407,14 @@ window.addEventListener('DOMContentLoaded', () => {
   const handleFaceResults = results => {
     const detection = results?.detections?.[0];
     if (!detection || !shoulderCamera) {
-      shoulderTarget.visible = false;
+      // Keep the model visible at a sensible shoulder fallback until a face locks.
+      if (selfieActive && shoulderModelReady) {
+        const aspect = window.innerWidth / Math.max(window.innerHeight, 1);
+        shoulderTarget.x = -0.58 * aspect;
+        shoulderTarget.y = -0.28;
+        shoulderTarget.scale = 0.62 / shoulderBaseHeight;
+        shoulderTarget.visible = true;
+      }
       return;
     }
     const box = detection.boundingBox;
@@ -417,7 +430,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const shoulderY = faceTop + box.height * 1.12;
     shoulderTarget.x = (shoulderX - 0.5) * 2 * aspect;
     shoulderTarget.y = (0.5 - shoulderY) * 2;
-    const desiredHeightWorld = Math.max(0.36, box.height * 2.0);
+    const desiredHeightWorld = Math.max(0.58, box.height * 2.7);
     shoulderTarget.scale = desiredHeightWorld / shoulderBaseHeight;
   };
 
@@ -796,7 +809,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=121'));
+    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=122'));
   }
 });
 </script>
