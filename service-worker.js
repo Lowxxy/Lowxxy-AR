@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lowxxy-ar-clean-v203';
+const CACHE_NAME = 'lowxxy-ar-clean-v204';
 const APP_SHELL = [
   './', './index.html?v=203', './selfie.html?v=203', './manifest.webmanifest',
   './assets/targets.mind?v=200', './assets/chainmail.glb?v=200',
