@@ -7,8 +7,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Lowxxy AR</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=203" />
-  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=203" />
+  <link rel="manifest" href="./manifest.webmanifest?v=206" />
+  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=206" />
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
@@ -176,6 +176,9 @@
     @media (prefers-reduced-motion:reduce){*{animation:none!important}}
   
     #cameraTools{position:fixed;z-index:1150;right:18px;top:max(18px,env(safe-area-inset-top));display:flex;gap:12px;flex-direction:column}
+    #collectionButton{position:fixed;z-index:1150;left:18px;top:max(18px,env(safe-area-inset-top));width:58px;height:58px;border-radius:50%;border:4px solid #f5f1e8;background:#171717;color:#fff;box-shadow:0 0 0 3px #171717,0 6px 0 rgba(0,0,0,.45);display:grid;place-items:center;padding:10px;cursor:pointer}
+    #collectionButton svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+    #collectionButton:active{transform:translateY(3px)}
     .round-tool{width:58px;height:58px;border-radius:50%;border:4px solid #f5f1e8;background:#171717;color:#fff;box-shadow:0 0 0 3px #171717,0 6px 0 rgba(0,0,0,.45);font-size:26px;font-weight:900;display:grid;place-items:center;padding:0}
     .round-tool:active{transform:translateY(3px);box-shadow:0 0 0 3px #171717,0 2px 0 rgba(0,0,0,.45)}
     #captureToast{position:fixed;z-index:1500;left:50%;top:50%;transform:translate(-50%,-50%) scale(.85);background:#171717;color:#fff;border:4px solid #f5f1e8;border-radius:999px;padding:16px 24px;font-weight:900;letter-spacing:1px;opacity:0;pointer-events:none;transition:.2s}
@@ -199,6 +202,8 @@
   <div id="shopBar" class="hidden"><div class="shop-copy"><span class="shop-title">More from Lowxxy</span><span class="shop-subtitle">See the latest designs.</span></div><button id="shopButton" class="shop-button">VISIT THE SHOP</button></div>
 
 
+  <button id="collectionButton" class="hidden" aria-label="Open shirt collection" title="Collection"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4 10 6h4l2-2 4 3-2 4-2-1v10H8V10l-2 1-2-4 4-3Z"/></svg></button>
+
   <div id="cameraTools" class="hidden">
     <button id="openSelfie" class="round-tool" aria-label="Open selfie camera" title="Selfie camera">↺</button>
     <button id="takeScannerPhoto" class="round-tool" aria-label="Take AR photo" title="Take photo">●</button>
@@ -206,7 +211,7 @@
   <div id="captureToast">PHOTO READY!</div>
 
   <a-scene
-    mindar-image="imageTargetSrc: ./assets/targets.mind?v=203; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.00001; filterBeta: 0.0001; warmupTolerance: 15; missTolerance: 18;"
+    mindar-image="imageTargetSrc: ./assets/targets.mind?v=206; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.00001; filterBeta: 0.0001; warmupTolerance: 15; missTolerance: 18;"
     embedded
     color-space="sRGB"
     renderer="colorManagement: true; alpha: true; antialias: true; logarithmicDepthBuffer: true; preserveDrawingBuffer: true;"
@@ -216,10 +221,10 @@
     <a-camera position="0 0 0" near="0.01" far="1000" look-controls="enabled:false"></a-camera>
 
     <a-assets timeout="90000">
-      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=203"></a-asset-item>
-      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=203"></a-asset-item>
-      <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=203"></a-asset-item>
-      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=203"></a-asset-item>
+      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=206"></a-asset-item>
+      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=206"></a-asset-item>
+      <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=206"></a-asset-item>
+      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=206"></a-asset-item>
     </a-assets>
 
     <!-- Target 0: Pop Art. Placed first in the scanner database so the dotted comic-book print gets priority over the similar regular Chainmail artwork. -->
@@ -268,6 +273,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const errorText = document.querySelector('#errorText');
   const targets = [...document.querySelectorAll('.ar-target')];
   const cameraTools = document.querySelector('#cameraTools');
+  const collectionButton = document.querySelector('#collectionButton');
   const openSelfie = document.querySelector('#openSelfie');
   const takeScannerPhoto = document.querySelector('#takeScannerPhoto');
   const captureToast = document.querySelector('#captureToast');
@@ -355,6 +361,18 @@ window.addEventListener('DOMContentLoaded', () => {
   // - brief tracking wobble is smoothed by MindAR's filter
   // - when the design leaves frame, the current loop finishes once
   // - the model then hides automatically so the next design can be scanned
+  const collectionKeyByTargetName = {
+    'POP ART': 'pop-art',
+    'GROUNDED GAINS': 'grounded-gains',
+    'HANG': 'hang',
+    'CHAINMAIL': 'chainmail'
+  };
+  const unlockScannedShirt = name => {
+    const key = collectionKeyByTargetName[name];
+    if (!key) return;
+    localStorage.setItem('lowxxy-collection-' + key, 'unlocked');
+  };
+
   targets.forEach(target => {
     const wrapper = target.querySelector('.model-wrapper');
     const model = target.querySelector('.ar-model');
@@ -403,7 +421,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
       isActive = true;
       target._stickyActive = true;
-      statusBar.textContent = 'LOWXXY DESIGN SCANNED!';
+      unlockScannedShirt(name);
+      statusBar.textContent = 'LOWXXY DESIGN SCANNED — COLLECTION UNLOCKED!';
       statusBar.classList.remove('scan-pop');
       void statusBar.offsetWidth;
       statusBar.classList.add('scan-pop');
@@ -443,6 +462,7 @@ window.addEventListener('DOMContentLoaded', () => {
     statusBar.classList.remove('hidden');
     shopBar.classList.remove('hidden');
     cameraTools.classList.remove('hidden');
+    collectionButton.classList.remove('hidden');
     scanFrame.classList.remove('hidden');
     try {
       await arSystem.start();
@@ -452,6 +472,7 @@ window.addEventListener('DOMContentLoaded', () => {
       statusBar.classList.add('hidden');
       shopBar.classList.add('hidden');
       cameraTools.classList.add('hidden');
+      collectionButton.classList.add('hidden');
       scanFrame.classList.add('hidden');
       errorText.style.display = 'block';
       errorText.textContent = 'Camera or scanner could not start. Allow camera access, confirm targets.mind was uploaded, then refresh.';
@@ -461,11 +482,15 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=203'));
+    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=206'));
   }
 
+  collectionButton.addEventListener('click', () => {
+    window.location.href = './collection.html?v=206';
+  });
+
   openSelfie.addEventListener('click', () => {
-    window.location.href = './selfie.html?v=203';
+    window.location.href = './selfie.html?v=206';
   });
 
   function drawCover(ctx, source, width, height, mirror = false) {
