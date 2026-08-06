@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#050505" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Lowxxy Collection</title>
+  <link rel="manifest" href="./manifest.webmanifest?v=206" />
+  <style>
+    :root{color-scheme:dark;--paper:#f2f0e8;--gold:#d6aa42;--gold2:#ffe59a;--gray:#8c8c8c;--ink:#070707;font-family:"Arial Rounded MT Bold","Trebuchet MS",Arial,sans-serif}
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;background:#050505;color:var(--paper)}
+    body{background:radial-gradient(circle at 50% -15%,#282828 0,#101010 35%,#050505 72%);padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+    body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.17;background-image:radial-gradient(#fff 0 .7px,transparent .9px);background-size:11px 11px;mix-blend-mode:soft-light}
+    .top{position:sticky;top:0;z-index:10;display:grid;grid-template-columns:52px 1fr 52px;align-items:center;padding:14px 16px;background:linear-gradient(#070707f2,#070707c9,transparent);backdrop-filter:blur(6px)}
+    .iconBtn{width:48px;height:48px;border:2px solid #ddd;border-radius:50%;background:#111;color:#fff;font-size:25px;font-weight:900;display:grid;place-items:center;box-shadow:0 4px 0 #333;cursor:pointer}
+    .logo{text-align:center;font-family:Georgia,serif;font-weight:900;letter-spacing:.12em}.logo strong{display:block;font-size:20px}.logo span{font-size:10px;color:#bbb}
+    main{width:min(980px,100%);margin:auto;padding:4px 14px 34px}
+    h1{text-align:center;font-family:Georgia,serif;font-size:clamp(34px,9vw,62px);margin:8px 0 2px;letter-spacing:.04em;text-shadow:0 4px 0 #303030}
+    .intro{text-align:center;margin:0 auto 22px;color:#cfcfcf;font:italic 700 14px/1.45 Georgia,serif;max-width:500px}
+    .section{border:2px solid #494949;border-radius:24px;padding:17px 13px 14px;margin:0 0 18px;background:#080808d9;box-shadow:0 18px 32px #0008}
+    .section.gold{border-color:#9b7728;box-shadow:0 0 22px #d6aa4219,0 18px 32px #0009}
+    .sectionTitle{text-align:center;margin:0 0 5px;font-family:Georgia,serif;font-size:22px;letter-spacing:.08em}.gold .sectionTitle{color:var(--gold2)}
+    .sectionSub{text-align:center;margin:0 0 15px;color:#aaa;font-size:12px}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+    .regular .grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .card{position:relative;min-width:0;overflow:hidden;border:1px solid #444;border-radius:18px;background:linear-gradient(145deg,#171717,#090909 62%);padding:12px 8px 11px;text-align:center;box-shadow:inset 0 0 22px #000,0 6px 15px #0008}
+    .gold .card{border-color:#8e6b24;background:radial-gradient(circle at 50% 32%,#3b2b0b 0,#161208 43%,#090909 75%)}
+    .shirtBox{height:175px;display:grid;place-items:center;position:relative}
+    .shirt{width:100%;height:100%;object-fit:contain;transition:.35s ease;filter:brightness(0) saturate(100%) invert(65%) sepia(80%) saturate(535%) hue-rotate(2deg) brightness(96%) contrast(90%);opacity:.88;drop-shadow:0 0 14px #d6aa4255}
+    .regular .shirt{filter:brightness(0) invert(55%);opacity:.52}
+    .card::after{content:"?";position:absolute;left:50%;top:82px;transform:translate(-50%,-50%);font:900 44px/1 Georgia,serif;color:#090909;text-shadow:0 1px 0 #ffe59a99;opacity:.8}
+    .lock{width:34px;height:34px;margin:-2px auto 7px;border:2px solid currentColor;border-radius:50%;display:grid;place-items:center;color:#d9b85e;font-size:16px}.regular .lock{color:#8d8d8d}
+    .name{font:900 13px/1.12 Georgia,serif;letter-spacing:.05em;text-transform:uppercase}.type{font-size:9px;color:#b99849;margin-top:5px;letter-spacing:.11em}.regular .type{color:#777}
+    .card.unlocked{border-color:#e5e5e5;background:radial-gradient(circle at 50% 30%,#2c2c2c,#0a0a0a 70%)}
+    .gold .card.unlocked{border-color:#ffd86b;box-shadow:0 0 18px #ffd86b33,inset 0 0 24px #000}
+    .card.unlocked::after{display:none}.card.unlocked .shirt{filter:none;opacity:1;transform:scale(1.05)}.card.unlocked .lock{color:#fff;border-color:#fff}.card.unlocked .lock::before{content:"✓"}.card.unlocked .lock span{display:none}.card.unlocked .type{color:#fff}.card.unlocked .name{color:#fff}
+    .saveNote{margin:18px auto 0;max-width:520px;padding:12px 15px;border:1px solid #444;border-radius:999px;color:#bbb;text-align:center;font-size:11px;background:#0d0d0ddd}
+    .emptyNote{text-align:center;color:#777;font-size:10px;margin:12px 0 0}
+    @media (max-width:430px){.shirtBox{height:145px}.regular .grid{grid-template-columns:repeat(3,minmax(0,1fr))}.regular .shirtBox{height:105px}.regular .card{padding-left:4px;padding-right:4px}.regular .name{font-size:10px}.card::after{top:69px}.regular .card::after{top:53px;font-size:30px}}
+  </style>
+</head>
+<body>
+  <header class="top">
+    <button class="iconBtn" id="backBtn" aria-label="Back to scanner">‹</button>
+    <div class="logo"><strong>LOWXXY</strong><span>COLLECTION</span></div>
+    <button class="iconBtn" id="scanBtn" aria-label="Scan a shirt">⌗</button>
+  </header>
+  <main>
+    <h1>YOUR COLLECTION</h1>
+    <p class="intro">Scan a Lowxxy shirt in the AR camera to reveal it here. Your unlocked collection stays saved on this device.</p>
+
+    <section class="section gold">
+      <h2 class="sectionTitle">✦ GOLD AR MYSTERIES ✦</h2>
+      <p class="sectionSub">Animated shirts unlock when their design is scanned.</p>
+      <div class="grid">
+        <article class="card" data-key="chainmail"><div class="shirtBox"><img class="shirt" src="./assets/shirts/chainmail.webp" alt="Chainmail shirt"></div><div class="lock"><span>🔒</span></div><div class="name">Chainmail</div><div class="type">MYSTERY AR SHIRT</div></article>
+        <article class="card" data-key="pop-art"><div class="shirtBox"><img class="shirt" src="./assets/shirts/popart.webp" alt="Pop Art shirt"></div><div class="lock"><span>🔒</span></div><div class="name">Pop Art</div><div class="type">MYSTERY AR SHIRT</div></article>
+        <article class="card" data-key="grounded-gains"><div class="shirtBox"><img class="shirt" src="./assets/shirts/grounded-gains.webp" alt="Grounded Gains shirt"></div><div class="lock"><span>🔒</span></div><div class="name">Grounded Gains</div><div class="type">MYSTERY AR SHIRT</div></article>
+        <article class="card" data-key="hang"><div class="shirtBox"><img class="shirt" src="./assets/shirts/hang.webp" alt="Hang shirt"></div><div class="lock"><span>🔒</span></div><div class="name">Hang</div><div class="type">MYSTERY AR SHIRT</div></article>
+      </div>
+    </section>
+
+    <section class="section regular">
+      <h2 class="sectionTitle">REGULAR DESIGNS</h2>
+      <p class="sectionSub">These three will be connected to scanning later.</p>
+      <div class="grid">
+        <article class="card" data-key="royal-script"><div class="shirtBox"><img class="shirt" src="./assets/shirts/royal-script.webp" alt="Royal Script shirt"></div><div class="lock"><span>🔒</span></div><div class="name">Royal Script</div><div class="type">LOCKED</div></article>
+        <article class="card" data-key="crown-column"><div class="shirtBox"><img class="shirt" src="./assets/shirts/crown-column.webp" alt="Crown Column shirt"></div><div class="lock"><span>🔒</span></div><div class="name">Crown Column</div><div class="type">LOCKED</div></article>
+        <article class="card" data-key="double-vision"><div class="shirtBox"><img class="shirt" src="./assets/shirts/double-vision.webp" alt="Double Vision shirt"></div><div class="lock"><span>🔒</span></div><div class="name">Double Vision</div><div class="type">LOCKED</div></article>
+      </div>
+      <p class="emptyNote">The regular shirts stay locked until their scanner targets are added.</p>
+    </section>
+    <div class="saveNote">✓ Collection progress is saved in this browser on this phone.</div>
+  </main>
+<script>
+  const STORAGE_PREFIX = 'lowxxy-collection-';
+  document.querySelectorAll('.card').forEach(card => {
+    if (localStorage.getItem(STORAGE_PREFIX + card.dataset.key) === 'unlocked') {
+      card.classList.add('unlocked');
+      card.querySelector('.type').textContent = 'UNLOCKED';
+    }
+  });
+  document.getElementById('backBtn').addEventListener('click', () => location.href='./index.html?v=206');
+  document.getElementById('scanBtn').addEventListener('click', () => location.href='./index.html?v=206');
+</script>
+</body>
+</html>
