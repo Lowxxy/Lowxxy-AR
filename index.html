@@ -7,8 +7,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Lowxxy AR</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=228" />
-  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=228" />
+  <link rel="manifest" href="./manifest.webmanifest?v=229" />
+  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=229" />
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
@@ -226,7 +226,8 @@
     .global-film-grain{position:fixed;inset:0;z-index:500;pointer-events:none;opacity:.045;mix-blend-mode:screen;background-image:radial-gradient(#fff 0 .55px,transparent .8px),radial-gradient(#000 0 .65px,transparent .9px);background-size:7px 7px,9px 9px;background-position:0 0,4px 5px;animation:grain .18s steps(2) infinite}
     .brand-logo,.show-title,#statusBar{animation:headerProjectorFlicker 8.5s steps(1,end) infinite}@keyframes headerProjectorFlicker{0%,92%,94%,96%,100%{opacity:1}93%{opacity:.82}95%{opacity:.94}}
     #unlockBurst{position:fixed;inset:0;z-index:5000;display:grid;place-items:center;pointer-events:none;opacity:0;visibility:hidden;background:radial-gradient(circle,rgba(214,170,66,.11),rgba(0,0,0,.2) 42%,rgba(0,0,0,.72));transition:opacity .18s ease}#unlockBurst.show{visibility:visible;opacity:1}#unlockBurst .unlock-card{width:min(86vw,360px);padding:28px 22px 25px;text-align:center;border:3px solid #d6aa42;border-radius:26px;background:radial-gradient(circle at 50% 10%,#4e3a12,#171006 55%,#080808 100%);box-shadow:0 0 0 6px #0b0b0b,0 0 32px rgba(214,170,66,.48),0 24px 55px #000d;transform:scale(.65) rotate(-2deg);animation:unlockPop .82s cubic-bezier(.18,.86,.3,1.25) forwards}#unlockBurst .unlock-crown{width:112px;height:auto;filter:sepia(1) saturate(4) brightness(1.45) drop-shadow(0 0 10px rgba(255,229,154,.35));margin-bottom:8px}#unlockBurst .unlock-small{color:#ffe59a;font:900 11px/1 Arial,sans-serif;letter-spacing:.2em}#unlockBurst .unlock-name{margin-top:7px;color:#fff;font:900 24px/1 Georgia,serif;text-transform:uppercase;letter-spacing:.05em}@keyframes unlockPop{0%{transform:scale(.5) rotate(-4deg);filter:brightness(.55)}55%{transform:scale(1.07) rotate(1deg);filter:brightness(1.2)}100%{transform:scale(1) rotate(0);filter:none}}
-    #crownEasterToast{position:fixed;z-index:5100;left:50%;top:50%;transform:translate(-50%,-50%) scale(.72);opacity:0;pointer-events:none;padding:18px 24px;border:3px solid #f2f0e8;border-radius:999px;background:#080808;color:#ffe59a;font:900 14px/1 Georgia,serif;letter-spacing:.12em;box-shadow:0 0 28px #d6aa4266,0 12px 38px #000;transition:.22s}#crownEasterToast.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+    #crownEasterToast{position:fixed;z-index:5100;left:50%;top:50%;transform:translate(-50%,-50%) scale(.72);opacity:0;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:6px;min-width:min(86vw,320px);padding:20px 28px;border:3px solid #f2f0e8;border-radius:26px;background:#080808;color:#ffe59a;font:900 14px/1 Georgia,serif;letter-spacing:.12em;text-align:center;box-shadow:0 0 28px #d6aa4266,0 12px 38px #000;transition:.22s}#crownEasterToast.show{opacity:1;transform:translate(-50%,-50%) scale(1)}#crownEasterToast span{display:block;white-space:nowrap}
+    #crownRain{position:fixed;inset:0;z-index:5095;pointer-events:none;overflow:hidden;opacity:0;transition:opacity .18s ease}#crownRain.show{opacity:1}.crown-drop{position:absolute;top:-18vh;height:auto;opacity:0;filter:sepia(1) saturate(5) brightness(1.28) drop-shadow(0 0 10px rgba(255,221,130,.4));animation:crownRainFall var(--dur,2.7s) linear forwards;animation-delay:var(--delay,0s)}@keyframes crownRainFall{0%{transform:translate3d(0,-16vh,0) rotate(0deg) scale(var(--scale,.9));opacity:0}8%{opacity:.98}100%{transform:translate3d(var(--drift,0px),118vh,0) rotate(var(--spin,240deg)) scale(var(--scale,.9));opacity:.95}}
     .scan-crown-watermark{pointer-events:auto!important;cursor:pointer}
 </style>
 </head>
@@ -234,7 +235,7 @@
   
 <div id="app"><div class="global-film-grain"></div>
   <div id="filmOverlay"></div>
-  <div id="scanFrame" class="hidden"><img class="scan-crown-watermark" src="./assets/lowxxy-crown.png?v=228" alt=""><span class="frame-label">Line up the full design</span></div>
+  <div id="scanFrame" class="hidden"><img class="scan-crown-watermark" src="./assets/lowxxy-crown.png?v=229" alt=""><span class="frame-label">Line up the full design</span></div>
   <div id="startOverlay" class="overlay"><div class="panel">
     <p class="eyebrow">A Lowxxy picture presentation</p>
     <div class="projector-window">
@@ -266,10 +267,10 @@
       </button><span class="tool-label">SELFIE</span>
     </div>
   </div>
-  <div id="captureToast">PHOTO READY!</div><div id="unlockBurst"><div class="unlock-card"><img class="unlock-crown" src="./assets/lowxxy-crown.png?v=228" alt=""><div class="unlock-small">ANIMATION FOUND</div><div class="unlock-name" id="unlockName">LOWXXY</div></div></div><div id="crownEasterToast">STAND OUT. STAY HUMBLE.</div>
+  <div id="captureToast">PHOTO READY!</div><div id="unlockBurst"><div class="unlock-card"><img class="unlock-crown" src="./assets/lowxxy-crown.png?v=229" alt=""><div class="unlock-small">ANIMATION FOUND</div><div class="unlock-name" id="unlockName">LOWXXY</div></div></div><div id="crownRain"></div><div id="crownEasterToast"><span>STAND OUT.</span><span>STAY HUMBLE.</span></div>
 
   <a-scene
-    mindar-image="imageTargetSrc: ./assets/targets.mind?v=228; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.00001; filterBeta: 0.0001; warmupTolerance: 15; missTolerance: 18;"
+    mindar-image="imageTargetSrc: ./assets/targets.mind?v=229; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.00001; filterBeta: 0.0001; warmupTolerance: 15; missTolerance: 18;"
     embedded
     color-space="sRGB"
     renderer="colorManagement: true; alpha: true; antialias: true; logarithmicDepthBuffer: true; preserveDrawingBuffer: true;"
@@ -279,10 +280,10 @@
     <a-camera position="0 0 0" near="0.01" far="1000" look-controls="enabled:false"></a-camera>
 
     <a-assets timeout="90000">
-      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=228"></a-asset-item>
-      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=228"></a-asset-item>
-      <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=228"></a-asset-item>
-      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=228"></a-asset-item>
+      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=229"></a-asset-item>
+      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=229"></a-asset-item>
+      <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=229"></a-asset-item>
+      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=229"></a-asset-item>
     </a-assets>
 
     <!-- Target 0: Pop Art. Placed first in the scanner database so the dotted comic-book print gets priority over the similar regular Chainmail artwork. -->
@@ -344,7 +345,35 @@ window.addEventListener('DOMContentLoaded', () => {
   const unlockBurst = document.querySelector('#unlockBurst');
   const unlockName = document.querySelector('#unlockName');
   const crownEasterToast = document.querySelector('#crownEasterToast');
+  const crownRain = document.querySelector('#crownRain');
   const scanCrown = document.querySelector('.scan-crown-watermark');
+
+  let crownRainHideTimer = null;
+  let crownRainClearTimer = null;
+  const playCrownRain = () => {
+    if (!crownRain) return;
+    clearTimeout(crownRainHideTimer);
+    clearTimeout(crownRainClearTimer);
+    crownRain.innerHTML = '';
+    crownRain.classList.add('show');
+    const count = 24;
+    for (let i = 0; i < count; i++) {
+      const crown = document.createElement('img');
+      crown.className = 'crown-drop';
+      crown.src = './assets/lowxxy-crown.png?v=229';
+      crown.alt = '';
+      crown.style.left = `${Math.random() * 100}vw`;
+      crown.style.width = `${24 + Math.random() * 30}px`;
+      crown.style.setProperty('--delay', `${(Math.random() * 0.7).toFixed(2)}s`);
+      crown.style.setProperty('--dur', `${(2.3 + Math.random() * 1.3).toFixed(2)}s`);
+      crown.style.setProperty('--drift', `${Math.round((Math.random() * 2 - 1) * 90)}px`);
+      crown.style.setProperty('--spin', `${Math.round((Math.random() * 2 - 1) * 540)}deg`);
+      crown.style.setProperty('--scale', `${(0.72 + Math.random() * 0.55).toFixed(2)}`);
+      crownRain.appendChild(crown);
+    }
+    crownRainHideTimer = setTimeout(() => crownRain.classList.remove('show'), 3050);
+    crownRainClearTimer = setTimeout(() => { crownRain.innerHTML = ''; }, 4100);
+  };
 
   let arSystem = null;
   let deferredInstallPrompt = null;
@@ -459,7 +488,7 @@ window.addEventListener('DOMContentLoaded', () => {
     setTimeout(()=>unlockBurst.classList.remove('show'),1500);
   };
   let crownTapCount=0,crownTapTimer=null;
-  scanCrown?.addEventListener('click',()=>{LowxxySound.click();crownTapCount++;clearTimeout(crownTapTimer);crownTapTimer=setTimeout(()=>crownTapCount=0,1600);if(crownTapCount>=5){crownTapCount=0;crownEasterToast.classList.add('show');LowxxySound.chime();setTimeout(()=>crownEasterToast.classList.remove('show'),1900);}});
+  scanCrown?.addEventListener('click',()=>{LowxxySound.click();crownTapCount++;clearTimeout(crownTapTimer);crownTapTimer=setTimeout(()=>crownTapCount=0,1600);if(crownTapCount>=5){crownTapCount=0;crownEasterToast.classList.add('show');playCrownRain();LowxxySound.chime();setTimeout(()=>crownEasterToast.classList.remove('show'),2500);}});
 
   targets.forEach(target => {
     const wrapper = target.querySelector('.model-wrapper');
@@ -582,19 +611,19 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=228'));
+    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=229'));
   }
 
   collectionButton.addEventListener('click', () => {
     sessionStorage.setItem('lowxxy-return-url', location.href);
     sessionStorage.setItem('lowxxy-resume-ar','1');
-    filmTransitionTo('./collection.html?v=228','left');
+    filmTransitionTo('./collection.html?v=229','left');
   });
 
   openSelfie.addEventListener('click', () => {
     sessionStorage.setItem('lowxxy-return-url', location.href);
     sessionStorage.setItem('lowxxy-resume-ar','1');
-    filmTransitionTo('./selfie.html?v=228','right');
+    filmTransitionTo('./selfie.html?v=229','right');
   });
 
   function drawCover(ctx, source, width, height, mirror = false) {
@@ -682,7 +711,7 @@ window.addEventListener('DOMContentLoaded', () => {
     wipe=document.createElement('div');
     wipe.id='lowxxyFilmWipe';
     wipe.className='film-wipe';
-    const frames=Array.from({length:14},(_,i)=>'<div class="film-frame">'+((i%4===1)?'<img class="film-crown" src="./assets/lowxxy-crown.png?v=228" alt="">':'')+'</div>').join('');
+    const frames=Array.from({length:14},(_,i)=>'<div class="film-frame">'+((i%4===1)?'<img class="film-crown" src="./assets/lowxxy-crown.png?v=229" alt="">':'')+'</div>').join('');
     wipe.innerHTML='<div class="film-sheet"><div class="film-holes"></div><div class="film-body"><div class="film-track">'+frames+'</div><div class="film-scratches"></div></div><div class="film-holes"></div></div>';
     document.body.appendChild(wipe);
     return wipe;
