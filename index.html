@@ -7,8 +7,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Lowxxy AR</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=223" />
-  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=223" />
+  <link rel="manifest" href="./manifest.webmanifest?v=228" />
+  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=228" />
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
@@ -221,13 +221,20 @@
 
   .film-crown{position:absolute;left:50%;top:50%;width:46%;height:auto;transform:translate(-50%,-50%) rotate(-4deg);opacity:.58;filter:sepia(1) saturate(.65) brightness(1.35);z-index:3;pointer-events:none;mix-blend-mode:screen}
   .film-frame:nth-child(even) .film-crown{transform:translate(-50%,-50%) rotate(4deg);opacity:.42}
+
+    /* v228 finishing touches */
+    .global-film-grain{position:fixed;inset:0;z-index:500;pointer-events:none;opacity:.045;mix-blend-mode:screen;background-image:radial-gradient(#fff 0 .55px,transparent .8px),radial-gradient(#000 0 .65px,transparent .9px);background-size:7px 7px,9px 9px;background-position:0 0,4px 5px;animation:grain .18s steps(2) infinite}
+    .brand-logo,.show-title,#statusBar{animation:headerProjectorFlicker 8.5s steps(1,end) infinite}@keyframes headerProjectorFlicker{0%,92%,94%,96%,100%{opacity:1}93%{opacity:.82}95%{opacity:.94}}
+    #unlockBurst{position:fixed;inset:0;z-index:5000;display:grid;place-items:center;pointer-events:none;opacity:0;visibility:hidden;background:radial-gradient(circle,rgba(214,170,66,.11),rgba(0,0,0,.2) 42%,rgba(0,0,0,.72));transition:opacity .18s ease}#unlockBurst.show{visibility:visible;opacity:1}#unlockBurst .unlock-card{width:min(86vw,360px);padding:28px 22px 25px;text-align:center;border:3px solid #d6aa42;border-radius:26px;background:radial-gradient(circle at 50% 10%,#4e3a12,#171006 55%,#080808 100%);box-shadow:0 0 0 6px #0b0b0b,0 0 32px rgba(214,170,66,.48),0 24px 55px #000d;transform:scale(.65) rotate(-2deg);animation:unlockPop .82s cubic-bezier(.18,.86,.3,1.25) forwards}#unlockBurst .unlock-crown{width:112px;height:auto;filter:sepia(1) saturate(4) brightness(1.45) drop-shadow(0 0 10px rgba(255,229,154,.35));margin-bottom:8px}#unlockBurst .unlock-small{color:#ffe59a;font:900 11px/1 Arial,sans-serif;letter-spacing:.2em}#unlockBurst .unlock-name{margin-top:7px;color:#fff;font:900 24px/1 Georgia,serif;text-transform:uppercase;letter-spacing:.05em}@keyframes unlockPop{0%{transform:scale(.5) rotate(-4deg);filter:brightness(.55)}55%{transform:scale(1.07) rotate(1deg);filter:brightness(1.2)}100%{transform:scale(1) rotate(0);filter:none}}
+    #crownEasterToast{position:fixed;z-index:5100;left:50%;top:50%;transform:translate(-50%,-50%) scale(.72);opacity:0;pointer-events:none;padding:18px 24px;border:3px solid #f2f0e8;border-radius:999px;background:#080808;color:#ffe59a;font:900 14px/1 Georgia,serif;letter-spacing:.12em;box-shadow:0 0 28px #d6aa4266,0 12px 38px #000;transition:.22s}#crownEasterToast.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+    .scan-crown-watermark{pointer-events:auto!important;cursor:pointer}
 </style>
 </head>
 <body>
   
-<div id="app">
+<div id="app"><div class="global-film-grain"></div>
   <div id="filmOverlay"></div>
-  <div id="scanFrame" class="hidden"><img class="scan-crown-watermark" src="./assets/lowxxy-crown.png?v=223" alt=""><span class="frame-label">Line up the full design</span></div>
+  <div id="scanFrame" class="hidden"><img class="scan-crown-watermark" src="./assets/lowxxy-crown.png?v=228" alt=""><span class="frame-label">Line up the full design</span></div>
   <div id="startOverlay" class="overlay"><div class="panel">
     <p class="eyebrow">A Lowxxy picture presentation</p>
     <div class="projector-window">
@@ -259,10 +266,10 @@
       </button><span class="tool-label">SELFIE</span>
     </div>
   </div>
-  <div id="captureToast">PHOTO READY!</div>
+  <div id="captureToast">PHOTO READY!</div><div id="unlockBurst"><div class="unlock-card"><img class="unlock-crown" src="./assets/lowxxy-crown.png?v=228" alt=""><div class="unlock-small">ANIMATION FOUND</div><div class="unlock-name" id="unlockName">LOWXXY</div></div></div><div id="crownEasterToast">STAND OUT. STAY HUMBLE.</div>
 
   <a-scene
-    mindar-image="imageTargetSrc: ./assets/targets.mind?v=223; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.00001; filterBeta: 0.0001; warmupTolerance: 15; missTolerance: 18;"
+    mindar-image="imageTargetSrc: ./assets/targets.mind?v=228; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.00001; filterBeta: 0.0001; warmupTolerance: 15; missTolerance: 18;"
     embedded
     color-space="sRGB"
     renderer="colorManagement: true; alpha: true; antialias: true; logarithmicDepthBuffer: true; preserveDrawingBuffer: true;"
@@ -272,10 +279,10 @@
     <a-camera position="0 0 0" near="0.01" far="1000" look-controls="enabled:false"></a-camera>
 
     <a-assets timeout="90000">
-      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=223"></a-asset-item>
-      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=223"></a-asset-item>
-      <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=223"></a-asset-item>
-      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=223"></a-asset-item>
+      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=228"></a-asset-item>
+      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=228"></a-asset-item>
+      <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=228"></a-asset-item>
+      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=228"></a-asset-item>
     </a-assets>
 
     <!-- Target 0: Pop Art. Placed first in the scanner database so the dotted comic-book print gets priority over the similar regular Chainmail artwork. -->
@@ -311,6 +318,9 @@
   </a-scene>
 </div>
 <script>
+window.LowxxySound=window.LowxxySound||(()=>{let ctx=null;const AC=window.AudioContext||window.webkitAudioContext;function get(){if(!AC)return null;if(!ctx)ctx=new AC();if(ctx.state==='suspended')ctx.resume().catch(()=>{});return ctx}function tone(freq=220,dur=.08,type='triangle',vol=.035,delay=0){const c=get();if(!c)return;const o=c.createOscillator(),g=c.createGain(),t=c.currentTime+delay;o.type=type;o.frequency.setValueAtTime(freq,t);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(vol,t+.008);g.gain.exponentialRampToValueAtTime(.0001,t+dur);o.connect(g).connect(c.destination);o.start(t);o.stop(t+dur+.03)}function noise(dur=.12,vol=.03,low=500,high=5000,delay=0){const c=get();if(!c)return;const len=Math.max(1,Math.floor(c.sampleRate*dur)),buf=c.createBuffer(1,len,c.sampleRate),data=buf.getChannelData(0);for(let i=0;i<len;i++)data[i]=(Math.random()*2-1)*(1-i/len*.35);const src=c.createBufferSource(),bp=c.createBiquadFilter(),g=c.createGain(),t=c.currentTime+delay;src.buffer=buf;bp.type='bandpass';bp.frequency.value=(low+high)/2;bp.Q.value=.55;g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(vol,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+dur);src.connect(bp).connect(g).connect(c.destination);src.start(t);src.stop(t+dur+.03)}function click(){noise(.055,.02,900,4200);tone(118,.055,'square',.025)}function shutter(){noise(.045,.055,700,6500);tone(105,.045,'square',.04);noise(.07,.04,500,4500,.06);tone(82,.065,'square',.028,.055)}function chime(){tone(523.25,.18,'triangle',.04);tone(659.25,.18,'triangle',.035,.09);tone(783.99,.25,'triangle',.04,.18);noise(.20,.008,1000,6000,.12)}function tape(){const c=get();if(!c)return;const dur=.84,len=Math.floor(c.sampleRate*dur),buf=c.createBuffer(1,len,c.sampleRate),data=buf.getChannelData(0);for(let i=0;i<len;i++){const x=i/len;data[i]=(Math.random()*2-1)*(.55+.45*Math.sin(x*Math.PI));}const src=c.createBufferSource(),hp=c.createBiquadFilter(),lp=c.createBiquadFilter(),g=c.createGain(),t=c.currentTime;src.buffer=buf;hp.type='highpass';hp.frequency.value=380;lp.type='lowpass';lp.frequency.value=5200;g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(.055,t+.09);g.gain.setValueAtTime(.05,t+dur-.15);g.gain.exponentialRampToValueAtTime(.0001,t+dur);src.connect(hp).connect(lp).connect(g).connect(c.destination);src.start(t);src.stop(t+dur+.03);tone(76,dur,'sawtooth',.008)}return{click,shutter,chime,tape};})();
+</script>
+<script>
 window.addEventListener('DOMContentLoaded', () => {
   const scene = document.querySelector('a-scene');
   const startOverlay = document.querySelector('#startOverlay');
@@ -331,6 +341,10 @@ window.addEventListener('DOMContentLoaded', () => {
   const openSelfie = document.querySelector('#openSelfie');
   const takeScannerPhoto = document.querySelector('#takeScannerPhoto');
   const captureToast = document.querySelector('#captureToast');
+  const unlockBurst = document.querySelector('#unlockBurst');
+  const unlockName = document.querySelector('#unlockName');
+  const crownEasterToast = document.querySelector('#crownEasterToast');
+  const scanCrown = document.querySelector('.scan-crown-watermark');
 
   let arSystem = null;
   let deferredInstallPrompt = null;
@@ -423,18 +437,29 @@ window.addEventListener('DOMContentLoaded', () => {
   };
   const unlockScannedShirt = name => {
     const key = collectionKeyByTargetName[name];
-    if (!key) return;
-
-    // Pop Art and Chainmail share the same AR experience, so discovering either
-    // one unlocks the paired collection card and both saved design keys.
-    if (key === 'pop-art' || key === 'chainmail') {
+    if (!key) return {isNew:false, animationKey:null};
+    const animationKey = (key === 'pop-art' || key === 'chainmail') ? 'pop-art-chainmail' : key;
+    const alreadyUnlocked = animationKey === 'pop-art-chainmail'
+      ? (localStorage.getItem('lowxxy-collection-pop-art') === 'unlocked' || localStorage.getItem('lowxxy-collection-chainmail') === 'unlocked' || localStorage.getItem('lowxxy-collection-pop-art-chainmail') === 'unlocked')
+      : localStorage.getItem('lowxxy-collection-' + key) === 'unlocked';
+    if (animationKey === 'pop-art-chainmail') {
       localStorage.setItem('lowxxy-collection-pop-art', 'unlocked');
       localStorage.setItem('lowxxy-collection-chainmail', 'unlocked');
-      return;
+      localStorage.setItem('lowxxy-collection-pop-art-chainmail', 'unlocked');
+    } else {
+      localStorage.setItem('lowxxy-collection-' + key, 'unlocked');
     }
-
-    localStorage.setItem('lowxxy-collection-' + key, 'unlocked');
+    if (!alreadyUnlocked) localStorage.setItem('lowxxy-new-' + animationKey, '1');
+    return {isNew:!alreadyUnlocked, animationKey};
   };
+  const showUnlockCelebration = name => {
+    unlockName.textContent = name === 'POP ART' || name === 'CHAINMAIL' ? 'CHAINMAIL + POP ART' : name;
+    LowxxySound.chime();
+    unlockBurst.classList.remove('show'); void unlockBurst.offsetWidth; unlockBurst.classList.add('show');
+    setTimeout(()=>unlockBurst.classList.remove('show'),1500);
+  };
+  let crownTapCount=0,crownTapTimer=null;
+  scanCrown?.addEventListener('click',()=>{LowxxySound.click();crownTapCount++;clearTimeout(crownTapTimer);crownTapTimer=setTimeout(()=>crownTapCount=0,1600);if(crownTapCount>=5){crownTapCount=0;crownEasterToast.classList.add('show');LowxxySound.chime();setTimeout(()=>crownEasterToast.classList.remove('show'),1900);}});
 
   targets.forEach(target => {
     const wrapper = target.querySelector('.model-wrapper');
@@ -484,8 +509,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
       isActive = true;
       target._stickyActive = true;
-      unlockScannedShirt(name);
-      statusBar.textContent = 'LOWXXY DESIGN SCANNED — COLLECTION UNLOCKED!';
+      const unlockResult = unlockScannedShirt(name);
+      if (unlockResult?.isNew) showUnlockCelebration(name);
+      statusBar.textContent = unlockResult?.isNew ? 'NEW LOWXXY ANIMATION FOUND!' : 'LOWXXY DESIGN SCANNED — ALREADY COLLECTED';
       statusBar.classList.remove('scan-pop');
       void statusBar.offsetWidth;
       statusBar.classList.add('scan-pop');
@@ -510,6 +536,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   startButton.addEventListener('click', async () => {
+    LowxxySound.click();
     startButton.disabled = true;
     startButton.textContent = 'WARMING UP THE PROJECTOR...';
     errorText.style.display = 'none';
@@ -555,19 +582,19 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=223'));
+    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=228'));
   }
 
   collectionButton.addEventListener('click', () => {
     sessionStorage.setItem('lowxxy-return-url', location.href);
     sessionStorage.setItem('lowxxy-resume-ar','1');
-    filmTransitionTo('./collection.html?v=223','left');
+    filmTransitionTo('./collection.html?v=228','left');
   });
 
   openSelfie.addEventListener('click', () => {
     sessionStorage.setItem('lowxxy-return-url', location.href);
     sessionStorage.setItem('lowxxy-resume-ar','1');
-    filmTransitionTo('./selfie.html?v=223','right');
+    filmTransitionTo('./selfie.html?v=228','right');
   });
 
   function drawCover(ctx, source, width, height, mirror = false) {
@@ -610,6 +637,7 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   takeScannerPhoto.addEventListener('click', async () => {
+    LowxxySound.shutter();
     takeScannerPhoto.disabled = true;
     try {
       const cameraVideo = [...document.querySelectorAll('video')].find(video => video.readyState >= 2 && video.videoWidth > 0);
@@ -654,12 +682,13 @@ window.addEventListener('DOMContentLoaded', () => {
     wipe=document.createElement('div');
     wipe.id='lowxxyFilmWipe';
     wipe.className='film-wipe';
-    const frames=Array.from({length:14},(_,i)=>'<div class="film-frame">'+((i%4===1)?'<img class="film-crown" src="./assets/lowxxy-crown.png?v=223" alt="">':'')+'</div>').join('');
+    const frames=Array.from({length:14},(_,i)=>'<div class="film-frame">'+((i%4===1)?'<img class="film-crown" src="./assets/lowxxy-crown.png?v=228" alt="">':'')+'</div>').join('');
     wipe.innerHTML='<div class="film-sheet"><div class="film-holes"></div><div class="film-body"><div class="film-track">'+frames+'</div><div class="film-scratches"></div></div><div class="film-holes"></div></div>';
     document.body.appendChild(wipe);
     return wipe;
   }
   window.lowxxyFilmNavigate=function(url,direction){
+    LowxxySound.tape();
     const wipe=ensureFilmWipe();
     const sheet=wipe.querySelector('.film-sheet');
     sheet.className='film-sheet '+(direction==='left'?'to-left':'to-right');
