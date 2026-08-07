@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Lowxxy Collection</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=212" />
+  <link rel="manifest" href="./manifest.webmanifest?v=213" />
   <style>
     :root{color-scheme:dark;--paper:#f2f0e8;--gold:#d6aa42;--gold2:#ffe59a;--gray:#8c8c8c;--ink:#070707;font-family:"Arial Rounded MT Bold","Trebuchet MS",Arial,sans-serif}
     *{box-sizing:border-box}
@@ -64,9 +64,12 @@
       .regular .card::after{top:58px;font-size:30px}
     }
 .progressWrap{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:10px auto 20px}.progressPill{border:1px solid #5c5c5c;border-radius:999px;padding:8px 12px;background:#0c0c0c;color:#cfcfcf;font:900 10px/1 Arial,sans-serif;letter-spacing:.08em}.progressPill.goldPill{border-color:#8e6b24;color:#ffe59a;box-shadow:0 0 12px #d6aa421e}.card.unlocked::before{content:"COLLECTED";position:absolute;z-index:6;right:8px;top:8px;padding:5px 8px;border-radius:999px;background:#f2f0e8;color:#090909;font:900 8px/1 Arial,sans-serif;letter-spacing:.08em;box-shadow:0 3px 0 #777}.gold .card.unlocked::before{background:#ffe59a;color:#201500;box-shadow:0 3px 0 #8e6b24,0 0 12px #d6aa4255}.card.unlocked{animation:earnedGlow 1.1s ease-out}@keyframes earnedGlow{0%{transform:scale(.96);filter:brightness(.65)}55%{transform:scale(1.02);filter:brightness(1.18)}100%{transform:scale(1);filter:none}}
-  </style>
+  
+    #filmTransition{position:fixed;inset:0;z-index:5000;pointer-events:none;overflow:hidden;visibility:hidden}#filmTransition.active{visibility:visible}#filmTransition .film-strip{position:absolute;left:-130vw;top:50%;width:360vw;height:118px;transform:translateY(-50%) rotate(-5deg);background:#070707;border-top:9px solid #eee;border-bottom:9px solid #eee;box-shadow:0 0 0 5px #111,0 12px 35px #000;display:flex;align-items:center;animation:filmSweep .62s cubic-bezier(.72,.02,.18,1) forwards}#filmTransition .film-strip::before,#filmTransition .film-strip::after{content:"";position:absolute;left:0;right:0;height:20px;background:repeating-linear-gradient(90deg,#eee 0 18px,transparent 18px 34px)}#filmTransition .film-strip::before{top:8px}#filmTransition .film-strip::after{bottom:8px}#filmTransition .frames{width:100%;height:58px;background:repeating-linear-gradient(90deg,#1a1a1a 0 92px,#e9e6dd 92px 98px,#080808 98px 190px,#e9e6dd 190px 196px)}#filmTransition.active::after{content:"";position:absolute;inset:0;background:#000;animation:filmFade .62s steps(2,end) forwards}@keyframes filmSweep{0%{transform:translate(-8%,-50%) rotate(-5deg)}100%{transform:translate(56%,-50%) rotate(-5deg)}}@keyframes filmFade{0%,42%{opacity:0}70%,100%{opacity:1}}
+</style>
 </head>
 <body>
+<div id="filmTransition" aria-hidden="true"><div class="film-strip"><div class="frames"></div></div></div>
   <header class="top">
     <button class="iconBtn" id="backBtn" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
     <div class="logo"><strong>LOWXXY</strong><span>COLLECTION</span></div>
@@ -116,6 +119,8 @@
     <div class="saveNote">✓ Collection progress is saved in this browser on this phone.</div>
   </main>
 <script>
+
+  function filmTransitionTo(url){ const fx=document.getElementById('filmTransition'); if(!fx){location.href=url;return;} fx.classList.remove('active'); void fx.offsetWidth; fx.classList.add('active'); setTimeout(()=>{location.href=url;},520); }
   const STORAGE_PREFIX = 'lowxxy-collection-';
   document.querySelectorAll('.card').forEach(card => {
     let unlocked = localStorage.getItem(STORAGE_PREFIX + card.dataset.key) === 'unlocked';
@@ -138,8 +143,8 @@
   const arCount=(popUnlocked?2:0)+(groundedUnlocked?1:0)+(hangUnlocked?1:0);
   document.getElementById('arProgress').textContent=`AR DESIGNS ${arCount}/4`;
   document.getElementById('totalProgress').textContent=`COLLECTION ${arCount+regularCount}/7`;
-  document.getElementById('backBtn').addEventListener('click', () => { sessionStorage.setItem('lowxxy-resume-ar','1'); const returnUrl=sessionStorage.getItem('lowxxy-return-url'); if(returnUrl) location.href=returnUrl; else if(history.length>1) history.back(); else location.href='./index.html?v=212'; });
-  document.getElementById('shopBtn').addEventListener('click', () => location.href='https://lowxxy.myshopify.com');
+  document.getElementById('backBtn').addEventListener('click', () => { sessionStorage.setItem('lowxxy-resume-ar','1'); const returnUrl=sessionStorage.getItem('lowxxy-return-url'); if(returnUrl) filmTransitionTo(returnUrl); else if(history.length>1){ document.getElementById('filmTransition').classList.add('active'); setTimeout(()=>history.back(),520); } else filmTransitionTo('./index.html?v=213'); });
+  document.getElementById('shopBtn').addEventListener('click', () => filmTransitionTo('https://lowxxy.myshopify.com'));
 </script>
 </body>
 </html>
