@@ -7,8 +7,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Lowxxy AR</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=212" />
-  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=212" />
+  <link rel="manifest" href="./manifest.webmanifest?v=213" />
+  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=213" />
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
@@ -170,6 +170,15 @@
     #shopBar{display:none!important}
 
     @media (max-height:690px){.panel{padding:27px 20px 23px}.brand-logo{width:min(255px,78%)}.subtitle{margin:11px auto 17px}.button-stack{gap:9px}button{min-height:49px}.show-title{font-size:31px}}
+    #filmTransition{position:fixed;inset:0;z-index:5000;pointer-events:none;overflow:hidden;visibility:hidden}
+    #filmTransition.active{visibility:visible}
+    #filmTransition .film-strip{position:absolute;left:-130vw;top:50%;width:360vw;height:118px;transform:translateY(-50%) rotate(-5deg);background:#070707;border-top:9px solid #eee;border-bottom:9px solid #eee;box-shadow:0 0 0 5px #111,0 12px 35px #000;display:flex;align-items:center;animation:filmSweep .62s cubic-bezier(.72,.02,.18,1) forwards}
+    #filmTransition .film-strip::before,#filmTransition .film-strip::after{content:"";position:absolute;left:0;right:0;height:20px;background:repeating-linear-gradient(90deg,#eee 0 18px,transparent 18px 34px)}
+    #filmTransition .film-strip::before{top:8px}#filmTransition .film-strip::after{bottom:8px}
+    #filmTransition .frames{width:100%;height:58px;background:repeating-linear-gradient(90deg,#1a1a1a 0 92px,#e9e6dd 92px 98px,#080808 98px 190px,#e9e6dd 190px 196px);opacity:.98}
+    #filmTransition.active::after{content:"";position:absolute;inset:0;background:#000;animation:filmFade .62s steps(2,end) forwards}
+    @keyframes filmSweep{0%{transform:translate(-8%, -50%) rotate(-5deg)}100%{transform:translate(56%, -50%) rotate(-5deg)}}
+    @keyframes filmFade{0%,42%{opacity:0}70%,100%{opacity:1}}
     @media (prefers-reduced-motion:reduce){*{animation:none!important}}
   
     .intro-character{display:block;width:92px;height:92px;object-fit:contain;margin:-4px auto 6px;filter:grayscale(1) contrast(1.15) drop-shadow(0 4px 0 #000)}
@@ -194,6 +203,7 @@
 </style>
 </head>
 <body>
+  <div id="filmTransition" aria-hidden="true"><div class="film-strip"><div class="frames"></div></div></div>
 <div id="app">
   <div id="filmOverlay"></div>
   <div id="scanFrame" class="hidden"><span class="frame-label">Line up the full design</span></div>
@@ -201,7 +211,6 @@
     <p class="eyebrow">A Lowxxy picture presentation</p>
     <div class="projector-window">
       <img class="brand-logo" src="./icons/lowxxy-logo-white.png" alt="Lowxxy" />
-      <img class="intro-character" src="./icons/lowxxy-character-512.png" alt="Lowxxy character" />
     </div>
     <h1 class="show-title">The Lowxxy Picture Show</h1><div class="flourish"><span>✦</span></div>
     <p class="subtitle">Present the design to the camera and let the picture begin.</p>
@@ -232,7 +241,7 @@
   <div id="captureToast">PHOTO READY!</div>
 
   <a-scene
-    mindar-image="imageTargetSrc: ./assets/targets.mind?v=212; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.00001; filterBeta: 0.0001; warmupTolerance: 15; missTolerance: 18;"
+    mindar-image="imageTargetSrc: ./assets/targets.mind?v=213; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.00001; filterBeta: 0.0001; warmupTolerance: 15; missTolerance: 18;"
     embedded
     color-space="sRGB"
     renderer="colorManagement: true; alpha: true; antialias: true; logarithmicDepthBuffer: true; preserveDrawingBuffer: true;"
@@ -242,10 +251,10 @@
     <a-camera position="0 0 0" near="0.01" far="1000" look-controls="enabled:false"></a-camera>
 
     <a-assets timeout="90000">
-      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=212"></a-asset-item>
-      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=212"></a-asset-item>
-      <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=212"></a-asset-item>
-      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=212"></a-asset-item>
+      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=213"></a-asset-item>
+      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=213"></a-asset-item>
+      <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=213"></a-asset-item>
+      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=213"></a-asset-item>
     </a-assets>
 
     <!-- Target 0: Pop Art. Placed first in the scanner database so the dotted comic-book print gets priority over the similar regular Chainmail artwork. -->
@@ -289,6 +298,15 @@ window.addEventListener('DOMContentLoaded', () => {
   const installHelp = document.querySelector('#installHelp');
   const statusBar = document.querySelector('#statusBar');
   const scanFrame = document.querySelector('#scanFrame');
+
+  function filmTransitionTo(url){
+    const fx=document.getElementById('filmTransition');
+    if(!fx){ location.href=url; return; }
+    fx.classList.remove('active');
+    void fx.offsetWidth;
+    fx.classList.add('active');
+    setTimeout(()=>{ location.href=url; },520);
+  }
   const shopBar = document.querySelector('#shopBar');
   const shopButton = document.querySelector('#shopButton');
   const errorText = document.querySelector('#errorText');
@@ -329,7 +347,7 @@ window.addEventListener('DOMContentLoaded', () => {
       : 'Use your browser’s install option.';
   });
 
-  shopButton.addEventListener('click', () => { location.href = 'https://lowxxy.myshopify.com'; });
+  shopButton.addEventListener('click', () => { filmTransitionTo('https://lowxxy.myshopify.com'); });
   scene.addEventListener('loaded', () => { arSystem = scene.systems['mindar-image-system']; });
 
   document.querySelectorAll('.ar-model').forEach(model => {
@@ -522,19 +540,19 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=212'));
+    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=213'));
   }
 
   collectionButton.addEventListener('click', () => {
     sessionStorage.setItem('lowxxy-return-url', location.href);
     sessionStorage.setItem('lowxxy-resume-ar','1');
-    window.location.href = './collection.html?v=212';
+    filmTransitionTo('./collection.html?v=213');
   });
 
   openSelfie.addEventListener('click', () => {
     sessionStorage.setItem('lowxxy-return-url', location.href);
     sessionStorage.setItem('lowxxy-resume-ar','1');
-    window.location.href = './selfie.html?v=212';
+    filmTransitionTo('./selfie.html?v=213');
   });
 
   function drawCover(ctx, source, width, height, mirror = false) {
