@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Lowxxy Animation</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=225" />
+  <link rel="manifest" href="./manifest.webmanifest?v=226" />
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
   <style>
@@ -33,12 +33,12 @@
 </head>
 <body>
   <div id="stage">
-    <img id="previewCrown" src="./assets/lowxxy-crown.png?v=225" alt="">
+    <img id="previewCrown" src="./assets/lowxxy-crown.png?v=226" alt="">
     <a-scene embedded renderer="alpha:true;antialias:true;colorManagement:true" vr-mode-ui="enabled:false" device-orientation-permission-ui="enabled:false">
       <a-assets>
-        <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=225"></a-asset-item>
-        <a-asset-item id="groundedAsset" src="./assets/grounded-gains.glb?v=225"></a-asset-item>
-        <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=225"></a-asset-item>
+        <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=226"></a-asset-item>
+        <a-asset-item id="groundedAsset" src="./assets/grounded-gains.glb?v=226"></a-asset-item>
+        <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=226"></a-asset-item>
       </a-assets>
       <a-entity light="type:ambient;intensity:1.9;color:#ffffff"></a-entity>
       <a-entity light="type:directional;intensity:2.2;color:#fff3d1" position="1 3 4"></a-entity>
@@ -46,13 +46,13 @@
       <a-camera position="0 0 0" fov="80" look-controls="enabled:false" wasd-controls="enabled:false"></a-camera>
     </a-scene>
   </div>
-  <header class="top"><button class="iconBtn" id="backBtn" aria-label="Back to collection"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="logo"><img src="./assets/lowxxy-wordmark.png?v=225" alt="LOWXXY"><span>ANIMATION</span></div><div></div></header>
+  <header class="top"><button class="iconBtn" id="backBtn" aria-label="Back to collection"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="logo"><img src="./assets/lowxxy-wordmark.png?v=226" alt="LOWXXY"><span>ANIMATION</span></div><div></div></header>
   <div class="gestureHint">DRAG TO LOOK AROUND • PINCH TO SIZE</div>
   <div class="bottomCard"><div class="kicker">✦ UNLOCKED AR DESIGN ✦</div><div class="title" id="designTitle">LOWXXY</div><div class="hint">Same animation and presentation as the shirt scan.</div><div class="controls"><button class="reset" id="resetViewBtn">RESET VIEW</button><button class="replay" id="replayBtn">REPLAY</button></div></div>
 <script>
 const design=new URLSearchParams(location.search).get('design')||'pop-art-chainmail';
 const configs={
-  'pop-art-chainmail':{title:'Chainmail + Pop Art',asset:'#popArtAsset',wrapperPosition:'0 -0.08 0.07',modelPosition:'0.18 -0.238 0',modelRotation:'0 180 0',modelScale:'5.25 5.25 5.25',anchorZ:-4},
+  'pop-art-chainmail':{title:'Chainmail + Pop Art',asset:'#popArtAsset',wrapperPosition:'0 -0.08 0.07',modelPosition:'0.18 -0.238 0',modelRotation:'0 0 0',modelScale:'5.25 5.25 5.25',anchorZ:-4},
   'grounded-gains':{title:'Grounded Gains',asset:'#groundedAsset',wrapperPosition:'0 -0.12 0.08',modelPosition:'0 -0.28 0',modelRotation:'0 0 0',modelScale:'1.25 1.25 1.25',anchorZ:-4},
   'hang':{title:'Hang',asset:'#hangAsset',wrapperPosition:'0 -0.03 0.08',modelPosition:'0 -0.68 -0.013',modelRotation:'0 0 0',modelScale:'7 7 7',anchorZ:-4}
 };
@@ -73,9 +73,9 @@ stage.addEventListener('pointerdown',e=>{activePointers.set(e.pointerId,{x:e.cli
 stage.addEventListener('pointermove',e=>{if(!activePointers.has(e.pointerId))return;e.preventDefault();activePointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(activePointers.size===1&&lastSingle){rotY+=(e.clientX-lastSingle.x)*.45;rotX-=(e.clientY-lastSingle.y)*.32;lastSingle={x:e.clientX,y:e.clientY};applyView()}else if(activePointers.size===2){const d=pointerDistance();if(d&&lastPinchDistance){viewerScale*=d/lastPinchDistance;viewerScale=Math.max(.55,Math.min(2.2,viewerScale));applyView()}lastPinchDistance=d}},{passive:false});
 function endPointer(e){activePointers.delete(e.pointerId);if(activePointers.size===1){const p=[...activePointers.values()][0];lastSingle={x:p.x,y:p.y};lastPinchDistance=null}else{lastSingle=null;lastPinchDistance=null}}
 stage.addEventListener('pointerup',endPointer);stage.addEventListener('pointercancel',endPointer);
-function ensureFilmWipe(){let wipe=document.getElementById('lowxxyFilmWipe');if(wipe)return wipe;wipe=document.createElement('div');wipe.id='lowxxyFilmWipe';wipe.className='film-wipe';const frames=Array.from({length:14},(_,i)=>'<div class="film-frame">'+((i%4===1)?'<img class="film-crown" src="./assets/lowxxy-crown.png?v=225" alt="">':'')+'</div>').join('');wipe.innerHTML='<div class="film-sheet"><div class="film-holes"></div><div class="film-body"><div class="film-track">'+frames+'</div><div class="film-scratches"></div></div><div class="film-holes"></div></div>';document.body.appendChild(wipe);return wipe}
+function ensureFilmWipe(){let wipe=document.getElementById('lowxxyFilmWipe');if(wipe)return wipe;wipe=document.createElement('div');wipe.id='lowxxyFilmWipe';wipe.className='film-wipe';const frames=Array.from({length:14},(_,i)=>'<div class="film-frame">'+((i%4===1)?'<img class="film-crown" src="./assets/lowxxy-crown.png?v=226" alt="">':'')+'</div>').join('');wipe.innerHTML='<div class="film-sheet"><div class="film-holes"></div><div class="film-body"><div class="film-track">'+frames+'</div><div class="film-scratches"></div></div><div class="film-holes"></div></div>';document.body.appendChild(wipe);return wipe}
 function nav(url,direction='right'){const wipe=ensureFilmWipe(),sheet=wipe.querySelector('.film-sheet');sheet.className='film-sheet '+(direction==='left'?'to-left':'to-right');wipe.classList.remove('active');void wipe.offsetWidth;wipe.classList.add('active');setTimeout(()=>location.href=url,760)}
-document.getElementById('backBtn').addEventListener('click',()=>nav('./collection.html?v=225','right'));
+document.getElementById('backBtn').addEventListener('click',()=>nav('./collection.html?v=226','right'));
 </script>
 </body>
 </html>
