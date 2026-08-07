@@ -7,8 +7,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Lowxxy AR</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=214" />
-  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=213" />
+  <link rel="manifest" href="./manifest.webmanifest?v=215" />
+  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=215" />
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
@@ -170,15 +170,7 @@
     #shopBar{display:none!important}
 
     @media (max-height:690px){.panel{padding:27px 20px 23px}.brand-logo{width:min(255px,78%)}.subtitle{margin:11px auto 17px}.button-stack{gap:9px}button{min-height:49px}.show-title{font-size:31px}}
-    #filmTransition{position:fixed;inset:0;z-index:5000;pointer-events:none;overflow:hidden;visibility:hidden}
-    #filmTransition.active{visibility:visible}
-    #filmTransition .film-strip{position:absolute;left:-130vw;top:50%;width:360vw;height:118px;transform:translateY(-50%) rotate(-5deg);background:#070707;border-top:9px solid #eee;border-bottom:9px solid #eee;box-shadow:0 0 0 5px #111,0 12px 35px #000;display:flex;align-items:center;animation:filmSweep .62s cubic-bezier(.72,.02,.18,1) forwards}
-    #filmTransition .film-strip::before,#filmTransition .film-strip::after{content:"";position:absolute;left:0;right:0;height:20px;background:repeating-linear-gradient(90deg,#eee 0 18px,transparent 18px 34px)}
-    #filmTransition .film-strip::before{top:8px}#filmTransition .film-strip::after{bottom:8px}
-    #filmTransition .frames{width:100%;height:58px;background:repeating-linear-gradient(90deg,#1a1a1a 0 92px,#e9e6dd 92px 98px,#080808 98px 190px,#e9e6dd 190px 196px);opacity:.98}
-    #filmTransition.active::after{content:"";position:absolute;inset:0;background:#000;animation:filmFade .62s steps(2,end) forwards}
-    @keyframes filmSweep{0%{transform:translate(-8%, -50%) rotate(-5deg)}100%{transform:translate(56%, -50%) rotate(-5deg)}}
-    @keyframes filmFade{0%,42%{opacity:0}70%,100%{opacity:1}}
+70%,100%{opacity:1}}
     @media (prefers-reduced-motion:reduce){*{animation:none!important}}
   
     .intro-character{display:block;width:92px;height:92px;object-fit:contain;margin:-4px auto 6px;filter:grayscale(1) contrast(1.15) drop-shadow(0 4px 0 #000)}
@@ -199,26 +191,31 @@
     @media(max-width:390px){#cameraTools{gap:12px;padding-left:13px;padding-right:13px}.tool-wrap{width:62px}.round-tool,#collectionButton{width:58px!important;height:58px!important;min-height:58px!important}.round-tool svg,#collectionButton svg{width:25px!important;height:25px!important}}
     #captureToast{position:fixed;z-index:1500;left:50%;top:50%;transform:translate(-50%,-50%) scale(.85);background:#171717;color:#fff;border:4px solid #f5f1e8;border-radius:999px;padding:16px 24px;font-weight:900;letter-spacing:1px;opacity:0;pointer-events:none;transition:.2s}
     #captureToast.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+50%{transform:translateX(-1.6vw)}100%{transform:translateX(.9vw)}}
 
 
-  /* v214 full-screen vintage film-strip wipe */
-  .film-wipe{position:fixed;inset:0;z-index:99999;pointer-events:none;overflow:hidden;opacity:0;visibility:hidden;background:#050505}
-  .film-wipe.active{opacity:1;visibility:visible}
-  .film-strip{position:absolute;top:0;bottom:0;width:185vw;display:grid;grid-template-rows:44px 1fr 44px;background:#090909;box-shadow:0 0 40px #000;will-change:transform}
-  .film-strip.to-right{left:-185vw;animation:filmRight .52s cubic-bezier(.2,.75,.15,1) forwards}
-  .film-strip.to-left{right:-185vw;animation:filmLeft .52s cubic-bezier(.2,.75,.15,1) forwards}
-  .film-sprockets{background:repeating-linear-gradient(90deg,#090909 0 18px,#f1eee5 18px 34px,#090909 34px 52px);filter:contrast(1.15)}
-  .film-frames{position:relative;background:repeating-linear-gradient(90deg,#0a0a0a 0 8vw,#171717 8vw 8.25vw,#0a0a0a 8.25vw 16vw);overflow:hidden}
-  .film-frames::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 7.4vw,rgba(245,242,232,.24) 7.4vw 7.55vw,transparent 7.55vw 8vw),radial-gradient(circle at 20% 30%,rgba(255,255,255,.09),transparent 24%),radial-gradient(circle at 70% 65%,rgba(255,255,255,.06),transparent 20%);mix-blend-mode:screen;animation:filmJitter .12s steps(2,end) infinite}
-  .film-frames::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.06),transparent 12%,transparent 88%,rgba(255,255,255,.06));box-shadow:inset 0 0 70px #000}
-  @keyframes filmRight{0%{transform:translateX(0)}100%{transform:translateX(285vw)}}
-  @keyframes filmLeft{0%{transform:translateX(0)}100%{transform:translateX(-285vw)}}
-  @keyframes filmJitter{0%{transform:translateX(0)}50%{transform:translateX(-1.6vw)}100%{transform:translateX(.9vw)}}
+  /* v215 — full-screen directional film-strip wipe */
+  .film-wipe{position:fixed;inset:0;z-index:999999;pointer-events:none;overflow:hidden;visibility:hidden;opacity:0;background:#050505}
+  .film-wipe.active{visibility:visible;opacity:1}
+  .film-sheet{position:absolute;top:-6vh;width:150vw;height:112vh;display:grid;grid-template-rows:9vh 1fr 9vh;background:#080808;box-shadow:0 0 90px #000;will-change:transform}
+  .film-sheet.to-right{left:-155vw;animation:filmSheetRight .62s cubic-bezier(.12,.78,.18,1) forwards}
+  .film-sheet.to-left{right:-155vw;animation:filmSheetLeft .62s cubic-bezier(.12,.78,.18,1) forwards}
+  .film-holes{background-color:#090909;background-image:repeating-linear-gradient(90deg,transparent 0 18px,#eee9dc 18px 42px,transparent 42px 64px);border-top:4px solid #e9e4d8;border-bottom:4px solid #e9e4d8}
+  .film-body{position:relative;overflow:hidden;background:#0a0a0a}
+  .film-frames-grid{position:absolute;inset:2.5vh 0;display:grid;grid-template-columns:repeat(10,1fr);gap:1.4vw;padding:0 1.4vw}
+  .film-frame{position:relative;border:4px solid #e9e4d8;border-radius:3px;background:linear-gradient(145deg,#181818,#050505 70%);box-shadow:inset 0 0 24px #000;overflow:hidden}
+  .film-frame::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.11),transparent 20%),linear-gradient(100deg,transparent 0 46%,rgba(255,255,255,.08) 48%,transparent 51%);mix-blend-mode:screen}
+  .film-body::before{content:"";position:absolute;inset:0;z-index:3;background:repeating-linear-gradient(90deg,transparent 0 11vw,rgba(245,241,226,.18) 11vw 11.15vw,transparent 11.15vw 15vw);animation:filmFrameRush .09s steps(2,end) infinite;mix-blend-mode:screen}
+  .film-body::after{content:"";position:absolute;inset:0;z-index:4;background:radial-gradient(circle at 20% 35%,rgba(255,255,255,.08),transparent 16%),radial-gradient(circle at 73% 62%,rgba(255,255,255,.06),transparent 18%),linear-gradient(90deg,rgba(0,0,0,.9),transparent 8%,transparent 92%,rgba(0,0,0,.9));animation:filmFlicker .12s steps(2,end) infinite}
+  @keyframes filmSheetRight{0%{transform:translateX(0) skewX(-5deg)}100%{transform:translateX(260vw) skewX(-5deg)}}
+  @keyframes filmSheetLeft{0%{transform:translateX(0) skewX(5deg)}100%{transform:translateX(-260vw) skewX(5deg)}}
+  @keyframes filmFrameRush{0%{transform:translateX(0)}50%{transform:translateX(-5vw)}100%{transform:translateX(3vw)}}
+  @keyframes filmFlicker{0%,100%{opacity:.88}50%{opacity:.58}}
 
 </style>
 </head>
 <body>
-  <div id="filmTransition" aria-hidden="true"><div class="film-strip"><div class="frames"></div></div></div>
+  
 <div id="app">
   <div id="filmOverlay"></div>
   <div id="scanFrame" class="hidden"><span class="frame-label">Line up the full design</span></div>
@@ -256,7 +253,7 @@
   <div id="captureToast">PHOTO READY!</div>
 
   <a-scene
-    mindar-image="imageTargetSrc: ./assets/targets.mind?v=213; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.00001; filterBeta: 0.0001; warmupTolerance: 15; missTolerance: 18;"
+    mindar-image="imageTargetSrc: ./assets/targets.mind?v=215; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.00001; filterBeta: 0.0001; warmupTolerance: 15; missTolerance: 18;"
     embedded
     color-space="sRGB"
     renderer="colorManagement: true; alpha: true; antialias: true; logarithmicDepthBuffer: true; preserveDrawingBuffer: true;"
@@ -266,10 +263,10 @@
     <a-camera position="0 0 0" near="0.01" far="1000" look-controls="enabled:false"></a-camera>
 
     <a-assets timeout="90000">
-      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=213"></a-asset-item>
-      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=213"></a-asset-item>
-      <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=213"></a-asset-item>
-      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=213"></a-asset-item>
+      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=215"></a-asset-item>
+      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=215"></a-asset-item>
+      <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=215"></a-asset-item>
+      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=215"></a-asset-item>
     </a-assets>
 
     <!-- Target 0: Pop Art. Placed first in the scanner database so the dotted comic-book print gets priority over the similar regular Chainmail artwork. -->
@@ -314,14 +311,8 @@ window.addEventListener('DOMContentLoaded', () => {
   const statusBar = document.querySelector('#statusBar');
   const scanFrame = document.querySelector('#scanFrame');
 
-  function filmTransitionTo(url){
-    const fx=document.getElementById('filmTransition');
-    if(!fx){ location.href=url; return; }
-    fx.classList.remove('active');
-    void fx.offsetWidth;
-    fx.classList.add('active');
-    setTimeout(()=>{ location.href=url; },520);
-  }
+  function filmTransitionTo(url,direction='right'){ lowxxyFilmNavigate(url,direction); }
+    
   const shopBar = document.querySelector('#shopBar');
   const shopButton = document.querySelector('#shopButton');
   const errorText = document.querySelector('#errorText');
@@ -555,19 +546,19 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=213'));
+    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=215'));
   }
 
   collectionButton.addEventListener('click', () => {
     sessionStorage.setItem('lowxxy-return-url', location.href);
     sessionStorage.setItem('lowxxy-resume-ar','1');
-    filmTransitionTo('./collection.html?v=213');
+    filmTransitionTo('./collection.html?v=215','left');
   });
 
   openSelfie.addEventListener('click', () => {
     sessionStorage.setItem('lowxxy-return-url', location.href);
     sessionStorage.setItem('lowxxy-resume-ar','1');
-    filmTransitionTo('./selfie.html?v=213');
+    filmTransitionTo('./selfie.html?v=215','right');
   });
 
   function drawCover(ctx, source, width, height, mirror = false) {
@@ -645,26 +636,28 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
+
 <script>
 (function(){
-  function ensureFilm(){
-    let wipe=document.querySelector('.film-wipe');
-    if(!wipe){
-      wipe=document.createElement('div');
-      wipe.className='film-wipe';
-      wipe.innerHTML='<div class="film-strip"><div class="film-sprockets"></div><div class="film-frames"></div><div class="film-sprockets"></div></div>';
-      document.body.appendChild(wipe);
-    }
+  function ensureFilmWipe(){
+    let wipe=document.getElementById('lowxxyFilmWipe');
+    if(wipe) return wipe;
+    wipe=document.createElement('div');
+    wipe.id='lowxxyFilmWipe';
+    wipe.className='film-wipe';
+    const frames=Array.from({length:10},()=>'<div class="film-frame"></div>').join('');
+    wipe.innerHTML='<div class="film-sheet"><div class="film-holes"></div><div class="film-body"><div class="film-frames-grid">'+frames+'</div></div><div class="film-holes"></div></div>';
+    document.body.appendChild(wipe);
     return wipe;
   }
   window.lowxxyFilmNavigate=function(url,direction){
-    const wipe=ensureFilm();
-    const strip=wipe.querySelector('.film-strip');
-    strip.className='film-strip '+(direction==='left'?'to-left':'to-right');
+    const wipe=ensureFilmWipe();
+    const sheet=wipe.querySelector('.film-sheet');
+    sheet.className='film-sheet '+(direction==='left'?'to-left':'to-right');
     wipe.classList.remove('active');
     void wipe.offsetWidth;
     wipe.classList.add('active');
-    setTimeout(()=>{location.href=url;},430);
+    setTimeout(()=>{location.href=url;},500);
   };
 })();
 </script>
