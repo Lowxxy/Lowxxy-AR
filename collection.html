@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Lowxxy Collection</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=225" />
+  <link rel="manifest" href="./manifest.webmanifest?v=226" />
   <style>
     :root{color-scheme:dark;--paper:#f2f0e8;--gold:#d6aa42;--gold2:#ffe59a;--gray:#8c8c8c;--playGold:#ffe59a;--lockedSilver:#777;--ink:#070707;font-family:"Arial Rounded MT Bold","Trebuchet MS",Arial,sans-serif}
     *{box-sizing:border-box}
@@ -54,7 +54,7 @@
     .card.unlocked .name{color:#fff}
 
     .gold .card.unlocked.playable{cursor:pointer;transition:transform .16s ease,box-shadow .16s ease}.gold .card.unlocked.playable:active{transform:scale(.975)}.gold .card.unlocked.playable .type{display:inline-flex;align-items:center;justify-content:center;margin-top:8px;padding:7px 10px;border:1.5px solid #d6aa42;border-radius:999px;background:#171006;color:#ffe59a;box-shadow:0 0 10px #d6aa4226;font-size:9px;letter-spacing:.1em}.gold .card.unlocked.playable .type::after{content:"  •  TAP TO PLAY";color:#ffe59a}.gold .card.unlocked.playable::after{display:none}
-    .gold .card.unlocked.playable .imageStage::after{content:"";position:absolute;z-index:5;right:7px;bottom:7px;width:44px;height:34px;background:#ffe59a;-webkit-mask:url("./assets/lowxxy-crown.png?v=225") center/contain no-repeat;mask:url("./assets/lowxxy-crown.png?v=225") center/contain no-repeat;opacity:1;filter:none;transform:rotate(-10deg);pointer-events:none}.regular .card.unlocked .imageStage::after{content:"";position:absolute;z-index:5;right:6px;bottom:6px;width:38px;height:30px;background:#777;-webkit-mask:url("./assets/lowxxy-crown.png?v=225") center/contain no-repeat;mask:url("./assets/lowxxy-crown.png?v=225") center/contain no-repeat;opacity:1;filter:none;transform:rotate(-10deg);pointer-events:none}
+    .gold .card.unlocked.playable .imageStage::after{content:"";position:absolute;z-index:5;right:7px;bottom:7px;width:44px;height:34px;background:url("./assets/lowxxy-crown.png?v=226") center/contain no-repeat;opacity:.92;filter:sepia(1) saturate(5) hue-rotate(352deg) brightness(1.38) drop-shadow(0 0 5px rgba(214,170,66,.5));transform:rotate(-10deg);pointer-events:none}.regular .card .shirtBox::after{content:"";position:absolute;z-index:5;right:7px;bottom:7px;width:38px;height:30px;background:url("./assets/lowxxy-crown.png?v=226") center/contain no-repeat;opacity:.78;filter:grayscale(1) brightness(1.65) contrast(.95) drop-shadow(0 0 4px rgba(190,190,190,.3));transform:rotate(-10deg);pointer-events:none}
     .saveNote{margin:18px auto 0;max-width:520px;padding:12px 15px;border:1px solid #444;border-radius:999px;color:#bbb;text-align:center;font-size:11px;background:#0d0d0ddd}
     .emptyNote{text-align:center;color:#777;font-size:10px;margin:12px 0 0}
     @media (max-width:430px){
@@ -103,7 +103,7 @@
 
   <header class="top">
     <button class="iconBtn" id="backBtn" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
-    <div class="logo"><img src="./assets/lowxxy-wordmark.png?v=225" alt="LOWXXY"><span>COLLECTION</span></div>
+    <div class="logo"><img src="./assets/lowxxy-wordmark.png?v=226" alt="LOWXXY"><span>COLLECTION</span></div>
     <button class="iconBtn" id="shopBtn" aria-label="Shop Lowxxy"><svg viewBox="0 0 24 24"><path d="M3 5h2l2.2 9.2a2 2 0 0 0 2 1.5h7.9a2 2 0 0 0 1.9-1.4L21 8H6"/><circle cx="10" cy="19" r="1.4"/><circle cx="18" cy="19" r="1.4"/></svg></button>
   </header>
   <main>
@@ -179,7 +179,7 @@
   const hangUnlocked = localStorage.getItem(STORAGE_PREFIX + 'hang') === 'unlocked';
   const arCount=(popUnlocked?1:0)+(groundedUnlocked?1:0)+(hangUnlocked?1:0);
   document.getElementById('animationProgress').textContent=`ANIMATIONS FOUND ${arCount}/3`;
-  document.getElementById('backBtn').addEventListener('click', () => { sessionStorage.setItem('lowxxy-resume-ar','1'); const returnUrl=sessionStorage.getItem('lowxxy-return-url'); if(returnUrl) lowxxyFilmNavigate(returnUrl,'right'); else lowxxyFilmNavigate('./index.html?v=225','right'); });
+  document.getElementById('backBtn').addEventListener('click', () => { sessionStorage.setItem('lowxxy-resume-ar','1'); const returnUrl=sessionStorage.getItem('lowxxy-return-url'); if(returnUrl) lowxxyFilmNavigate(returnUrl,'right'); else lowxxyFilmNavigate('./index.html?v=226','right'); });
   document.getElementById('shopBtn').addEventListener('click', () => lowxxyFilmNavigate('https://lowxxy.myshopify.com','right'));
 </script>
 
@@ -192,7 +192,7 @@
     wipe=document.createElement('div');
     wipe.id='lowxxyFilmWipe';
     wipe.className='film-wipe';
-    const frames=Array.from({length:14},(_,i)=>'<div class="film-frame">'+((i%4===1)?'<img class="film-crown" src="./assets/lowxxy-crown.png?v=225" alt="">':'')+'</div>').join('');
+    const frames=Array.from({length:14},(_,i)=>'<div class="film-frame">'+((i%4===1)?'<img class="film-crown" src="./assets/lowxxy-crown.png?v=226" alt="">':'')+'</div>').join('');
     wipe.innerHTML='<div class="film-sheet"><div class="film-holes"></div><div class="film-body"><div class="film-track">'+frames+'</div><div class="film-scratches"></div></div><div class="film-holes"></div></div>';
     document.body.appendChild(wipe);
     return wipe;
