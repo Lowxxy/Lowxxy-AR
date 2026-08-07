@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Lowxxy Collection</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=208" />
+  <link rel="manifest" href="./manifest.webmanifest?v=209" />
   <style>
     :root{color-scheme:dark;--paper:#f2f0e8;--gold:#d6aa42;--gold2:#ffe59a;--gray:#8c8c8c;--ink:#070707;font-family:"Arial Rounded MT Bold","Trebuchet MS",Arial,sans-serif}
     *{box-sizing:border-box}
@@ -25,22 +25,44 @@
     .sectionTitle{text-align:center;margin:0 0 5px;font-family:Georgia,serif;font-size:22px;letter-spacing:.08em}.gold .sectionTitle{color:var(--gold2)}
     .sectionSub{text-align:center;margin:0 0 15px;color:#aaa;font-size:12px}
     .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
-    .dualCard{grid-column:1/-1}.dualShirts{display:grid;grid-template-columns:1fr 1fr;gap:4px;align-items:center;width:100%;height:100%}.dualShirts .shirt{min-width:0}
+    .dualCard{grid-column:1/-1}
+    .dualShirts{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:stretch;width:100%;height:100%}
+    .dualShirts .imageStage{height:100%}
     .regular .grid{grid-template-columns:repeat(3,minmax(0,1fr))}
     .card{position:relative;min-width:0;overflow:hidden;border:1px solid #444;border-radius:18px;background:linear-gradient(145deg,#171717,#090909 62%);padding:12px 8px 11px;text-align:center;box-shadow:inset 0 0 22px #000,0 6px 15px #0008}
     .gold .card{border-color:#8e6b24;background:radial-gradient(circle at 50% 32%,#3b2b0b 0,#161208 43%,#090909 75%)}
-    .shirtBox{height:190px;display:grid;place-items:center;position:relative;overflow:hidden;border-radius:13px;background:#080808}
-    .shirt{width:100%;height:100%;object-fit:cover;transition:.35s ease;filter:grayscale(1) sepia(1) saturate(3.2) hue-rotate(355deg) brightness(.38) contrast(1.35);opacity:.82}
-    .regular .shirt{filter:grayscale(1) brightness(.26) contrast(1.35);opacity:.78}
-    .card::after{content:"?";position:absolute;left:50%;top:82px;transform:translate(-50%,-50%);font:900 44px/1 Georgia,serif;color:#090909;text-shadow:0 1px 0 #ffe59a99;opacity:.8}
-    .lock{width:34px;height:34px;margin:-2px auto 7px;border:2px solid currentColor;border-radius:50%;display:grid;place-items:center;color:#d9b85e;font-size:16px}.regular .lock{color:#8d8d8d}
-    .name{font:900 13px/1.12 Georgia,serif;letter-spacing:.05em;text-transform:uppercase}.type{font-size:9px;color:#b99849;margin-top:5px;letter-spacing:.11em}.regular .type{color:#777}
+    .shirtBox{height:190px;display:grid;place-items:center;position:relative;overflow:hidden;border-radius:13px;background:radial-gradient(circle at 50% 12%,#2a2a2a,#121212 58%,#080808 90%);padding:10px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.03),inset 0 0 22px rgba(0,0,0,.7)}
+    .regular .shirtBox{height:150px}
+    .imageStage{position:relative;width:100%;height:100%;border-radius:10px;overflow:hidden;background:#0b0b0b;display:flex;align-items:center;justify-content:center}
+    .imageStage::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(0,0,0,.14));pointer-events:none;z-index:2}
+    .shirt{position:relative;z-index:1;width:100%;height:100%;object-fit:contain;background:#0b0b0b;border-radius:8px;transition:.35s ease;opacity:1}
+    .card:not(.unlocked) .shirt{filter:grayscale(1) brightness(.33) contrast(1.1) sepia(.2);opacity:.9}
+    .gold .card:not(.unlocked) .shirt{filter:grayscale(1) sepia(1) saturate(1.35) hue-rotate(346deg) brightness(.42) contrast(1.08)}
+    .card:not(.unlocked) .imageStage::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.18),rgba(0,0,0,.4));z-index:2}
+    .card::after{content:"?";position:absolute;left:50%;top:88px;transform:translate(-50%,-50%);font:900 44px/1 Georgia,serif;color:#090909;text-shadow:0 1px 0 #ffe59a99;opacity:.88;z-index:3}
+    .regular .card::after{color:#d9d9d9;text-shadow:0 1px 0 #0008}
+    .lock{position:relative;z-index:4;width:34px;height:34px;margin:-2px auto 7px;border:2px solid currentColor;border-radius:50%;display:grid;place-items:center;color:#d9b85e;font-size:16px}.regular .lock{color:#8d8d8d}
+    .name{position:relative;z-index:4;font:900 13px/1.12 Georgia,serif;letter-spacing:.05em;text-transform:uppercase}.type{position:relative;z-index:4;font-size:9px;color:#b99849;margin-top:5px;letter-spacing:.11em}.regular .type{color:#777}
     .card.unlocked{border-color:#e5e5e5;background:radial-gradient(circle at 50% 30%,#2c2c2c,#0a0a0a 70%)}
     .gold .card.unlocked{border-color:#ffd86b;box-shadow:0 0 18px #ffd86b33,inset 0 0 24px #000}
-    .card.unlocked::after{display:none}.card.unlocked .shirt{filter:none;opacity:1;transform:none;object-fit:cover}.card.unlocked .lock{color:#fff;border-color:#fff}.card.unlocked .lock::before{content:"✓"}.card.unlocked .lock span{display:none}.card.unlocked .type{color:#fff}.card.unlocked .name{color:#fff}
+    .card.unlocked::after{display:none}
+    .card.unlocked .shirt{filter:none;opacity:1;transform:none}
+    .card.unlocked .lock{color:#fff;border-color:#fff}
+    .card.unlocked .lock::before{content:"✓"}
+    .card.unlocked .lock span{display:none}
+    .card.unlocked .type{color:#fff}
+    .card.unlocked .name{color:#fff}
     .saveNote{margin:18px auto 0;max-width:520px;padding:12px 15px;border:1px solid #444;border-radius:999px;color:#bbb;text-align:center;font-size:11px;background:#0d0d0ddd}
     .emptyNote{text-align:center;color:#777;font-size:10px;margin:12px 0 0}
-    @media (max-width:430px){.shirtBox{height:155px}.regular .grid{grid-template-columns:repeat(3,minmax(0,1fr))}.regular .shirtBox{height:112px}.regular .card{padding-left:4px;padding-right:4px}.regular .name{font-size:10px}.card::after{top:69px}.regular .card::after{top:53px;font-size:30px}}
+    @media (max-width:430px){
+      .shirtBox{height:165px}
+      .regular .shirtBox{height:118px}
+      .regular .grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+      .regular .card{padding-left:4px;padding-right:4px}
+      .regular .name{font-size:10px}
+      .card::after{top:75px}
+      .regular .card::after{top:58px;font-size:30px}
+    }
   </style>
 </head>
 <body>
@@ -57,9 +79,25 @@
       <h2 class="sectionTitle">✦ GOLD AR MYSTERIES ✦</h2>
       <p class="sectionSub">Animated shirts unlock when their design is scanned.</p>
       <div class="grid">
-        <article class="card dualCard" data-key="pop-art-chainmail"><div class="shirtBox"><div class="dualShirts"><img class="shirt" src="./chainmail.webp" alt="Chainmail shirt"><img class="shirt" src="./popart.webp" alt="Pop Art shirt"></div></div><div class="lock"><span>🔒</span></div><div class="name">Chainmail + Pop Art</div><div class="type">SHARED AR MYSTERY</div></article>
-        <article class="card" data-key="grounded-gains"><div class="shirtBox"><img class="shirt" src="./grounded-gains.webp" alt="Grounded Gains shirt"></div><div class="lock"><span>🔒</span></div><div class="name">Grounded Gains</div><div class="type">MYSTERY AR SHIRT</div></article>
-        <article class="card" data-key="hang"><div class="shirtBox"><img class="shirt" src="./hang.webp" alt="Hang shirt"></div><div class="lock"><span>🔒</span></div><div class="name">Hang</div><div class="type">MYSTERY AR SHIRT</div></article>
+        <article class="card dualCard" data-key="pop-art-chainmail">
+          <div class="shirtBox">
+            <div class="dualShirts">
+              <div class="imageStage"><img class="shirt" src="./chainmail.webp" alt="Chainmail shirt"></div>
+              <div class="imageStage"><img class="shirt" src="./popart.webp" alt="Pop Art shirt"></div>
+            </div>
+          </div>
+          <div class="lock"><span>🔒</span></div>
+          <div class="name">Chainmail + Pop Art</div>
+          <div class="type">SHARED AR MYSTERY</div>
+        </article>
+        <article class="card" data-key="grounded-gains">
+          <div class="shirtBox"><div class="imageStage"><img class="shirt" src="./grounded-gains.webp" alt="Grounded Gains shirt"></div></div>
+          <div class="lock"><span>🔒</span></div><div class="name">Grounded Gains</div><div class="type">MYSTERY AR SHIRT</div>
+        </article>
+        <article class="card" data-key="hang">
+          <div class="shirtBox"><div class="imageStage"><img class="shirt" src="./hang.webp" alt="Hang shirt"></div></div>
+          <div class="lock"><span>🔒</span></div><div class="name">Hang</div><div class="type">MYSTERY AR SHIRT</div>
+        </article>
       </div>
     </section>
 
@@ -67,9 +105,9 @@
       <h2 class="sectionTitle">REGULAR DESIGNS</h2>
       <p class="sectionSub">These three will be connected to scanning later.</p>
       <div class="grid">
-        <article class="card" data-key="royal-script"><div class="shirtBox"><img class="shirt" src="./royal-script.webp" alt="Royal Script shirt"></div><div class="lock"><span>🔒</span></div><div class="name">Royal Script</div><div class="type">LOCKED</div></article>
-        <article class="card" data-key="crown-column"><div class="shirtBox"><img class="shirt" src="./crown-column.webp" alt="Crown Column shirt"></div><div class="lock"><span>🔒</span></div><div class="name">Crown Column</div><div class="type">LOCKED</div></article>
-        <article class="card" data-key="double-vision"><div class="shirtBox"><img class="shirt" src="./double-vision.webp" alt="Double Vision shirt"></div><div class="lock"><span>🔒</span></div><div class="name">Double Vision</div><div class="type">LOCKED</div></article>
+        <article class="card" data-key="royal-script"><div class="shirtBox"><div class="imageStage"><img class="shirt" src="./royal-script.webp" alt="Royal Script shirt"></div></div><div class="lock"><span>🔒</span></div><div class="name">Royal Script</div><div class="type">LOCKED</div></article>
+        <article class="card" data-key="crown-column"><div class="shirtBox"><div class="imageStage"><img class="shirt" src="./crown-column.webp" alt="Crown Column shirt"></div></div><div class="lock"><span>🔒</span></div><div class="name">Crown Column</div><div class="type">LOCKED</div></article>
+        <article class="card" data-key="double-vision"><div class="shirtBox"><div class="imageStage"><img class="shirt" src="./double-vision.webp" alt="Double Vision shirt"></div></div><div class="lock"><span>🔒</span></div><div class="name">Double Vision</div><div class="type">LOCKED</div></article>
       </div>
       <p class="emptyNote">The regular shirts stay locked until their scanner targets are added.</p>
     </section>
@@ -79,22 +117,19 @@
   const STORAGE_PREFIX = 'lowxxy-collection-';
   document.querySelectorAll('.card').forEach(card => {
     let unlocked = localStorage.getItem(STORAGE_PREFIX + card.dataset.key) === 'unlocked';
-
-    // The paired Chainmail + Pop Art card is unlocked when either legacy key is
-    // present. This also preserves collections already earned before this update.
     if (card.dataset.key === 'pop-art-chainmail') {
       unlocked =
         localStorage.getItem(STORAGE_PREFIX + 'pop-art') === 'unlocked' ||
-        localStorage.getItem(STORAGE_PREFIX + 'chainmail') === 'unlocked';
+        localStorage.getItem(STORAGE_PREFIX + 'chainmail') === 'unlocked' ||
+        localStorage.getItem(STORAGE_PREFIX + 'pop-art-chainmail') === 'unlocked';
     }
-
     if (unlocked) {
       card.classList.add('unlocked');
       card.querySelector('.type').textContent = 'UNLOCKED';
     }
   });
-  document.getElementById('backBtn').addEventListener('click', () => location.href='./index.html?v=208');
-  document.getElementById('scanBtn').addEventListener('click', () => location.href='./index.html?v=208');
+  document.getElementById('backBtn').addEventListener('click', () => location.href='./index.html?v=209');
+  document.getElementById('scanBtn').addEventListener('click', () => location.href='./index.html?v=209');
 </script>
 </body>
 </html>
