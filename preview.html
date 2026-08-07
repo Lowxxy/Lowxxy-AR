@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Lowxxy Animation</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=238" />
+  <link rel="manifest" href="./manifest.webmanifest?v=239" />
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
   <style>
@@ -31,6 +31,13 @@
   .film-frame:nth-child(even) .film-crown{transform:translate(-50%,-50%) rotate(4deg);opacity:.58}
 
 body::after{content:"";position:fixed;inset:0;z-index:9;pointer-events:none;opacity:.035;mix-blend-mode:screen;background-image:radial-gradient(#fff 0 .5px,transparent .8px),radial-gradient(#000 0 .7px,transparent 1px);background-size:7px 7px,10px 10px;animation:previewGrain .18s steps(2) infinite}@keyframes previewGrain{50%{transform:translate(1px,-1px)}}.logo img,.gestureHint{animation:previewProjector 9s steps(1,end) infinite}@keyframes previewProjector{0%,91%,93%,95%,100%{opacity:1}92%{opacity:.84}94%{opacity:.96}}
+
+    /* v239 selective rubber-hose motion */
+    .bottomCard .title{animation:previewTitleRubber 6s ease-in-out infinite;transform-origin:center}
+    @keyframes previewTitleRubber{0%,72%,100%{transform:translateY(0) rotate(0) scale(1)}77%{transform:translateY(-2px) rotate(-1deg) scale(1.025,.975)}82%{transform:translateY(1px) rotate(.7deg) scale(.985,1.025)}87%{transform:translateY(0) rotate(0) scale(1)}}
+    .replay:active,.reset:active,.iconBtn:active{transform:scale(.9,1.1) translateY(2px)}
+    @media (prefers-reduced-motion:reduce){.bottomCard .title{animation:none!important}}
+
 </style>
 </head>
 <body>
@@ -38,12 +45,12 @@ body::after{content:"";position:fixed;inset:0;z-index:9;pointer-events:none;opac
 window.LowxxySound=window.LowxxySound||(()=>{let ctx=null;const AC=window.AudioContext||window.webkitAudioContext;function get(){if(!AC)return null;if(!ctx)ctx=new AC();if(ctx.state==='suspended')ctx.resume().catch(()=>{});return ctx}function tone(freq=220,dur=.08,type='triangle',vol=.035,delay=0){const c=get();if(!c)return;const o=c.createOscillator(),g=c.createGain(),t=c.currentTime+delay;o.type=type;o.frequency.setValueAtTime(freq,t);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(vol,t+.008);g.gain.exponentialRampToValueAtTime(.0001,t+dur);o.connect(g).connect(c.destination);o.start(t);o.stop(t+dur+.03)}function noise(dur=.12,vol=.03,low=500,high=5000,delay=0){const c=get();if(!c)return;const len=Math.max(1,Math.floor(c.sampleRate*dur)),buf=c.createBuffer(1,len,c.sampleRate),data=buf.getChannelData(0);for(let i=0;i<len;i++)data[i]=(Math.random()*2-1)*(1-i/len*.35);const src=c.createBufferSource(),bp=c.createBiquadFilter(),g=c.createGain(),t=c.currentTime+delay;src.buffer=buf;bp.type='bandpass';bp.frequency.value=(low+high)/2;bp.Q.value=.55;g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(vol,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+dur);src.connect(bp).connect(g).connect(c.destination);src.start(t);src.stop(t+dur+.03)}function click(){noise(.055,.02,900,4200);tone(118,.055,'square',.025)}function shutter(){noise(.045,.055,700,6500);tone(105,.045,'square',.04);noise(.07,.04,500,4500,.06);tone(82,.065,'square',.028,.055)}function chime(){tone(523.25,.18,'triangle',.04);tone(659.25,.18,'triangle',.035,.09);tone(783.99,.25,'triangle',.04,.18);noise(.20,.008,1000,6000,.12)}function tape(){const c=get();if(!c)return;const dur=1.08,len=Math.floor(c.sampleRate*dur),buf=c.createBuffer(1,len,c.sampleRate),data=buf.getChannelData(0);for(let i=0;i<len;i++){const x=i/len;data[i]=(Math.random()*2-1)*(.55+.45*Math.sin(x*Math.PI));}const src=c.createBufferSource(),hp=c.createBiquadFilter(),lp=c.createBiquadFilter(),g=c.createGain(),t=c.currentTime;src.buffer=buf;hp.type='highpass';hp.frequency.value=380;lp.type='lowpass';lp.frequency.value=5200;g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(.055,t+.09);g.gain.setValueAtTime(.05,t+dur-.15);g.gain.exponentialRampToValueAtTime(.0001,t+dur);src.connect(hp).connect(lp).connect(g).connect(c.destination);src.start(t);src.stop(t+dur+.03);tone(76,dur,'sawtooth',.008)}return{click,shutter,chime,tape};})();
 </script>
   <div id="stage">
-    <img id="previewCrown" src="./assets/lowxxy-crown.png?v=238" alt="">
+    <img id="previewCrown" src="./assets/lowxxy-crown.png?v=239" alt="">
     <a-scene embedded renderer="alpha:true;antialias:true;colorManagement:true" vr-mode-ui="enabled:false" device-orientation-permission-ui="enabled:false">
       <a-assets>
-        <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=238"></a-asset-item>
-        <a-asset-item id="groundedAsset" src="./assets/grounded-gains.glb?v=238"></a-asset-item>
-        <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=238"></a-asset-item>
+        <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=239"></a-asset-item>
+        <a-asset-item id="groundedAsset" src="./assets/grounded-gains.glb?v=239"></a-asset-item>
+        <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=239"></a-asset-item>
       </a-assets>
       <a-entity light="type:ambient;intensity:1.9;color:#ffffff"></a-entity>
       <a-entity light="type:directional;intensity:2.2;color:#fff3d1" position="1 3 4"></a-entity>
@@ -51,7 +58,7 @@ window.LowxxySound=window.LowxxySound||(()=>{let ctx=null;const AC=window.AudioC
       <a-camera position="0 0 0" fov="80" look-controls="enabled:false" wasd-controls="enabled:false"></a-camera>
     </a-scene>
   </div>
-  <header class="top"><button class="iconBtn" id="backBtn" aria-label="Back to collection"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="logo"><img src="./assets/lowxxy-wordmark.png?v=238" alt="LOWXXY"><span>ANIMATION</span></div><div></div></header>
+  <header class="top"><button class="iconBtn" id="backBtn" aria-label="Back to collection"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="logo"><img src="./assets/lowxxy-wordmark.png?v=239" alt="LOWXXY"><span>ANIMATION</span></div><div></div></header>
   <div class="gestureHint">DRAG TO LOOK AROUND • PINCH TO SIZE</div>
   <div class="bottomCard"><div class="kicker">✦ UNLOCKED AR DESIGN ✦</div><div class="title" id="designTitle">LOWXXY</div><div class="hint">Same animation and presentation as the shirt scan.</div><div class="controls"><button class="reset" id="resetViewBtn">RESET VIEW</button><button class="replay" id="replayBtn">REPLAY</button></div></div>
 <script>
@@ -78,9 +85,9 @@ stage.addEventListener('pointerdown',e=>{activePointers.set(e.pointerId,{x:e.cli
 stage.addEventListener('pointermove',e=>{if(!activePointers.has(e.pointerId))return;e.preventDefault();activePointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(activePointers.size===1&&lastSingle){rotY+=(e.clientX-lastSingle.x)*.45;rotX-=(e.clientY-lastSingle.y)*.32;lastSingle={x:e.clientX,y:e.clientY};applyView()}else if(activePointers.size===2){const d=pointerDistance();if(d&&lastPinchDistance){viewerScale*=d/lastPinchDistance;viewerScale=Math.max(.55,Math.min(2.2,viewerScale));applyView()}lastPinchDistance=d}},{passive:false});
 function endPointer(e){activePointers.delete(e.pointerId);if(activePointers.size===1){const p=[...activePointers.values()][0];lastSingle={x:p.x,y:p.y};lastPinchDistance=null}else{lastSingle=null;lastPinchDistance=null}}
 stage.addEventListener('pointerup',endPointer);stage.addEventListener('pointercancel',endPointer);
-function ensureFilmWipe(){let wipe=document.getElementById('lowxxyFilmWipe');if(wipe)return wipe;wipe=document.createElement('div');wipe.id='lowxxyFilmWipe';wipe.className='film-wipe';const frames=Array.from({length:22},()=>'<div class="film-frame"><img class="film-crown" src="./assets/lowxxy-crown.png?v=238" alt=""></div>').join('');wipe.innerHTML='<div class="film-sheet"><div class="film-holes"></div><div class="film-body"><div class="film-track">'+frames+'</div><div class="film-scratches"></div></div><div class="film-holes"></div></div>';document.body.appendChild(wipe);return wipe}
+function ensureFilmWipe(){let wipe=document.getElementById('lowxxyFilmWipe');if(wipe)return wipe;wipe=document.createElement('div');wipe.id='lowxxyFilmWipe';wipe.className='film-wipe';const frames=Array.from({length:22},()=>'<div class="film-frame"><img class="film-crown" src="./assets/lowxxy-crown.png?v=239" alt=""></div>').join('');wipe.innerHTML='<div class="film-sheet"><div class="film-holes"></div><div class="film-body"><div class="film-track">'+frames+'</div><div class="film-scratches"></div></div><div class="film-holes"></div></div>';document.body.appendChild(wipe);return wipe}
 function nav(url,direction='right'){LowxxySound.tape();const wipe=ensureFilmWipe(),sheet=wipe.querySelector('.film-sheet');sheet.className='film-sheet '+(direction==='left'?'to-left':'to-right');wipe.classList.remove('active');void wipe.offsetWidth;wipe.classList.add('active');setTimeout(()=>location.href=url,980)}
-document.getElementById('backBtn').addEventListener('click',()=>nav('./collection.html?v=238','right'));
+document.getElementById('backBtn').addEventListener('click',()=>nav('./collection.html?v=239','right'));
 </script>
 </body>
 </html>
