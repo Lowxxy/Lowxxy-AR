@@ -23,23 +23,28 @@
 50%{transform:translateX(-1.6vw)}100%{transform:translateX(.9vw)}}
 
 
-  /* v215 — full-screen directional film-strip wipe */
-  .film-wipe{position:fixed;inset:0;z-index:999999;pointer-events:none;overflow:hidden;visibility:hidden;opacity:0;background:#050505}
-  .film-wipe.active{visibility:visible;opacity:1}
-  .film-sheet{position:absolute;top:-6vh;width:150vw;height:112vh;display:grid;grid-template-rows:9vh 1fr 9vh;background:#080808;box-shadow:0 0 90px #000;will-change:transform}
-  .film-sheet.to-right{left:-155vw;animation:filmSheetRight .62s cubic-bezier(.12,.78,.18,1) forwards}
-  .film-sheet.to-left{right:-155vw;animation:filmSheetLeft .62s cubic-bezier(.12,.78,.18,1) forwards}
-  .film-holes{background-color:#090909;background-image:repeating-linear-gradient(90deg,transparent 0 18px,#eee9dc 18px 42px,transparent 42px 64px);border-top:4px solid #e9e4d8;border-bottom:4px solid #e9e4d8}
-  .film-body{position:relative;overflow:hidden;background:#0a0a0a}
-  .film-frames-grid{position:absolute;inset:2.5vh 0;display:grid;grid-template-columns:repeat(10,1fr);gap:1.4vw;padding:0 1.4vw}
-  .film-frame{position:relative;border:4px solid #e9e4d8;border-radius:3px;background:linear-gradient(145deg,#181818,#050505 70%);box-shadow:inset 0 0 24px #000;overflow:hidden}
-  .film-frame::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.11),transparent 20%),linear-gradient(100deg,transparent 0 46%,rgba(255,255,255,.08) 48%,transparent 51%);mix-blend-mode:screen}
-  .film-body::before{content:"";position:absolute;inset:0;z-index:3;background:repeating-linear-gradient(90deg,transparent 0 11vw,rgba(245,241,226,.18) 11vw 11.15vw,transparent 11.15vw 15vw);animation:filmFrameRush .09s steps(2,end) infinite;mix-blend-mode:screen}
-  .film-body::after{content:"";position:absolute;inset:0;z-index:4;background:radial-gradient(circle at 20% 35%,rgba(255,255,255,.08),transparent 16%),radial-gradient(circle at 73% 62%,rgba(255,255,255,.06),transparent 18%),linear-gradient(90deg,rgba(0,0,0,.9),transparent 8%,transparent 92%,rgba(0,0,0,.9));animation:filmFlicker .12s steps(2,end) infinite}
-  @keyframes filmSheetRight{0%{transform:translateX(0) skewX(-5deg)}100%{transform:translateX(260vw) skewX(-5deg)}}
-  @keyframes filmSheetLeft{0%{transform:translateX(0) skewX(5deg)}100%{transform:translateX(-260vw) skewX(5deg)}}
-  @keyframes filmFrameRush{0%{transform:translateX(0)}50%{transform:translateX(-5vw)}100%{transform:translateX(3vw)}}
-  @keyframes filmFlicker{0%,100%{opacity:.88}50%{opacity:.58}}
+  /* v217 — oversized horizontal vintage film strip */
+  .film-wipe{position:fixed;inset:0;z-index:999999;pointer-events:none;overflow:hidden;visibility:hidden;background:transparent}
+  .film-wipe.active{visibility:visible}
+  .film-sheet{position:absolute;top:50%;width:245vw;height:46vh;min-height:290px;max-height:430px;display:grid;grid-template-rows:58px 1fr 58px;background:#0a0907;border:3px solid #d9d0b6;box-shadow:0 22px 60px #000d,0 -10px 40px #0009;transform-origin:center;will-change:transform;filter:sepia(.22) contrast(1.1)}
+  .film-sheet.to-right{left:-255vw;animation:filmTapeRight .92s cubic-bezier(.16,.78,.24,1) forwards}
+  .film-sheet.to-left{right:-255vw;animation:filmTapeLeft .92s cubic-bezier(.16,.78,.24,1) forwards}
+  .film-holes{position:relative;background:#090806;border-color:#d9d0b6;border-style:solid;border-width:0}
+  .film-holes:first-child{border-bottom-width:3px}.film-holes:last-child{border-top-width:3px}
+  .film-holes::before{content:"";position:absolute;inset:10px 0;background:repeating-linear-gradient(90deg,transparent 0 18px,#e7dfc8 18px 45px,transparent 45px 72px);opacity:.96}
+  .film-body{position:relative;overflow:hidden;background:#11100d}
+  .film-track{position:absolute;inset:14px 0;display:flex;gap:22px;width:max-content;padding:0 22px;animation:filmFramesRoll .34s linear infinite;will-change:transform}
+  .film-frame{width:31vw;min-width:220px;max-width:360px;height:100%;position:relative;border:5px solid #ded5bc;border-radius:4px;background:radial-gradient(circle at 42% 28%,#4e493d 0,#24211c 34%,#090806 78%);box-shadow:inset 0 0 34px #000,0 0 0 1px #000;overflow:hidden}
+  .film-frame:nth-child(3n+2){background:radial-gradient(circle at 65% 38%,#5f5848 0,#28241d 32%,#080705 80%)}
+  .film-frame:nth-child(3n){background:radial-gradient(circle at 30% 65%,#4a4539 0,#211e19 37%,#070605 82%)}
+  .film-frame::before{content:"";position:absolute;inset:0;background:linear-gradient(108deg,transparent 0 37%,rgba(255,245,215,.13) 40%,transparent 45%),radial-gradient(circle at 18% 22%,rgba(255,255,255,.12),transparent 10%),radial-gradient(circle at 76% 63%,rgba(255,255,255,.08),transparent 12%);mix-blend-mode:screen}
+  .film-frame::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 7px,rgba(255,255,255,.018) 8px,transparent 9px);opacity:.8}
+  .film-scratches{position:absolute;inset:0;z-index:5;pointer-events:none;opacity:.22;background:linear-gradient(90deg,transparent 13%,#fff 13.2%,transparent 13.35% 46%,#fff 46.12%,transparent 46.27% 78%,#fff 78.1%,transparent 78.22%);animation:filmFlicker .14s steps(2,end) infinite}
+  @keyframes filmTapeRight{0%{transform:translateY(-50%) translateX(0) rotate(-7deg)}42%{transform:translateY(-50%) translateX(118vw) rotate(-5deg)}100%{transform:translateY(-50%) translateX(365vw) rotate(-3deg)}}
+  @keyframes filmTapeLeft{0%{transform:translateY(-50%) translateX(0) rotate(7deg)}42%{transform:translateY(-50%) translateX(-118vw) rotate(5deg)}100%{transform:translateY(-50%) translateX(-365vw) rotate(3deg)}}
+  @keyframes filmFramesRoll{from{transform:translateX(0)}to{transform:translateX(-34vw)}}
+  @keyframes filmFlicker{0%,100%{opacity:.18}50%{opacity:.34}}
+  @media(max-width:430px){.film-sheet{height:42vh;min-height:260px;grid-template-rows:48px 1fr 48px}.film-frame{width:72vw;min-width:250px}.film-track{gap:16px}.film-holes::before{inset:8px 0;background:repeating-linear-gradient(90deg,transparent 0 13px,#e7dfc8 13px 34px,transparent 34px 55px)}@keyframes filmFramesRoll{from{transform:translateX(0)}to{transform:translateX(-76vw)}}}
 
 </style>
 </head>
@@ -220,8 +225,8 @@ async function savePhoto(){
   }finally{shoot.disabled=false}
 }
 
-document.querySelector('#back').onclick=()=>{ sessionStorage.setItem('lowxxy-resume-ar','1'); const returnUrl=sessionStorage.getItem('lowxxy-return-url'); if(returnUrl) lowxxyFilmNavigate(returnUrl,'left'); else lowxxyFilmNavigate('./index.html?v=215','left'); };
-document.querySelector('#switchAR').onclick=()=>{ sessionStorage.setItem('lowxxy-resume-ar','1'); lowxxyFilmNavigate('./index.html?v=215','left'); };
+document.querySelector('#back').onclick=()=>{ sessionStorage.setItem('lowxxy-resume-ar','1'); const returnUrl=sessionStorage.getItem('lowxxy-return-url'); if(returnUrl) lowxxyFilmNavigate(returnUrl,'left'); else lowxxyFilmNavigate('./index.html?v=217','left'); };
+document.querySelector('#switchAR').onclick=()=>{ sessionStorage.setItem('lowxxy-resume-ar','1'); lowxxyFilmNavigate('./index.html?v=217','left'); };
 shoot.onclick=savePhoto;
 shoot.disabled=true;
 startCamera();
@@ -237,8 +242,8 @@ addEventListener('pagehide',()=>stream?.getTracks().forEach(track=>track.stop())
     wipe=document.createElement('div');
     wipe.id='lowxxyFilmWipe';
     wipe.className='film-wipe';
-    const frames=Array.from({length:10},()=>'<div class="film-frame"></div>').join('');
-    wipe.innerHTML='<div class="film-sheet"><div class="film-holes"></div><div class="film-body"><div class="film-frames-grid">'+frames+'</div></div><div class="film-holes"></div></div>';
+    const frames=Array.from({length:14},()=>'<div class="film-frame"></div>').join('');
+    wipe.innerHTML='<div class="film-sheet"><div class="film-holes"></div><div class="film-body"><div class="film-track">'+frames+'</div><div class="film-scratches"></div></div><div class="film-holes"></div></div>';
     document.body.appendChild(wipe);
     return wipe;
   }
@@ -249,7 +254,7 @@ addEventListener('pagehide',()=>stream?.getTracks().forEach(track=>track.stop())
     wipe.classList.remove('active');
     void wipe.offsetWidth;
     wipe.classList.add('active');
-    setTimeout(()=>{location.href=url;},500);
+    setTimeout(()=>{location.href=url;},760);
   };
 })();
 </script>
