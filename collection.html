@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Lowxxy Collection</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=211" />
+  <link rel="manifest" href="./manifest.webmanifest?v=212" />
   <style>
     :root{color-scheme:dark;--paper:#f2f0e8;--gold:#d6aa42;--gold2:#ffe59a;--gray:#8c8c8c;--ink:#070707;font-family:"Arial Rounded MT Bold","Trebuchet MS",Arial,sans-serif}
     *{box-sizing:border-box}
@@ -138,7 +138,7 @@
   const arCount=(popUnlocked?2:0)+(groundedUnlocked?1:0)+(hangUnlocked?1:0);
   document.getElementById('arProgress').textContent=`AR DESIGNS ${arCount}/4`;
   document.getElementById('totalProgress').textContent=`COLLECTION ${arCount+regularCount}/7`;
-  document.getElementById('backBtn').addEventListener('click', () => { sessionStorage.setItem('lowxxy-resume-ar','1'); if(history.length>1) history.back(); else location.href='./index.html?v=211'; });
+  document.getElementById('backBtn').addEventListener('click', () => { sessionStorage.setItem('lowxxy-resume-ar','1'); const returnUrl=sessionStorage.getItem('lowxxy-return-url'); if(returnUrl) location.href=returnUrl; else if(history.length>1) history.back(); else location.href='./index.html?v=212'; });
   document.getElementById('shopBtn').addEventListener('click', () => location.href='https://lowxxy.myshopify.com');
 </script>
 </body>
