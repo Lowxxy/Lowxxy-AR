@@ -10,7 +10,7 @@
 #camera{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1);background:#000}
 #grain{position:fixed;inset:0;pointer-events:none;opacity:.09;background-image:radial-gradient(#fff .6px,transparent .8px),radial-gradient(#000 .7px,transparent .9px);background-position:0 0,5px 5px;background-size:8px 8px;mix-blend-mode:overlay;animation:flicker .18s infinite alternate}@keyframes flicker{from{opacity:.06}to{opacity:.11}}
 #topPlate{position:fixed;z-index:4;left:50%;top:max(12px,env(safe-area-inset-top));transform:translateX(-50%);width:min(78%,370px);padding:10px 13px 11px;text-align:center;background:rgba(9,9,9,.88);color:var(--paper);border:2px solid #d6aa42;border-radius:18px;box-shadow:0 4px 0 #6f531d,0 8px 18px #0009,0 0 16px rgba(214,170,66,.12);backdrop-filter:blur(5px)}
-#topPlate::after{content:"";position:absolute;right:12px;bottom:10px;width:74px;height:56px;background:url("./assets/lowxxy-crown.png?v=226") center/contain no-repeat;opacity:.92;transform:rotate(-10deg);pointer-events:none;filter:sepia(1) saturate(5) hue-rotate(352deg) brightness(1.38) drop-shadow(0 0 6px rgba(214,170,66,.5));z-index:0}#topPlate>*{position:relative;z-index:1}
+#topPlate::after{content:"";position:absolute;right:12px;bottom:10px;width:74px;height:56px;background:url("./assets/lowxxy-crown.png?v=228") center/contain no-repeat;opacity:.92;transform:rotate(-10deg);pointer-events:none;filter:sepia(1) saturate(5) hue-rotate(352deg) brightness(1.38) drop-shadow(0 0 6px rgba(214,170,66,.5));z-index:0}#topPlate>*{position:relative;z-index:1}
 #title{font:900 11px/1 Georgia,serif;letter-spacing:.15em;color:#ffe59a}#subtitle{margin:5px 0 7px;font:italic 700 9px/1.2 Georgia,serif;color:#ddd;letter-spacing:.02em}#topPlate a{display:inline-flex;align-items:center;gap:6px;color:#ffe59a;text-decoration:none;border:2px solid #d6aa42;border-radius:999px;padding:6px 11px;font:900 10px/1 Arial,sans-serif;background:#17120a;box-shadow:0 0 12px rgba(214,170,66,.12)}#topPlate a svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.9}
 .control{border:3px solid var(--paper);background:linear-gradient(#242424,#0b0b0b);color:var(--paper);box-shadow:0 4px 0 #444,0 7px 0 #000;font-weight:900;display:grid;place-items:center;padding:0}.control:active{transform:translateY(3px)}.control svg{width:27px;height:27px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 #back{position:fixed;z-index:7;left:14px;top:max(14px,calc(env(safe-area-inset-top) + 2px));width:46px;height:46px;border-radius:16px}
@@ -50,9 +50,14 @@
 
   .film-crown{position:absolute;left:50%;top:50%;width:46%;height:auto;transform:translate(-50%,-50%) rotate(-4deg);opacity:.58;filter:sepia(1) saturate(.65) brightness(1.35);z-index:3;pointer-events:none;mix-blend-mode:screen}
   .film-frame:nth-child(even) .film-crown{transform:translate(-50%,-50%) rotate(4deg);opacity:.42}
+
+#title,#topPlate a{animation:selfieProjector 8.7s steps(1,end) infinite}@keyframes selfieProjector{0%,91%,93%,95%,100%{opacity:1}92%{opacity:.84}94%{opacity:.95}}
 </style>
 </head>
 <body>
+<script>
+window.LowxxySound=window.LowxxySound||(()=>{let ctx=null;const AC=window.AudioContext||window.webkitAudioContext;function get(){if(!AC)return null;if(!ctx)ctx=new AC();if(ctx.state==='suspended')ctx.resume().catch(()=>{});return ctx}function tone(freq=220,dur=.08,type='triangle',vol=.035,delay=0){const c=get();if(!c)return;const o=c.createOscillator(),g=c.createGain(),t=c.currentTime+delay;o.type=type;o.frequency.setValueAtTime(freq,t);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(vol,t+.008);g.gain.exponentialRampToValueAtTime(.0001,t+dur);o.connect(g).connect(c.destination);o.start(t);o.stop(t+dur+.03)}function noise(dur=.12,vol=.03,low=500,high=5000,delay=0){const c=get();if(!c)return;const len=Math.max(1,Math.floor(c.sampleRate*dur)),buf=c.createBuffer(1,len,c.sampleRate),data=buf.getChannelData(0);for(let i=0;i<len;i++)data[i]=(Math.random()*2-1)*(1-i/len*.35);const src=c.createBufferSource(),bp=c.createBiquadFilter(),g=c.createGain(),t=c.currentTime+delay;src.buffer=buf;bp.type='bandpass';bp.frequency.value=(low+high)/2;bp.Q.value=.55;g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(vol,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+dur);src.connect(bp).connect(g).connect(c.destination);src.start(t);src.stop(t+dur+.03)}function click(){noise(.055,.02,900,4200);tone(118,.055,'square',.025)}function shutter(){noise(.045,.055,700,6500);tone(105,.045,'square',.04);noise(.07,.04,500,4500,.06);tone(82,.065,'square',.028,.055)}function chime(){tone(523.25,.18,'triangle',.04);tone(659.25,.18,'triangle',.035,.09);tone(783.99,.25,'triangle',.04,.18);noise(.20,.008,1000,6000,.12)}function tape(){const c=get();if(!c)return;const dur=.84,len=Math.floor(c.sampleRate*dur),buf=c.createBuffer(1,len,c.sampleRate),data=buf.getChannelData(0);for(let i=0;i<len;i++){const x=i/len;data[i]=(Math.random()*2-1)*(.55+.45*Math.sin(x*Math.PI));}const src=c.createBufferSource(),hp=c.createBiquadFilter(),lp=c.createBiquadFilter(),g=c.createGain(),t=c.currentTime;src.buffer=buf;hp.type='highpass';hp.frequency.value=380;lp.type='lowpass';lp.frequency.value=5200;g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(.055,t+.09);g.gain.setValueAtTime(.05,t+dur-.15);g.gain.exponentialRampToValueAtTime(.0001,t+dur);src.connect(hp).connect(lp).connect(g).connect(c.destination);src.start(t);src.stop(t+dur+.03);tone(76,dur,'sawtooth',.008)}return{click,shutter,chime,tape};})();
+</script>
 <video id="camera" autoplay muted playsinline></video>
 <div id="grain"></div>
 
@@ -194,6 +199,7 @@ async function makePhotoCanvas(source){
 }
 
 async function savePhoto(){
+  LowxxySound.shutter();
   if(!cameraReady||!stream){showToast('CAMERA IS STILL LOADING');return}
   shoot.disabled=true;
   showToast('CAPTURING…');
@@ -229,8 +235,8 @@ async function savePhoto(){
   }finally{shoot.disabled=false}
 }
 
-document.querySelector('#back').onclick=()=>{ sessionStorage.setItem('lowxxy-resume-ar','1'); const returnUrl=sessionStorage.getItem('lowxxy-return-url'); if(returnUrl) lowxxyFilmNavigate(returnUrl,'left'); else lowxxyFilmNavigate('./index.html?v=226','left'); };
-document.querySelector('#switchAR').onclick=()=>{ sessionStorage.setItem('lowxxy-resume-ar','1'); lowxxyFilmNavigate('./index.html?v=226','left'); };
+document.querySelector('#back').onclick=()=>{ sessionStorage.setItem('lowxxy-resume-ar','1'); const returnUrl=sessionStorage.getItem('lowxxy-return-url'); if(returnUrl) lowxxyFilmNavigate(returnUrl,'left'); else lowxxyFilmNavigate('./index.html?v=228','left'); };
+document.querySelector('#switchAR').onclick=()=>{ sessionStorage.setItem('lowxxy-resume-ar','1'); lowxxyFilmNavigate('./index.html?v=228','left'); };
 shoot.onclick=savePhoto;
 shoot.disabled=true;
 startCamera();
@@ -246,12 +252,13 @@ addEventListener('pagehide',()=>stream?.getTracks().forEach(track=>track.stop())
     wipe=document.createElement('div');
     wipe.id='lowxxyFilmWipe';
     wipe.className='film-wipe';
-    const frames=Array.from({length:14},(_,i)=>'<div class="film-frame">'+((i%4===1)?'<img class="film-crown" src="./assets/lowxxy-crown.png?v=226" alt="">':'')+'</div>').join('');
+    const frames=Array.from({length:14},(_,i)=>'<div class="film-frame">'+((i%4===1)?'<img class="film-crown" src="./assets/lowxxy-crown.png?v=228" alt="">':'')+'</div>').join('');
     wipe.innerHTML='<div class="film-sheet"><div class="film-holes"></div><div class="film-body"><div class="film-track">'+frames+'</div><div class="film-scratches"></div></div><div class="film-holes"></div></div>';
     document.body.appendChild(wipe);
     return wipe;
   }
   window.lowxxyFilmNavigate=function(url,direction){
+    LowxxySound.tape();
     const wipe=ensureFilmWipe();
     const sheet=wipe.querySelector('.film-sheet');
     sheet.className='film-sheet '+(direction==='left'?'to-left':'to-right');
