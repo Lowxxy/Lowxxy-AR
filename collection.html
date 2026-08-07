@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Lowxxy Collection</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=209" />
+  <link rel="manifest" href="./manifest.webmanifest?v=210" />
   <style>
     :root{color-scheme:dark;--paper:#f2f0e8;--gold:#d6aa42;--gold2:#ffe59a;--gray:#8c8c8c;--ink:#070707;font-family:"Arial Rounded MT Bold","Trebuchet MS",Arial,sans-serif}
     *{box-sizing:border-box}
@@ -46,7 +46,7 @@
     .card.unlocked{border-color:#e5e5e5;background:radial-gradient(circle at 50% 30%,#2c2c2c,#0a0a0a 70%)}
     .gold .card.unlocked{border-color:#ffd86b;box-shadow:0 0 18px #ffd86b33,inset 0 0 24px #000}
     .card.unlocked::after{display:none}
-    .card.unlocked .shirt{filter:none;opacity:1;transform:none}
+    .card.unlocked .shirt{filter:none;opacity:1;transform:none;object-fit:cover;background:#050505}
     .card.unlocked .lock{color:#fff;border-color:#fff}
     .card.unlocked .lock::before{content:"✓"}
     .card.unlocked .lock span{display:none}
@@ -128,8 +128,8 @@
       card.querySelector('.type').textContent = 'UNLOCKED';
     }
   });
-  document.getElementById('backBtn').addEventListener('click', () => location.href='./index.html?v=209');
-  document.getElementById('scanBtn').addEventListener('click', () => location.href='./index.html?v=209');
+  document.getElementById('backBtn').addEventListener('click', () => location.href='./index.html?v=210');
+  document.getElementById('scanBtn').addEventListener('click', () => location.href='./index.html?v=210');
 </script>
 </body>
 </html>
