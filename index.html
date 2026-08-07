@@ -7,8 +7,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Lowxxy AR</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=233" />
-  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=233" />
+  <link rel="manifest" href="./manifest.webmanifest?v=234" />
+  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=234" />
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
@@ -248,18 +248,23 @@
     #crownEasterToast{position:fixed;z-index:5100;left:50%;top:50%;transform:translate(-50%,-50%) scale(.72);opacity:0;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:6px;min-width:min(86vw,320px);padding:20px 28px;border:3px solid #f2f0e8;border-radius:26px;background:#080808;color:#ffe59a;font:900 14px/1 Georgia,serif;letter-spacing:.12em;text-align:center;box-shadow:0 0 28px #d6aa4266,0 12px 38px #000;transition:.22s}#crownEasterToast.show{opacity:1;transform:translate(-50%,-50%) scale(1)}#crownEasterToast span{display:block;white-space:nowrap}
     #crownRain{position:fixed;inset:0;z-index:5095;pointer-events:none;overflow:hidden;opacity:0;transition:opacity .18s ease}#crownRain.show{opacity:1}.crown-drop{position:absolute;top:-18vh;height:auto;opacity:0;filter:sepia(1) saturate(5) hue-rotate(352deg) brightness(1.38) drop-shadow(0 0 5px rgba(214,170,66,.5));animation:crownRainFall var(--dur,2.7s) linear forwards;animation-delay:var(--delay,0s)}#crownRain.big .crown-drop{filter:sepia(1) saturate(5) hue-rotate(352deg) brightness(1.38) drop-shadow(0 0 8px rgba(214,170,66,.65))}@keyframes crownRainFall{0%{transform:translate3d(0,-16vh,0) rotate(0deg) scale(var(--scale,.9));opacity:0}8%{opacity:.98}100%{transform:translate3d(var(--drift,0px),118vh,0) rotate(var(--spin,240deg)) scale(var(--scale,.9));opacity:.95}}
     .scan-crown-watermark{pointer-events:auto!important;cursor:pointer}
+    .overlay.ready .panel{animation:introPanelSettle .8s ease-out both}
+    @keyframes introPanelSettle{0%{transform:translateY(8px) scale(.985);opacity:.88}100%{transform:translateY(0) scale(1);opacity:1}}
 
-    /* v233 vintage cartoon iris intro/outro */
-    #irisWipe{position:fixed;inset:0;z-index:12000;pointer-events:none;overflow:hidden;visibility:hidden}
+    /* v234 slower vintage cartoon iris intro/outro */
+    #irisWipe{position:fixed;inset:0;z-index:12000;pointer-events:none;overflow:hidden;visibility:hidden;
+      background:repeating-radial-gradient(circle at center,#070707 0 8.6vmin,#2a2a2a 8.8vmin 15.8vmin,#0a0a0a 16vmin 23vmin);
+    }
     #irisWipe.active{visibility:visible}
-    #irisHole{position:absolute;left:50%;top:50%;width:34px;height:34px;border-radius:50%;transform:translate(-50%,-50%) scale(1);background:transparent;box-shadow:0 0 0 220vmax #000;will-change:transform,left,top}
-    #irisWipe.opening #irisHole{animation:lowxxyIrisOpen 1.45s cubic-bezier(.62,.02,.22,1) forwards}
-    #irisWipe.closing #irisHole{animation:lowxxyIrisClose 1.12s cubic-bezier(.68,.02,.88,.35) forwards}
-    #irisWipe::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.18;mix-blend-mode:screen;background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.035) 4px,transparent 5px);animation:irisFilmFlicker .12s steps(2,end) infinite}
-    @keyframes lowxxyIrisOpen{0%{transform:translate(-50%,-50%) scale(.18)}14%{transform:translate(-50%,-50%) scale(.34)}72%{transform:translate(-50%,-50%) scale(38)}100%{transform:translate(-50%,-50%) scale(120)}}
-    @keyframes lowxxyIrisClose{0%{transform:translate(-50%,-50%) scale(120)}74%{transform:translate(-50%,-50%) scale(.48)}100%{transform:translate(-50%,-50%) scale(.18)}}
-    @keyframes irisFilmFlicker{0%,100%{opacity:.14}50%{opacity:.24}}
-    @media (max-width:430px){#irisHole{width:30px;height:30px}}
+    #irisWipe::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at center,rgba(255,255,255,.05) 0 18%,transparent 40%),radial-gradient(circle at center,transparent 0 42%,rgba(0,0,0,.18) 64%,rgba(0,0,0,.56) 100%);opacity:.96}
+    #irisHole{position:absolute;left:50%;top:50%;width:34px;height:34px;border-radius:50%;transform:translate(-50%,-50%) scale(1);background:transparent;box-shadow:0 0 0 220vmax rgba(0,0,0,.42);will-change:transform,left,top}
+    #irisWipe.opening #irisHole{animation:lowxxyIrisOpen 2.7s cubic-bezier(.62,.02,.22,1) forwards}
+    #irisWipe.closing #irisHole{animation:lowxxyIrisClose 1.8s cubic-bezier(.68,.02,.88,.35) forwards}
+    #irisWipe::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.22;mix-blend-mode:screen;background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.04) 4px,transparent 5px);animation:irisFilmFlicker .13s steps(2,end) infinite}
+    @keyframes lowxxyIrisOpen{0%{transform:translate(-50%,-50%) scale(.18)}12%{transform:translate(-50%,-50%) scale(.24)}28%{transform:translate(-50%,-50%) scale(.5)}52%{transform:translate(-50%,-50%) scale(2.5)}74%{transform:translate(-50%,-50%) scale(10)}90%{transform:translate(-50%,-50%) scale(42)}100%{transform:translate(-50%,-50%) scale(120)}}
+    @keyframes lowxxyIrisClose{0%{transform:translate(-50%,-50%) scale(120)}10%{transform:translate(-50%,-50%) scale(120)}38%{transform:translate(-50%,-50%) scale(32)}68%{transform:translate(-50%,-50%) scale(4.8)}86%{transform:translate(-50%,-50%) scale(.95)}100%{transform:translate(-50%,-50%) scale(.18)}}
+    @keyframes irisFilmFlicker{0%,100%{opacity:.16}35%{opacity:.26}50%{opacity:.32}75%{opacity:.2}}
+    @media (max-width:430px){#irisWipe{background:repeating-radial-gradient(circle at center,#070707 0 10vmin,#2c2c2c 10.2vmin 18vmin,#0a0a0a 18.2vmin 26vmin)}#irisHole{width:30px;height:30px}}
 
 </style>
 </head>
@@ -267,7 +272,7 @@
   
 <div id="app"><div id="irisWipe"><div id="irisHole"></div></div><div class="global-film-grain"></div>
   <div id="filmOverlay"></div>
-  <div id="scanFrame" class="hidden"><img class="scan-crown-watermark" src="./assets/lowxxy-crown.png?v=233" alt=""><span class="frame-label">Line up the full design</span></div>
+  <div id="scanFrame" class="hidden"><img class="scan-crown-watermark" src="./assets/lowxxy-crown.png?v=234" alt=""><span class="frame-label">Line up the full design</span></div>
   <div id="startOverlay" class="overlay"><div class="panel">
     <p class="eyebrow">A Lowxxy picture presentation</p>
     <div class="projector-window">
@@ -299,10 +304,10 @@
       </button><span class="tool-label">SELFIE</span>
     </div>
   </div>
-  <div id="captureToast">PHOTO READY!</div><div id="unlockBurst"><div class="unlock-card"><img class="unlock-crown" src="./assets/lowxxy-crown.png?v=233" alt=""><div class="unlock-small">ANIMATION FOUND</div><div class="unlock-name" id="unlockName">LOWXXY</div></div></div><div id="crownRain"></div><div id="crownEasterToast"><span>STAND OUT.</span><span>STAY HUMBLE.</span></div>
+  <div id="captureToast">PHOTO READY!</div><div id="unlockBurst"><div class="unlock-card"><img class="unlock-crown" src="./assets/lowxxy-crown.png?v=234" alt=""><div class="unlock-small">ANIMATION FOUND</div><div class="unlock-name" id="unlockName">LOWXXY</div></div></div><div id="crownRain"></div><div id="crownEasterToast"><span>STAND OUT.</span><span>STAY HUMBLE.</span></div>
 
   <a-scene
-    mindar-image="imageTargetSrc: ./assets/targets.mind?v=233; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.00001; filterBeta: 0.0001; warmupTolerance: 15; missTolerance: 18;"
+    mindar-image="imageTargetSrc: ./assets/targets.mind?v=234; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.00001; filterBeta: 0.0001; warmupTolerance: 15; missTolerance: 18;"
     embedded
     color-space="sRGB"
     renderer="colorManagement: true; alpha: true; antialias: true; logarithmicDepthBuffer: true; preserveDrawingBuffer: true;"
@@ -312,10 +317,10 @@
     <a-camera position="0 0 0" near="0.01" far="1000" look-controls="enabled:false"></a-camera>
 
     <a-assets timeout="90000">
-      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=233"></a-asset-item>
-      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=233"></a-asset-item>
-      <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=233"></a-asset-item>
-      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=233"></a-asset-item>
+      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=234"></a-asset-item>
+      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=234"></a-asset-item>
+      <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=234"></a-asset-item>
+      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=234"></a-asset-item>
     </a-assets>
 
     <!-- Target 0: Pop Art. Placed first in the scanner database so the dotted comic-book print gets priority over the similar regular Chainmail artwork. -->
@@ -365,6 +370,8 @@ window.addEventListener('DOMContentLoaded', () => {
   const irisWipe = document.querySelector('#irisWipe');
   const irisHole = document.querySelector('#irisHole');
   const introCrownLogo = document.querySelector('.projector-window .brand-logo');
+  const IRIS_OPEN_MS = 2700;
+  const IRIS_CLOSE_MS = 1800;
 
   function filmTransitionTo(url,direction='right'){ lowxxyFilmNavigate(url,direction); }
 
@@ -379,14 +386,14 @@ window.addEventListener('DOMContentLoaded', () => {
     positionIrisOnCrown();
     irisWipe.className = 'active opening';
     irisHole.style.animation = 'none'; void irisHole.offsetWidth; irisHole.style.animation = '';
-    setTimeout(() => { irisWipe.className = ''; }, 1500);
+    setTimeout(() => { irisWipe.className = ''; startOverlay.classList.add('ready'); }, IRIS_OPEN_MS + 180);
   };
   const playIrisClose = () => new Promise(resolve => {
     if (!irisWipe || !irisHole) return resolve();
     positionIrisOnCrown();
     irisWipe.className = 'active closing';
     irisHole.style.animation = 'none'; void irisHole.offsetWidth; irisHole.style.animation = '';
-    setTimeout(resolve, 1140);
+    setTimeout(resolve, IRIS_CLOSE_MS + 100);
   });
     
   const shopBar = document.querySelector('#shopBar');
@@ -417,7 +424,7 @@ window.addEventListener('DOMContentLoaded', () => {
     for (let i = 0; i < count; i++) {
       const crown = document.createElement('img');
       crown.className = 'crown-drop';
-      crown.src = './assets/lowxxy-crown.png?v=233';
+      crown.src = './assets/lowxxy-crown.png?v=234';
       crown.alt = '';
       crown.style.left = `${Math.random() * 100}vw`;
       crown.style.width = `${(mode === 'big' ? 25 : 20) + Math.random() * (mode === 'big' ? 34 : 22)}px`;
@@ -626,6 +633,7 @@ window.addEventListener('DOMContentLoaded', () => {
     LowxxySound.click();
     LowxxySound.tape();
     startButton.disabled = true;
+    startOverlay.classList.remove('ready');
     startButton.textContent = 'WARMING UP THE PROJECTOR...';
     errorText.style.display = 'none';
     if (!arSystem) arSystem = scene.systems['mindar-image-system'];
@@ -636,6 +644,7 @@ window.addEventListener('DOMContentLoaded', () => {
       startButton.textContent = 'RUN IT BACK';
       return;
     }
+    await new Promise(r => setTimeout(r, 180));
     await playIrisClose();
     startOverlay.classList.add('hidden');
     statusBar.classList.remove('hidden');
@@ -676,19 +685,19 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=233'));
+    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=234'));
   }
 
   collectionButton.addEventListener('click', () => {
     sessionStorage.setItem('lowxxy-return-url', location.href);
     sessionStorage.setItem('lowxxy-resume-ar','1');
-    filmTransitionTo('./collection.html?v=233','left');
+    filmTransitionTo('./collection.html?v=234','left');
   });
 
   openSelfie.addEventListener('click', () => {
     sessionStorage.setItem('lowxxy-return-url', location.href);
     sessionStorage.setItem('lowxxy-resume-ar','1');
-    filmTransitionTo('./selfie.html?v=233','right');
+    filmTransitionTo('./selfie.html?v=234','right');
   });
 
   function drawCover(ctx, source, width, height, mirror = false) {
@@ -776,7 +785,7 @@ window.addEventListener('DOMContentLoaded', () => {
     wipe=document.createElement('div');
     wipe.id='lowxxyFilmWipe';
     wipe.className='film-wipe';
-    const frames=Array.from({length:14},(_,i)=>'<div class="film-frame">'+((i%4===1)?'<img class="film-crown" src="./assets/lowxxy-crown.png?v=233" alt="">':'')+'</div>').join('');
+    const frames=Array.from({length:14},(_,i)=>'<div class="film-frame">'+((i%4===1)?'<img class="film-crown" src="./assets/lowxxy-crown.png?v=234" alt="">':'')+'</div>').join('');
     wipe.innerHTML='<div class="film-sheet"><div class="film-holes"></div><div class="film-body"><div class="film-track">'+frames+'</div><div class="film-scratches"></div></div><div class="film-holes"></div></div>';
     document.body.appendChild(wipe);
     return wipe;
