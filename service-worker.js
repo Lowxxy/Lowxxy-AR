@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lowxxy-ar-v213-ui-refresh';
+const CACHE_NAME = 'lowxxy-ar-v214-ui-refresh';
 const APP_SHELL = [
   './', './index.html?v=213', './selfie.html?v=213', './collection.html?v=213', './manifest.webmanifest?v=213',
   './assets/targets.mind?v=213', './assets/chainmail.glb?v=213',
