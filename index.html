@@ -551,19 +551,19 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=218'));
+    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=219'));
   }
 
   collectionButton.addEventListener('click', () => {
     sessionStorage.setItem('lowxxy-return-url', location.href);
     sessionStorage.setItem('lowxxy-resume-ar','1');
-    filmTransitionTo('./collection.html?v=218','left');
+    filmTransitionTo('./collection.html?v=219','left');
   });
 
   openSelfie.addEventListener('click', () => {
     sessionStorage.setItem('lowxxy-return-url', location.href);
     sessionStorage.setItem('lowxxy-resume-ar','1');
-    filmTransitionTo('./selfie.html?v=218','right');
+    filmTransitionTo('./selfie.html?v=219','right');
   });
 
   function drawCover(ctx, source, width, height, mirror = false) {
