@@ -7,8 +7,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Lowxxy AR</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=211" />
-  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=211" />
+  <link rel="manifest" href="./manifest.webmanifest?v=212" />
+  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=212" />
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
@@ -137,7 +137,7 @@
     #installHelp,#errorText{display:none;margin:15px 0 0;font:700 14px/1.45 Georgia,serif;color:#ddd}
     #errorText{color:#fff;text-decoration:underline}
 
-    #scanFrame{position:fixed;z-index:700;left:50%;top:50%;transform:translate(-50%,-52%);width:min(73vw,390px);aspect-ratio:3/4;pointer-events:none}
+    #scanFrame{position:fixed;z-index:700;left:50%;top:50%;transform:translate(-50%,-57%);width:min(73vw,390px);aspect-ratio:3/4;pointer-events:none}
     #scanFrame::before{
       content:"";position:absolute;inset:0;
       background:
@@ -172,9 +172,22 @@
     @media (max-height:690px){.panel{padding:27px 20px 23px}.brand-logo{width:min(255px,78%)}.subtitle{margin:11px auto 17px}.button-stack{gap:9px}button{min-height:49px}.show-title{font-size:31px}}
     @media (prefers-reduced-motion:reduce){*{animation:none!important}}
   
-    #cameraTools{position:fixed;z-index:1150;right:18px;top:max(18px,env(safe-area-inset-top));display:flex;gap:12px;flex-direction:column}
-    .round-tool{width:58px;height:58px;border-radius:50%;border:4px solid #f5f1e8;background:#171717;color:#fff;box-shadow:0 0 0 3px #171717,0 6px 0 rgba(0,0,0,.45);font-size:26px;font-weight:900;display:grid;place-items:center;padding:0}
-    .round-tool:active{transform:translateY(3px);box-shadow:0 0 0 3px #171717,0 2px 0 rgba(0,0,0,.45)}
+    .intro-character{display:block;width:92px;height:92px;object-fit:contain;margin:-4px auto 6px;filter:grayscale(1) contrast(1.15) drop-shadow(0 4px 0 #000)}
+    .projector-window{position:relative;margin:8px auto 13px;width:min(360px,94%);padding:18px 16px 13px;border:2px solid #d8d8d8;border-radius:18px;background:radial-gradient(ellipse at center,#b7b7b7 0,#777 43%,#292929 77%,#080808 100%);box-shadow:inset 0 0 28px #000,0 7px 0 #222;overflow:hidden}
+    .projector-window::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(255,255,255,.03) 0 1px,rgba(0,0,0,.04) 1px 3px),radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,.55) 100%)}
+    .projector-window .brand-logo{position:relative;z-index:1;width:min(250px,80%);margin-bottom:0}
+    .projector-window .intro-character{position:relative;z-index:1}
+
+    #cameraTools{position:fixed;z-index:1150;left:50%;right:auto;top:auto;bottom:max(18px,calc(env(safe-area-inset-bottom) + 8px));transform:translateX(-50%);display:flex;align-items:flex-end;justify-content:center;gap:18px;padding:10px 16px 11px;border:2px solid rgba(242,240,232,.72);border-radius:999px;background:rgba(7,7,7,.84);box-shadow:0 8px 26px #000b;backdrop-filter:blur(7px)}
+    .tool-wrap{width:68px;display:flex;flex-direction:column;align-items:center;gap:6px}
+    .round-tool,#collectionButton{position:relative!important;inset:auto!important;width:64px!important;height:64px!important;min-height:64px!important;border-radius:20px!important;border:3px solid #f5f1e8!important;background:linear-gradient(#242424,#0b0b0b)!important;color:#fff!important;box-shadow:0 4px 0 #444,0 7px 0 #000!important;display:grid!important;place-items:center!important;padding:0!important;margin:0!important;transform:none!important}
+    .round-tool svg,#collectionButton svg{width:28px!important;height:28px!important;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+    #collectionButton{border-color:#d6aa42!important;color:#ffe59a!important;background:radial-gradient(circle at 50% 20%,#5a4516,#171006 72%)!important;box-shadow:0 4px 0 #8e6b24,0 7px 0 #000,0 0 14px rgba(214,170,66,.18)!important}
+    .round-tool:active,#collectionButton:active{transform:translateY(3px)!important;box-shadow:0 1px 0 #444,0 3px 0 #000!important}
+    .tool-label{display:block!important;font:900 8px/1 Arial,sans-serif!important;letter-spacing:.08em;color:#f2f0e8;text-align:center;white-space:nowrap}
+    .tool-wrap.collect .tool-label{color:#ffe59a}
+    .a-enter-vr,.a-enter-vr-button,.a-enter-ar,.a-enter-ar-button{display:none!important}
+    @media(max-width:390px){#cameraTools{gap:12px;padding-left:13px;padding-right:13px}.tool-wrap{width:62px}.round-tool,#collectionButton{width:58px!important;height:58px!important;min-height:58px!important}.round-tool svg,#collectionButton svg{width:25px!important;height:25px!important}}
     #captureToast{position:fixed;z-index:1500;left:50%;top:50%;transform:translate(-50%,-50%) scale(.85);background:#171717;color:#fff;border:4px solid #f5f1e8;border-radius:999px;padding:16px 24px;font-weight:900;letter-spacing:1px;opacity:0;pointer-events:none;transition:.2s}
     #captureToast.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
 
@@ -186,7 +199,10 @@
   <div id="scanFrame" class="hidden"><span class="frame-label">Line up the full design</span></div>
   <div id="startOverlay" class="overlay"><div class="panel">
     <p class="eyebrow">A Lowxxy picture presentation</p>
-    <img class="brand-logo" src="./icons/lowxxy-logo-white.png" alt="Lowxxy" />
+    <div class="projector-window">
+      <img class="brand-logo" src="./icons/lowxxy-logo-white.png" alt="Lowxxy" />
+      <img class="intro-character" src="./icons/lowxxy-character-512.png" alt="Lowxxy character" />
+    </div>
     <h1 class="show-title">The Lowxxy Picture Show</h1><div class="flourish"><span>✦</span></div>
     <p class="subtitle">Present the design to the camera and let the picture begin.</p>
     <div class="button-stack"><button id="installButton" class="secondary">ADD TO HOME SCREEN</button><button id="startButton">START THE SHOW</button></div>
@@ -197,20 +213,26 @@
 
 
   <div id="cameraTools" class="hidden">
-    <button id="collectionButton" aria-label="Open shirt collection" title="Collection">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4 10 6h4l2-2 4 3-2 4-2-1v10H8V10l-2 1-2-4 4-3Z"/></svg><span class="tool-label">COLLECT</span>
-    </button>
-    <button id="takeScannerPhoto" class="round-tool" aria-label="Take AR photo" title="Take photo">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 7 9 4.8h6L16.5 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h3.5Z"/><circle cx="12" cy="13" r="4"/></svg><span class="tool-label">PHOTO</span>
-    </button>
-    <button id="openSelfie" class="round-tool" aria-label="Switch to selfie camera" title="Selfie camera">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 8a8 8 0 0 0-13.7-3.7L4 6.5"/><path d="M4 3v3.5h3.5"/><path d="M4 16a8 8 0 0 0 13.7 3.7l2.3-2.2"/><path d="M20 21v-3.5h-3.5"/><rect x="7" y="8" width="10" height="8" rx="2"/><circle cx="12" cy="12" r="2.2"/></svg><span class="tool-label">SELFIE</span>
-    </button>
+    <div class="tool-wrap collect">
+      <button id="collectionButton" aria-label="Open shirt collection" title="Collection">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4 10 6h4l2-2 4 3-2 4-2-1v10H8V10l-2 1-2-4 4-3Z"/></svg>
+      </button><span class="tool-label">COLLECT</span>
+    </div>
+    <div class="tool-wrap">
+      <button id="takeScannerPhoto" class="round-tool" aria-label="Take AR photo" title="Take photo">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 7 9 4.8h6L16.5 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h3.5Z"/><circle cx="12" cy="13" r="4"/></svg>
+      </button><span class="tool-label">PHOTO</span>
+    </div>
+    <div class="tool-wrap">
+      <button id="openSelfie" class="round-tool" aria-label="Switch to selfie camera" title="Selfie camera">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 8a8 8 0 0 0-13.7-3.7L4 6.5"/><path d="M4 3v3.5h3.5"/><path d="M4 16a8 8 0 0 0 13.7 3.7l2.3-2.2"/><path d="M20 21v-3.5h-3.5"/><rect x="7" y="8" width="10" height="8" rx="2"/><circle cx="12" cy="12" r="2.2"/></svg>
+      </button><span class="tool-label">SELFIE</span>
+    </div>
   </div>
   <div id="captureToast">PHOTO READY!</div>
 
   <a-scene
-    mindar-image="imageTargetSrc: ./assets/targets.mind?v=211; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.00001; filterBeta: 0.0001; warmupTolerance: 15; missTolerance: 18;"
+    mindar-image="imageTargetSrc: ./assets/targets.mind?v=212; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.00001; filterBeta: 0.0001; warmupTolerance: 15; missTolerance: 18;"
     embedded
     color-space="sRGB"
     renderer="colorManagement: true; alpha: true; antialias: true; logarithmicDepthBuffer: true; preserveDrawingBuffer: true;"
@@ -220,10 +242,10 @@
     <a-camera position="0 0 0" near="0.01" far="1000" look-controls="enabled:false"></a-camera>
 
     <a-assets timeout="90000">
-      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=211"></a-asset-item>
-      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=211"></a-asset-item>
-      <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=211"></a-asset-item>
-      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=211"></a-asset-item>
+      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=212"></a-asset-item>
+      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=212"></a-asset-item>
+      <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=212"></a-asset-item>
+      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=212"></a-asset-item>
     </a-assets>
 
     <!-- Target 0: Pop Art. Placed first in the scanner database so the dotted comic-book print gets priority over the similar regular Chainmail artwork. -->
@@ -500,17 +522,19 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=211'));
+    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=212'));
   }
 
   collectionButton.addEventListener('click', () => {
+    sessionStorage.setItem('lowxxy-return-url', location.href);
     sessionStorage.setItem('lowxxy-resume-ar','1');
-    window.location.href = './collection.html?v=211';
+    window.location.href = './collection.html?v=212';
   });
 
   openSelfie.addEventListener('click', () => {
+    sessionStorage.setItem('lowxxy-return-url', location.href);
     sessionStorage.setItem('lowxxy-resume-ar','1');
-    window.location.href = './selfie.html?v=211';
+    window.location.href = './selfie.html?v=212';
   });
 
   function drawCover(ctx, source, width, height, mirror = false) {
