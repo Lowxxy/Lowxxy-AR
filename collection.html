@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Lowxxy Collection</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=217" />
+  <link rel="manifest" href="./manifest.webmanifest?v=218" />
   <style>
     :root{color-scheme:dark;--paper:#f2f0e8;--gold:#d6aa42;--gold2:#ffe59a;--gray:#8c8c8c;--ink:#070707;font-family:"Arial Rounded MT Bold","Trebuchet MS",Arial,sans-serif}
     *{box-sizing:border-box}
@@ -52,6 +52,8 @@
     .card.unlocked .lock span{display:none}
     .card.unlocked .type{color:#fff}
     .card.unlocked .name{color:#fff}
+
+    .gold .card.unlocked.playable{cursor:pointer;transition:transform .16s ease,box-shadow .16s ease}.gold .card.unlocked.playable:active{transform:scale(.975)}.gold .card.unlocked.playable .type{color:#ffe59a}.gold .card.unlocked.playable .type::after{content:"  •  TAP TO PLAY";color:#ffe59a}.gold .card.unlocked.playable::after{display:none}
     .saveNote{margin:18px auto 0;max-width:520px;padding:12px 15px;border:1px solid #444;border-radius:999px;color:#bbb;text-align:center;font-size:11px;background:#0d0d0ddd}
     .emptyNote{text-align:center;color:#777;font-size:10px;margin:12px 0 0}
     @media (max-width:430px){
@@ -109,7 +111,7 @@
       <h2 class="sectionTitle">✦ GOLD AR MYSTERIES ✦</h2>
       <p class="sectionSub">Animated shirts unlock when their design is scanned.</p>
       <div class="grid">
-        <article class="card dualCard" data-key="pop-art-chainmail">
+        <article class="card dualCard" data-key="pop-art-chainmail" data-preview="pop-art-chainmail">
           <div class="shirtBox">
             <div class="dualShirts">
               <div class="imageStage"><img class="shirt" src="./assets/chainmail.webp" alt="Chainmail shirt"></div>
@@ -120,11 +122,11 @@
           <div class="name">Chainmail + Pop Art</div>
           <div class="type">SHARED AR MYSTERY</div>
         </article>
-        <article class="card" data-key="grounded-gains">
+        <article class="card" data-key="grounded-gains" data-preview="grounded-gains">
           <div class="shirtBox"><div class="imageStage"><img class="shirt" src="./assets/grounded-gains.webp" alt="Grounded Gains shirt"></div></div>
           <div class="lock"><span>🔒</span></div><div class="name">Grounded Gains</div><div class="type">MYSTERY AR SHIRT</div>
         </article>
-        <article class="card" data-key="hang">
+        <article class="card" data-key="hang" data-preview="hang">
           <div class="shirtBox"><div class="imageStage"><img class="shirt" src="./assets/hang.webp" alt="Hang shirt"></div></div>
           <div class="lock"><span>🔒</span></div><div class="name">Hang</div><div class="type">MYSTERY AR SHIRT</div>
         </article>
@@ -158,6 +160,14 @@
     if (unlocked) {
       card.classList.add('unlocked');
       card.querySelector('.type').textContent = 'UNLOCKED';
+      if (card.dataset.preview) {
+        card.classList.add('playable');
+        card.setAttribute('role','button');
+        card.setAttribute('tabindex','0');
+        const openPreview=()=>lowxxyFilmNavigate('./preview.html?design='+encodeURIComponent(card.dataset.preview),'left');
+        card.addEventListener('click',openPreview);
+        card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openPreview();}});
+      }
     }
   });
   const popUnlocked = localStorage.getItem(STORAGE_PREFIX + 'pop-art') === 'unlocked' || localStorage.getItem(STORAGE_PREFIX + 'chainmail') === 'unlocked' || localStorage.getItem(STORAGE_PREFIX + 'pop-art-chainmail') === 'unlocked';
@@ -168,7 +178,7 @@
   const arCount=(popUnlocked?2:0)+(groundedUnlocked?1:0)+(hangUnlocked?1:0);
   document.getElementById('arProgress').textContent=`AR DESIGNS ${arCount}/4`;
   document.getElementById('totalProgress').textContent=`COLLECTION ${arCount+regularCount}/7`;
-  document.getElementById('backBtn').addEventListener('click', () => { sessionStorage.setItem('lowxxy-resume-ar','1'); const returnUrl=sessionStorage.getItem('lowxxy-return-url'); if(returnUrl) lowxxyFilmNavigate(returnUrl,'right'); else lowxxyFilmNavigate('./index.html?v=217','right'); });
+  document.getElementById('backBtn').addEventListener('click', () => { sessionStorage.setItem('lowxxy-resume-ar','1'); const returnUrl=sessionStorage.getItem('lowxxy-return-url'); if(returnUrl) lowxxyFilmNavigate(returnUrl,'right'); else lowxxyFilmNavigate('./index.html?v=218','right'); });
   document.getElementById('shopBtn').addEventListener('click', () => lowxxyFilmNavigate('https://lowxxy.myshopify.com','right'));
 </script>
 
