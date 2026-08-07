@@ -1,18 +1,18 @@
-const CACHE_NAME = 'lowxxy-ar-v238-back-nav-all-logos';
+const CACHE_NAME = 'lowxxy-ar-v239-rubberhose-motion';
 const ASSET_CACHE = [
-  './assets/targets.mind?v=238',
-  './assets/chainmail.glb?v=238',
-  './assets/grounded-gains.glb?v=238',
-  './assets/hang-v77.glb?v=238',
-  './assets/pop-art.glb?v=238',
-  './assets/lowxxy-shoulder.glb?v=238',
+  './assets/targets.mind?v=239',
+  './assets/chainmail.glb?v=239',
+  './assets/grounded-gains.glb?v=239',
+  './assets/hang-v77.glb?v=239',
+  './assets/pop-art.glb?v=239',
+  './assets/lowxxy-shoulder.glb?v=239',
   './assets/chainmail.webp', './assets/popart.webp',
   './assets/grounded-gains.webp', './assets/hang.webp',
   './assets/royal-script.webp', './assets/crown-column.webp',
   './assets/double-vision.webp',
-  './assets/lowxxy-wordmark.png?v=238',
-  './assets/lowxxy-crown.png?v=238',
-  './icons/lowxxy-character-192.png?v=238', './icons/lowxxy-character-512.png?v=238'
+  './assets/lowxxy-wordmark.png?v=239',
+  './assets/lowxxy-crown.png?v=239',
+  './icons/lowxxy-character-192.png?v=239', './icons/lowxxy-character-512.png?v=239'
 ];
 
 self.addEventListener('install', event => {
