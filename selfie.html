@@ -225,8 +225,8 @@ async function savePhoto(){
   }finally{shoot.disabled=false}
 }
 
-document.querySelector('#back').onclick=()=>{ sessionStorage.setItem('lowxxy-resume-ar','1'); const returnUrl=sessionStorage.getItem('lowxxy-return-url'); if(returnUrl) lowxxyFilmNavigate(returnUrl,'left'); else lowxxyFilmNavigate('./index.html?v=218','left'); };
-document.querySelector('#switchAR').onclick=()=>{ sessionStorage.setItem('lowxxy-resume-ar','1'); lowxxyFilmNavigate('./index.html?v=218','left'); };
+document.querySelector('#back').onclick=()=>{ sessionStorage.setItem('lowxxy-resume-ar','1'); const returnUrl=sessionStorage.getItem('lowxxy-return-url'); if(returnUrl) lowxxyFilmNavigate(returnUrl,'left'); else lowxxyFilmNavigate('./index.html?v=219','left'); };
+document.querySelector('#switchAR').onclick=()=>{ sessionStorage.setItem('lowxxy-resume-ar','1'); lowxxyFilmNavigate('./index.html?v=219','left'); };
 shoot.onclick=savePhoto;
 shoot.disabled=true;
 startCamera();
