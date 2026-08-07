@@ -7,8 +7,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Lowxxy AR</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=237" />
-  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=237" />
+  <link rel="manifest" href="./manifest.webmanifest?v=238" />
+  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=238" />
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
@@ -220,7 +220,7 @@
 
 
   .film-crown{position:absolute;left:50%;top:50%;width:46%;height:auto;transform:translate(-50%,-50%) rotate(-4deg);opacity:.58;filter:sepia(1) saturate(.65) brightness(1.35);z-index:3;pointer-events:none;mix-blend-mode:screen}
-  .film-frame:nth-child(even) .film-crown{transform:translate(-50%,-50%) rotate(4deg);opacity:.42}
+  .film-frame:nth-child(even) .film-crown{transform:translate(-50%,-50%) rotate(4deg);opacity:.58}
 
 
     /* v232 phone title-card match: keep the same theatrical look on mobile */
@@ -296,7 +296,7 @@
   
 <div id="app"><div id="irisWipe"><div id="irisHole"></div></div><div class="global-film-grain"></div>
   <div id="filmOverlay"></div>
-  <div id="scanFrame" class="hidden"><img class="scan-crown-watermark" src="./assets/lowxxy-crown.png?v=235" alt=""><span class="frame-label">Line up the full design</span></div>
+  <div id="scanFrame" class="hidden"><img class="scan-crown-watermark" src="./assets/lowxxy-crown.png?v=238" alt=""><span class="frame-label">Line up the full design</span></div>
   <div id="startOverlay" class="overlay"><div class="panel">
     <p class="eyebrow">A Lowxxy picture presentation</p>
     <div class="projector-window">
@@ -328,10 +328,10 @@
       </button><span class="tool-label">SELFIE</span>
     </div>
   </div>
-  <div id="captureToast">PHOTO READY!</div><div id="unlockBurst"><div class="unlock-card"><img class="unlock-crown" src="./assets/lowxxy-crown.png?v=235" alt=""><div class="unlock-small">ANIMATION FOUND</div><div class="unlock-name" id="unlockName">LOWXXY</div></div></div><div id="crownRain"></div><div id="crownEasterToast"><span>STAND OUT.</span><span>STAY HUMBLE.</span></div>
+  <div id="captureToast">PHOTO READY!</div><div id="unlockBurst"><div class="unlock-card"><img class="unlock-crown" src="./assets/lowxxy-crown.png?v=238" alt=""><div class="unlock-small">ANIMATION FOUND</div><div class="unlock-name" id="unlockName">LOWXXY</div></div></div><div id="crownRain"></div><div id="crownEasterToast"><span>STAND OUT.</span><span>STAY HUMBLE.</span></div>
 
   <a-scene
-    mindar-image="imageTargetSrc: ./assets/targets.mind?v=235; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.00001; filterBeta: 0.0001; warmupTolerance: 15; missTolerance: 18;"
+    mindar-image="imageTargetSrc: ./assets/targets.mind?v=238; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.00001; filterBeta: 0.0001; warmupTolerance: 15; missTolerance: 18;"
     embedded
     color-space="sRGB"
     renderer="colorManagement: true; alpha: true; antialias: true; logarithmicDepthBuffer: true; preserveDrawingBuffer: true;"
@@ -341,10 +341,10 @@
     <a-camera position="0 0 0" near="0.01" far="1000" look-controls="enabled:false"></a-camera>
 
     <a-assets timeout="90000">
-      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=235"></a-asset-item>
-      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=235"></a-asset-item>
-      <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=235"></a-asset-item>
-      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=235"></a-asset-item>
+      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=238"></a-asset-item>
+      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=238"></a-asset-item>
+      <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=238"></a-asset-item>
+      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=238"></a-asset-item>
     </a-assets>
 
     <!-- Target 0: Pop Art. Placed first in the scanner database so the dotted comic-book print gets priority over the similar regular Chainmail artwork. -->
@@ -448,7 +448,7 @@ window.addEventListener('DOMContentLoaded', () => {
     for (let i = 0; i < count; i++) {
       const crown = document.createElement('img');
       crown.className = 'crown-drop';
-      crown.src = './assets/lowxxy-crown.png?v=235';
+      crown.src = './assets/lowxxy-crown.png?v=238';
       crown.alt = '';
       crown.style.left = `${Math.random() * 100}vw`;
       crown.style.width = `${(mode === 'big' ? 25 : 20) + Math.random() * (mode === 'big' ? 34 : 22)}px`;
@@ -654,6 +654,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   startButton.addEventListener('click', async () => {
+    sessionStorage.setItem('lowxxy-session-started','1');
     LowxxySound.click();
     LowxxySound.tape();
     startButton.disabled = true;
@@ -693,19 +694,32 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  const shouldResumeAR = sessionStorage.getItem('lowxxy-resume-ar') === '1';
+  const shouldResumeAR = sessionStorage.getItem('lowxxy-resume-ar') === '1' || sessionStorage.getItem('lowxxy-session-started') === '1';
   if (!shouldResumeAR) requestAnimationFrame(() => requestAnimationFrame(playIrisOpen));
 
-  // When returning from Collection or Selfie, skip the picture-show intro and
-  // resume the scanner. The flag is one-shot so a normal fresh visit still shows
-  // the Lowxxy title card.
-  if (sessionStorage.getItem('lowxxy-resume-ar') === '1') {
+  // Once START THE SHOW has been used in this app session, any return to index
+  // goes straight back to the scanner. The title/iris screen only returns after
+  // the app/session is reopened.
+  if (shouldResumeAR) {
     sessionStorage.removeItem('lowxxy-resume-ar');
-    const resumeScanner = () => {
-      if (!startOverlay.classList.contains('hidden') && !startButton.disabled) startButton.click();
+    const resumeScanner = async () => {
+      if (!arSystem) arSystem = scene.systems['mindar-image-system'];
+      if (!arSystem) return;
+      irisWipe.className = '';
+      startOverlay.classList.add('hidden');
+      statusBar.classList.remove('hidden');
+      shopBar.classList.remove('hidden');
+      cameraTools.classList.remove('hidden');
+      scanFrame.classList.remove('hidden');
+      try { await arSystem.start(); }
+      catch (error) {
+        console.error(error);
+        errorText.style.display = 'block';
+        errorText.textContent = 'Camera or scanner could not start. Allow camera access, then refresh.';
+      }
     };
-    if (scene.hasLoaded) setTimeout(resumeScanner, 250);
-    else scene.addEventListener('loaded', () => setTimeout(resumeScanner, 250), { once:true });
+    if (scene.hasLoaded) setTimeout(resumeScanner, 180);
+    else scene.addEventListener('loaded', () => setTimeout(resumeScanner, 180), { once:true });
   }
 
   if ('serviceWorker' in navigator) {
@@ -719,14 +733,16 @@ window.addEventListener('DOMContentLoaded', () => {
 
   collectionButton.addEventListener('click', () => {
     sessionStorage.setItem('lowxxy-return-url', location.href);
+    sessionStorage.setItem('lowxxy-session-started','1');
     sessionStorage.setItem('lowxxy-resume-ar','1');
-    filmTransitionTo('./collection.html?v=235','left');
+    filmTransitionTo('./collection.html?v=238','left');
   });
 
   openSelfie.addEventListener('click', () => {
     sessionStorage.setItem('lowxxy-return-url', location.href);
+    sessionStorage.setItem('lowxxy-session-started','1');
     sessionStorage.setItem('lowxxy-resume-ar','1');
-    filmTransitionTo('./selfie.html?v=235','right');
+    filmTransitionTo('./selfie.html?v=238','right');
   });
 
   function drawCover(ctx, source, width, height, mirror = false) {
@@ -814,7 +830,7 @@ window.addEventListener('DOMContentLoaded', () => {
     wipe=document.createElement('div');
     wipe.id='lowxxyFilmWipe';
     wipe.className='film-wipe';
-    const frames=Array.from({length:22},(_,i)=>'<div class="film-frame">'+((i%4===1)?'<img class="film-crown" src="./assets/lowxxy-crown.png?v=235" alt="">':'')+'</div>').join('');
+    const frames=Array.from({length:22},()=>'<div class="film-frame"><img class="film-crown" src="./assets/lowxxy-crown.png?v=238" alt=""></div>').join('');
     wipe.innerHTML='<div class="film-sheet"><div class="film-holes"></div><div class="film-body"><div class="film-track">'+frames+'</div><div class="film-scratches"></div></div><div class="film-holes"></div></div>';
     document.body.appendChild(wipe);
     return wipe;
