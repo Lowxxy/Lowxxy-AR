@@ -7,8 +7,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Lowxxy AR</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=218" />
-  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=218" />
+  <link rel="manifest" href="./manifest.webmanifest?v=222" />
+  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=222" />
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
@@ -152,6 +152,7 @@
       filter:drop-shadow(0 2px 2px #000);animation:frameBreathe 2.4s ease-in-out infinite
     }
     #scanFrame::after{content:"";position:absolute;inset:13px;border:1px solid rgba(255,255,255,.48);border-radius:48% 52% 49% 51%/3% 4% 3% 4%}
+    .scan-crown-watermark{position:absolute;z-index:0;left:50%;top:48%;width:72%;height:auto;transform:translate(-50%,-50%) rotate(-7deg);opacity:.065;filter:drop-shadow(0 0 14px rgba(255,255,255,.10));pointer-events:none}#scanFrame::before,#scanFrame::after{z-index:2}.frame-label{z-index:4}
     .frame-label{position:absolute;left:50%;bottom:-46px;transform:translateX(-50%);white-space:nowrap;padding:8px 19px;border:2px solid #fff;border-radius:999px;background:rgba(0,0,0,.78);color:#fff;font:900 11px/1 "Arial Rounded MT Bold",Arial,sans-serif;letter-spacing:.11em;text-transform:uppercase;box-shadow:0 4px 10px rgba(0,0,0,.6)}
     @keyframes frameBreathe{0%,100%{opacity:.82;transform:scale(.995)}50%{opacity:1;transform:scale(1.005)}}
 
@@ -217,13 +218,16 @@
   @keyframes filmFlicker{0%,100%{opacity:.18}50%{opacity:.34}}
   @media(max-width:430px){.film-sheet{height:42vh;min-height:260px;grid-template-rows:48px 1fr 48px}.film-frame{width:72vw;min-width:250px}.film-track{gap:16px}.film-holes::before{inset:8px 0;background:repeating-linear-gradient(90deg,transparent 0 13px,#e7dfc8 13px 34px,transparent 34px 55px)}@keyframes filmFramesRoll{from{transform:translateX(0)}to{transform:translateX(-76vw)}}}
 
+
+  .film-crown{position:absolute;left:50%;top:50%;width:46%;height:auto;transform:translate(-50%,-50%) rotate(-4deg);opacity:.58;filter:sepia(1) saturate(.65) brightness(1.35);z-index:3;pointer-events:none;mix-blend-mode:screen}
+  .film-frame:nth-child(even) .film-crown{transform:translate(-50%,-50%) rotate(4deg);opacity:.42}
 </style>
 </head>
 <body>
   
 <div id="app">
   <div id="filmOverlay"></div>
-  <div id="scanFrame" class="hidden"><span class="frame-label">Line up the full design</span></div>
+  <div id="scanFrame" class="hidden"><img class="scan-crown-watermark" src="./assets/lowxxy-crown.png?v=222" alt=""><span class="frame-label">Line up the full design</span></div>
   <div id="startOverlay" class="overlay"><div class="panel">
     <p class="eyebrow">A Lowxxy picture presentation</p>
     <div class="projector-window">
@@ -258,7 +262,7 @@
   <div id="captureToast">PHOTO READY!</div>
 
   <a-scene
-    mindar-image="imageTargetSrc: ./assets/targets.mind?v=218; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.00001; filterBeta: 0.0001; warmupTolerance: 15; missTolerance: 18;"
+    mindar-image="imageTargetSrc: ./assets/targets.mind?v=222; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.00001; filterBeta: 0.0001; warmupTolerance: 15; missTolerance: 18;"
     embedded
     color-space="sRGB"
     renderer="colorManagement: true; alpha: true; antialias: true; logarithmicDepthBuffer: true; preserveDrawingBuffer: true;"
@@ -268,10 +272,10 @@
     <a-camera position="0 0 0" near="0.01" far="1000" look-controls="enabled:false"></a-camera>
 
     <a-assets timeout="90000">
-      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=218"></a-asset-item>
-      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=218"></a-asset-item>
-      <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=218"></a-asset-item>
-      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=218"></a-asset-item>
+      <a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=222"></a-asset-item>
+      <a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=222"></a-asset-item>
+      <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=222"></a-asset-item>
+      <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=222"></a-asset-item>
     </a-assets>
 
     <!-- Target 0: Pop Art. Placed first in the scanner database so the dotted comic-book print gets priority over the similar regular Chainmail artwork. -->
@@ -551,19 +555,19 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=219'));
+    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=222'));
   }
 
   collectionButton.addEventListener('click', () => {
     sessionStorage.setItem('lowxxy-return-url', location.href);
     sessionStorage.setItem('lowxxy-resume-ar','1');
-    filmTransitionTo('./collection.html?v=219','left');
+    filmTransitionTo('./collection.html?v=222','left');
   });
 
   openSelfie.addEventListener('click', () => {
     sessionStorage.setItem('lowxxy-return-url', location.href);
     sessionStorage.setItem('lowxxy-resume-ar','1');
-    filmTransitionTo('./selfie.html?v=219','right');
+    filmTransitionTo('./selfie.html?v=222','right');
   });
 
   function drawCover(ctx, source, width, height, mirror = false) {
@@ -650,7 +654,7 @@ window.addEventListener('DOMContentLoaded', () => {
     wipe=document.createElement('div');
     wipe.id='lowxxyFilmWipe';
     wipe.className='film-wipe';
-    const frames=Array.from({length:14},()=>'<div class="film-frame"></div>').join('');
+    const frames=Array.from({length:14},(_,i)=>'<div class="film-frame">'+((i%4===1)?'<img class="film-crown" src="./assets/lowxxy-crown.png?v=222" alt="">':'')+'</div>').join('');
     wipe.innerHTML='<div class="film-sheet"><div class="film-holes"></div><div class="film-body"><div class="film-track">'+frames+'</div><div class="film-scratches"></div></div><div class="film-holes"></div></div>';
     document.body.appendChild(wipe);
     return wipe;
