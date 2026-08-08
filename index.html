@@ -715,7 +715,62 @@
   </a-scene>
 </div>
 <script>
-window.LowxxySound=window.LowxxySound||(()=>{let ctx=null;const AC=window.AudioContext||window.webkitAudioContext;function get(){if(!AC)return null;if(!ctx)ctx=new AC();if(ctx.state==='suspended')ctx.resume().catch(()=>{});return ctx}function tone(freq=220,dur=.08,type='triangle',vol=.035,delay=0){const c=get();if(!c)return;const o=c.createOscillator(),g=c.createGain(),t=c.currentTime+delay;o.type=type;o.frequency.setValueAtTime(freq,t);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(vol,t+.008);g.gain.exponentialRampToValueAtTime(.0001,t+dur);o.connect(g).connect(c.destination);o.start(t);o.stop(t+dur+.03)}function noise(dur=.12,vol=.03,low=500,high=5000,delay=0){const c=get();if(!c)return;const len=Math.max(1,Math.floor(c.sampleRate*dur)),buf=c.createBuffer(1,len,c.sampleRate),data=buf.getChannelData(0);for(let i=0;i<len;i++)data[i]=(Math.random()*2-1)*(1-i/len*.35);const src=c.createBufferSource(),bp=c.createBiquadFilter(),g=c.createGain(),t=c.currentTime+delay;src.buffer=buf;bp.type='bandpass';bp.frequency.value=(low+high)/2;bp.Q.value=.55;g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(vol,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+dur);src.connect(bp).connect(g).connect(c.destination);src.start(t);src.stop(t+dur+.03)}function click(){noise(.055,.02,900,4200);tone(118,.055,'square',.025)}function shutter(){noise(.045,.055,700,6500);tone(105,.045,'square',.04);noise(.07,.04,500,4500,.06);tone(82,.065,'square',.028,.055)}function chime(){tone(523.25,.18,'triangle',.04);tone(659.25,.18,'triangle',.035,.09);tone(783.99,.25,'triangle',.04,.18);noise(.20,.008,1000,6000,.12)}function tape(){const c=get();if(!c)return;const dur=1.08,len=Math.floor(c.sampleRate*dur),buf=c.createBuffer(1,len,c.sampleRate),data=buf.getChannelData(0);for(let i=0;i<len;i++){const x=i/len;data[i]=(Math.random()*2-1)*(.55+.45*Math.sin(x*Math.PI));}const src=c.createBufferSource(),hp=c.createBiquadFilter(),lp=c.createBiquadFilter(),g=c.createGain(),t=c.currentTime;src.buffer=buf;hp.type='highpass';hp.frequency.value=380;lp.type='lowpass';lp.frequency.value=5200;g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(.055,t+.09);g.gain.setValueAtTime(.05,t+dur-.15);g.gain.exponentialRampToValueAtTime(.0001,t+dur);src.connect(hp).connect(lp).connect(g).connect(c.destination);src.start(t);src.stop(t+dur+.03);tone(76,dur,'sawtooth',.008)}
+window.LowxxySound=window.LowxxySound||(()=>{let ctx=null;const AC=window.AudioContext||window.webkitAudioContext;function get(){if(!AC)return null;if(!ctx)ctx=new AC();if(ctx.state==='suspended')ctx.resume().catch(()=>{});return ctx}function tone(freq=220,dur=.08,type='triangle',vol=.035,delay=0){const c=get();if(!c)return;const o=c.createOscillator(),g=c.createGain(),t=c.currentTime+delay;o.type=type;o.frequency.setValueAtTime(freq,t);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(vol,t+.008);g.gain.exponentialRampToValueAtTime(.0001,t+dur);o.connect(g).connect(c.destination);o.start(t);o.stop(t+dur+.03)}function noise(dur=.12,vol=.03,low=500,high=5000,delay=0){const c=get();if(!c)return;const len=Math.max(1,Math.floor(c.sampleRate*dur)),buf=c.createBuffer(1,len,c.sampleRate),data=buf.getChannelData(0);for(let i=0;i<len;i++)data[i]=(Math.random()*2-1)*(1-i/len*.35);const src=c.createBufferSource(),bp=c.createBiquadFilter(),g=c.createGain(),t=c.currentTime+delay;src.buffer=buf;bp.type='bandpass';bp.frequency.value=(low+high)/2;bp.Q.value=.55;g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(vol,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+dur);src.connect(bp).connect(g).connect(c.destination);src.start(t);src.stop(t+dur+.03)}function click(){noise(.055,.02,900,4200);tone(118,.055,'square',.025)}function shutter(){noise(.045,.055,700,6500);tone(105,.045,'square',.04);noise(.07,.04,500,4500,.06);tone(82,.065,'square',.028,.055)}function chime(){tone(523.25,.18,'triangle',.04);tone(659.25,.18,'triangle',.035,.09);tone(783.99,.25,'triangle',.04,.18);noise(.20,.008,1000,6000,.12)}function tape(){
+  const c=get();if(!c)return;
+  const t=c.currentTime,dur=1.12;
+
+  /* steady projector motor */
+  const motor=c.createOscillator(),motorGain=c.createGain(),motorLP=c.createBiquadFilter();
+  motor.type='sawtooth';
+  motor.frequency.setValueAtTime(47,t);
+  motor.frequency.linearRampToValueAtTime(52,t+dur);
+  motorLP.type='lowpass';motorLP.frequency.value=430;
+  motorGain.gain.setValueAtTime(.0001,t);
+  motorGain.gain.exponentialRampToValueAtTime(.027,t+.045);
+  motorGain.gain.setValueAtTime(.024,t+dur-.10);
+  motorGain.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  motor.connect(motorLP).connect(motorGain).connect(c.destination);
+  motor.start(t);motor.stop(t+dur+.03);
+
+  /* film rushing through the gate */
+  const len=Math.floor(c.sampleRate*dur),buf=c.createBuffer(1,len,c.sampleRate),data=buf.getChannelData(0);
+  for(let i=0;i<len;i++){
+    const x=i/len;
+    data[i]=(Math.random()*2-1)*(.18+.08*Math.sin(Math.PI*x));
+  }
+  const src=c.createBufferSource(),hp=c.createBiquadFilter(),lp=c.createBiquadFilter(),ng=c.createGain();
+  src.buffer=buf;
+  hp.type='highpass';hp.frequency.value=650;
+  lp.type='lowpass';lp.frequency.value=3600;
+  ng.gain.setValueAtTime(.0001,t);
+  ng.gain.linearRampToValueAtTime(.030,t+.055);
+  ng.gain.setValueAtTime(.027,t+dur-.09);
+  ng.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  src.connect(hp).connect(lp).connect(ng).connect(c.destination);
+  src.start(t);src.stop(t+dur+.02);
+
+  /* sprocket / frame-gate chatter */
+  for(let dt=.025,i=0;dt<dur-.04;dt+=.082,i++){
+    const o=c.createOscillator(),g=c.createGain(),bp=c.createBiquadFilter();
+    o.type=i%2?'square':'triangle';
+    o.frequency.setValueAtTime(i%3===0?142:116,t+dt);
+    bp.type='bandpass';bp.frequency.value=i%2?1250:920;bp.Q.value=1.1;
+    g.gain.setValueAtTime(.0001,t+dt);
+    g.gain.exponentialRampToValueAtTime(i%3===0?.021:.014,t+dt+.004);
+    g.gain.exponentialRampToValueAtTime(.0001,t+dt+.026);
+    o.connect(bp).connect(g).connect(c.destination);
+    o.start(t+dt);o.stop(t+dt+.032);
+  }
+
+  /* little reel flutter so it reads as a projector, not plain static */
+  const flutter=c.createOscillator(),fg=c.createGain();
+  flutter.type='triangle';flutter.frequency.value=12.5;
+  fg.gain.setValueAtTime(.0001,t);
+  fg.gain.exponentialRampToValueAtTime(.006,t+.04);
+  fg.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  flutter.connect(fg).connect(c.destination);
+  flutter.start(t);flutter.stop(t+dur+.02);
+}
 function buttonTap(){
   click();
   tone(178,.045,'square',.024);
@@ -817,30 +872,44 @@ function irisOpen(){
 
 function channelChange(){
   const c=get();if(!c)return;
-  const t=c.currentTime;
+  const t=c.currentTime,dur=.68;
 
-  /* Mechanical channel click */
-  tone(118,.035,'square',.055);
-  tone(76,.045,'square',.038,.018);
+  /* chunky mechanical channel selector */
+  tone(118,.045,'square',.060);
+  tone(78,.060,'square',.042,.022);
+  tone(96,.045,'triangle',.030,.115);
 
-  /* Short burst of tuning/static */
-  noise(.13,.075,650,5200,.015);
-  noise(.10,.035,250,1800,.105);
-
-  /* Tiny descending tuner chirp */
-  const o=c.createOscillator(),g=c.createGain(),bp=c.createBiquadFilter();
-  o.type='sawtooth';
-  o.frequency.setValueAtTime(620,t+.02);
-  o.frequency.exponentialRampToValueAtTime(145,t+.18);
+  /* longer analog tuning/static wash */
+  const len=Math.floor(c.sampleRate*dur),buf=c.createBuffer(1,len,c.sampleRate),data=buf.getChannelData(0);
+  for(let i=0;i<len;i++){
+    const x=i/len;
+    data[i]=(Math.random()*2-1)*(.72+.28*Math.sin(Math.PI*x));
+  }
+  const src=c.createBufferSource(),bp=c.createBiquadFilter(),g=c.createGain();
+  src.buffer=buf;
   bp.type='bandpass';
-  bp.frequency.value=900;
-  bp.Q.value=.8;
-  g.gain.setValueAtTime(.0001,t+.02);
-  g.gain.exponentialRampToValueAtTime(.045,t+.04);
-  g.gain.exponentialRampToValueAtTime(.0001,t+.19);
-  o.connect(bp).connect(g).connect(c.destination);
-  o.start(t+.02);
-  o.stop(t+.21);
+  bp.frequency.setValueAtTime(2600,t);
+  bp.frequency.exponentialRampToValueAtTime(780,t+dur);
+  bp.Q.value=.55;
+  g.gain.setValueAtTime(.0001,t);
+  g.gain.exponentialRampToValueAtTime(.075,t+.025);
+  g.gain.setValueAtTime(.062,t+.40);
+  g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  src.connect(bp).connect(g).connect(c.destination);
+  src.start(t);src.stop(t+dur+.02);
+
+  /* tuner sweep lasts with the TV punch instead of a tiny chirp */
+  const o=c.createOscillator(),og=c.createGain(),filter=c.createBiquadFilter();
+  o.type='sawtooth';
+  o.frequency.setValueAtTime(760,t+.015);
+  o.frequency.exponentialRampToValueAtTime(105,t+dur-.04);
+  filter.type='bandpass';filter.frequency.value=960;filter.Q.value=.8;
+  og.gain.setValueAtTime(.0001,t+.015);
+  og.gain.exponentialRampToValueAtTime(.045,t+.045);
+  og.gain.setValueAtTime(.034,t+.42);
+  og.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  o.connect(filter).connect(og).connect(c.destination);
+  o.start(t+.015);o.stop(t+dur+.02);
 }
 return{click,buttonTap,shutter,chime,tape,irisClose,irisOpen,channelChange};})();
 
@@ -1036,7 +1105,7 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 <script>
-(function(){function ensureFilmWipe(){let wipe=document.getElementById('lowxxyFilmWipe');if(wipe)return wipe;wipe=document.createElement('div');wipe.id='lowxxyFilmWipe';wipe.className='film-wipe';const frames=Array.from({length:22},()=>'<div class="film-frame"><img class="film-crown" src="./assets/lowxxy-crown.png?v=239" alt=""></div>').join('');wipe.innerHTML='<div class="film-sheet"><div class="film-holes"></div><div class="film-body"><div class="film-track">'+frames+'</div><div class="film-scratches"></div></div><div class="film-holes"></div></div>';document.body.appendChild(wipe);return wipe}window.lowxxyFilmNavigate=function(url,direction){LowxxySound.tape();const wipe=ensureFilmWipe(),sheet=wipe.querySelector('.film-sheet');sheet.className='film-sheet '+(direction==='left'?'to-left':'to-right');wipe.classList.remove('active');void wipe.offsetWidth;wipe.classList.add('active');setTimeout(()=>{location.href=url},980)}})();
+(function(){function ensureFilmWipe(){let wipe=document.getElementById('lowxxyFilmWipe');if(wipe)return wipe;wipe=document.createElement('div');wipe.id='lowxxyFilmWipe';wipe.className='film-wipe';const frames=Array.from({length:22},()=>'<div class="film-frame"><img class="film-crown" src="./assets/lowxxy-crown.png?v=239" alt=""></div>').join('');wipe.innerHTML='<div class="film-sheet"><div class="film-holes"></div><div class="film-body"><div class="film-track">'+frames+'</div><div class="film-scratches"></div></div><div class="film-holes"></div></div>';document.body.appendChild(wipe);return wipe}window.lowxxyFilmNavigate=function(url,direction){LowxxySound.tape();const wipe=ensureFilmWipe(),sheet=wipe.querySelector('.film-sheet');sheet.className='film-sheet '+(direction==='left'?'to-left':'to-right');wipe.classList.remove('active');void wipe.offsetWidth;wipe.classList.add('active');setTimeout(()=>{location.href=url},1120)}})();
 </script>
 </body>
 </html>
