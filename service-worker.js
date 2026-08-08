@@ -1,8 +1,8 @@
-const CACHE_NAME = 'lowxxy-ar-v269-pwa-intro-photo';
+const CACHE_NAME = 'lowxxy-ar-v272-cross-device-intro';
 const APP_SHELL = [
   './',
-  './index.html?v=269',
-  './manifest.webmanifest?v=269',
+  './index.html?v=272',
+  './manifest.webmanifest?v=272',
   './assets/targets.mind',
   './assets/chainmail.glb',
   './assets/grounded-gains.glb',
@@ -10,8 +10,8 @@ const APP_SHELL = [
   './assets/pop-art.glb',
   './icons/icon-192.png',
   './icons/icon-512.png',
-  './icons/lowxxy-character-192.png?v=269',
-  './icons/lowxxy-character-512.png?v=269',
+  './icons/lowxxy-character-192.png?v=272',
+  './icons/lowxxy-character-512.png?v=272',
   './icons/lowxxy-logo-white.png'
 ];
 
@@ -47,7 +47,7 @@ self.addEventListener('fetch', event => {
       })
       .catch(() =>
         caches.match(event.request)
-          .then(hit => hit || caches.match('./index.html?v=269') || caches.match('./index.html'))
+          .then(hit => hit || caches.match('./index.html?v=272') || caches.match('./index.html'))
       )
   );
 });
