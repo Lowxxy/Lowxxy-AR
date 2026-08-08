@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Lowxxy AR</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=239" />
+  <link rel="manifest" href="./manifest.webmanifest?v=269" />
   <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=239" />
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
@@ -98,7 +98,7 @@
     .overlay.ready .panel{animation:introPanelSettle .8s ease-out both}@keyframes introPanelSettle{0%{transform:translateY(8px) scale(.985);opacity:.88}100%{transform:translateY(0) scale(1);opacity:1}}
 
     @property --iris-radius{syntax:"<length>";inherits:false;initial-value:18px}
-    #irisWipe{--iris-x:50%;--iris-y:50%;--iris-radius:18px;position:fixed;inset:0;z-index:12000;pointer-events:none;overflow:hidden;visibility:hidden;background:radial-gradient(circle at center,rgba(255,255,255,.035) 0 16%,transparent 40%),repeating-radial-gradient(circle at center,#070707 0 8.6vmin,#2a2a2a 8.8vmin 15.8vmin,#0a0a0a 16vmin 23vmin);-webkit-mask:radial-gradient(circle var(--iris-radius) at var(--iris-x) var(--iris-y),transparent 0 calc(var(--iris-radius) - 1px),#000 var(--iris-radius));mask:radial-gradient(circle var(--iris-radius) at var(--iris-x) var(--iris-y),transparent 0 calc(var(--iris-radius) - 1px),#000 var(--iris-radius));will-change:--iris-radius}#irisWipe.active{visibility:visible}#irisHole{display:none}#irisWipe.opening{animation:lowxxyIrisOpen 3.1s cubic-bezier(.22,.61,.36,1) forwards}#irisWipe.closing{animation:lowxxyIrisClose 2.25s cubic-bezier(.42,0,.58,1) forwards}#irisWipe::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at center,transparent 0 46%,rgba(0,0,0,.14) 65%,rgba(0,0,0,.46) 100%);opacity:.9}#irisWipe::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.20;mix-blend-mode:screen;background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.04) 4px,transparent 5px);animation:irisFilmFlicker .13s steps(2,end) infinite}
+    #irisWipe{--iris-x:50%;--iris-y:50%;--iris-radius:18px;position:fixed;inset:0;z-index:12000;pointer-events:none;overflow:hidden;visibility:hidden;background:radial-gradient(circle at center,rgba(255,255,255,.035) 0 16%,transparent 40%),repeating-radial-gradient(circle at center,#070707 0 8.6vmin,#2a2a2a 8.8vmin 15.8vmin,#0a0a0a 16vmin 23vmin);-webkit-mask:radial-gradient(circle var(--iris-radius) at var(--iris-x) var(--iris-y),transparent 0 calc(var(--iris-radius) - 1px),#000 var(--iris-radius));mask:radial-gradient(circle var(--iris-radius) at var(--iris-x) var(--iris-y),transparent 0 calc(var(--iris-radius) - 1px),#000 var(--iris-radius));will-change:--iris-radius}#irisWipe.active{visibility:visible}#irisHole{display:none}#irisWipe.opening{animation:lowxxyIrisOpen 4.2s cubic-bezier(.22,.61,.36,1) forwards}#irisWipe.closing{animation:lowxxyIrisClose 2.25s cubic-bezier(.42,0,.58,1) forwards}#irisWipe::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at center,transparent 0 46%,rgba(0,0,0,.14) 65%,rgba(0,0,0,.46) 100%);opacity:.9}#irisWipe::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.20;mix-blend-mode:screen;background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.04) 4px,transparent 5px);animation:irisFilmFlicker .13s steps(2,end) infinite}
     @keyframes lowxxyIrisOpen{0%{--iris-radius:14px}100%{--iris-radius:150vmax}}@keyframes lowxxyIrisClose{0%{--iris-radius:150vmax}100%{--iris-radius:14px}}@keyframes irisFilmFlicker{0%,100%{opacity:.15}35%{opacity:.24}50%{opacity:.30}75%{opacity:.19}}
 
     /* existing rubber-hose UI motion */
@@ -815,7 +815,7 @@
   <div id="filmOverlay"></div>
   <div id="scanFrame" class="hidden"><img class="scan-crown-watermark" src="./assets/lowxxy-crown.png?v=239" alt=""><span class="frame-label">Line up the full design</span></div>
   <div id="startOverlay" class="overlay"><div class="panel">
-    <p class="eyebrow">A Lowxxy picture presentation</p>
+    <p class="eyebrow">A Lowxxy AR experience</p>
         <div class="projector-window">
       <div class="tv-stage" aria-hidden="true">
         <div class="tv-shirt shirt-left"></div>
@@ -953,12 +953,12 @@ function irisClose(){
 }
 function irisOpen(){
   const c=get();if(!c)return;
-  const t=c.currentTime,dur=3.10;
+  const t=c.currentTime,dur=4.20;
 
   const master=c.createGain();
   master.gain.setValueAtTime(.0001,t);
   master.gain.exponentialRampToValueAtTime(.14,t+.07);
-  master.gain.setValueAtTime(.128,t+dur-.25);
+  master.gain.setValueAtTime(.128,t+dur-.30);
   master.gain.exponentialRampToValueAtTime(.0001,t+dur);
   master.connect(c.destination);
 
@@ -1042,11 +1042,54 @@ return{click,buttonTap,shutter,chime,tape,irisClose,irisOpen,channelChange,audio
 <script>
 window.addEventListener('DOMContentLoaded', () => {
   const scene=document.querySelector('a-scene'),startOverlay=document.querySelector('#startOverlay'),startButton=document.querySelector('#startButton'),installButton=document.querySelector('#installButton'),installHelp=document.querySelector('#installHelp'),statusBar=document.querySelector('#statusBar'),scanFrame=document.querySelector('#scanFrame'),irisWipe=document.querySelector('#irisWipe'),introCrownLogo=document.querySelector('.projector-window .screen-brand-logo');
-  const IRIS_OPEN_MS=3100,IRIS_CLOSE_MS=2250;
+  const IRIS_OPEN_MS=4200,IRIS_CLOSE_MS=2250;
   function filmTransitionTo(url,direction='right'){lowxxyFilmNavigate(url,direction)}
   const positionIrisOnCrown=()=>{if(!irisWipe||!introCrownLogo)return;const r=introCrownLogo.getBoundingClientRect();irisWipe.style.setProperty('--iris-x',`${r.left+r.width*.5}px`);irisWipe.style.setProperty('--iris-y',`${r.top+r.height*.5}px`)};
-  const playIrisOpen=()=>{if(!irisWipe)return;positionIrisOnCrown();try{if(LowxxySound.audioReady())LowxxySound.irisOpen()}catch(e){};irisWipe.className='active opening';irisWipe.style.animation='none';void irisWipe.offsetWidth;irisWipe.style.animation='';setTimeout(()=>{irisWipe.className='';startOverlay.classList.add('ready')},IRIS_OPEN_MS+120)};
-  const playIrisClose=()=>new Promise(resolve=>{if(!irisWipe)return resolve();positionIrisOnCrown();try{LowxxySound.irisClose()}catch(e){};irisWipe.className='active closing';irisWipe.style.animation='none';void irisWipe.offsetWidth;irisWipe.style.animation='';setTimeout(resolve,IRIS_CLOSE_MS+80)});
+  let irisRunToken=0,irisFallbackTimer=null;
+  const runIrisAnimation=(mode,durationMs,onDone)=>new Promise(resolve=>{
+    if(!irisWipe){onDone?.();return resolve()}
+    const token=++irisRunToken;
+    clearTimeout(irisFallbackTimer);
+    positionIrisOnCrown();
+
+    irisWipe.classList.remove('active','opening','closing');
+    irisWipe.style.animation='none';
+    void irisWipe.offsetWidth;
+
+    let finished=false;
+    const finish=()=>{
+      if(finished||token!==irisRunToken)return;
+      finished=true;
+      clearTimeout(irisFallbackTimer);
+      irisWipe.removeEventListener('animationend',handleEnd);
+      irisWipe.style.animation='';
+      onDone?.();
+      resolve();
+    };
+    const handleEnd=e=>{
+      if(e.target===irisWipe)finish();
+    };
+    irisWipe.addEventListener('animationend',handleEnd);
+
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      if(token!==irisRunToken)return;
+      positionIrisOnCrown();
+      irisWipe.style.animation='';
+      irisWipe.classList.add('active',mode);
+      irisFallbackTimer=setTimeout(finish,durationMs+300);
+    }));
+  });
+  const playIrisOpen=()=>{
+    try{if(LowxxySound.audioReady())LowxxySound.irisOpen()}catch(e){}
+    return runIrisAnimation('opening',IRIS_OPEN_MS,()=>{
+      irisWipe.classList.remove('active','opening','closing');
+      startOverlay.classList.add('ready');
+    });
+  };
+  const playIrisClose=()=>{
+    try{LowxxySound.irisClose()}catch(e){}
+    return runIrisAnimation('closing',IRIS_CLOSE_MS);
+  };
   const shopBar=document.querySelector('#shopBar'),shopButton=document.querySelector('#shopButton'),errorText=document.querySelector('#errorText'),targets=[...document.querySelectorAll('.ar-target')],cameraTools=document.querySelector('#cameraTools'),collectionButton=document.querySelector('#collectionButton'),openSelfie=document.querySelector('#openSelfie'),takeScannerPhoto=document.querySelector('#takeScannerPhoto'),captureToast=document.querySelector('#captureToast'),unlockBurst=document.querySelector('#unlockBurst'),unlockName=document.querySelector('#unlockName'),crownEasterToast=document.querySelector('#crownEasterToast'),crownRain=document.querySelector('#crownRain'),scanCrown=document.querySelector('.scan-crown-watermark');
   let crownRainHideTimer=null,crownRainClearTimer=null;
   const playCrownRain=(mode='big')=>{if(!crownRain)return;clearTimeout(crownRainHideTimer);clearTimeout(crownRainClearTimer);crownRain.innerHTML='';crownRain.className=mode==='big'?'show big':'show';const count=mode==='big'?34:15,maxDelay=mode==='big'?.85:.45;for(let i=0;i<count;i++){const crown=document.createElement('img');crown.className='crown-drop';crown.src='./assets/lowxxy-crown.png?v=239';crown.alt='';crown.style.left=`${Math.random()*100}vw`;crown.style.width=`${(mode==='big'?25:20)+Math.random()*(mode==='big'?34:22)}px`;crown.style.setProperty('--delay',`${(Math.random()*maxDelay).toFixed(2)}s`);crown.style.setProperty('--dur',`${(mode==='big'?2.5:2.0)+Math.random()*(mode==='big'?1.4:.8)}s`);crown.style.setProperty('--drift',`${Math.round((Math.random()*2-1)*(mode==='big'?100:65))}px`);crown.style.setProperty('--spin',`${Math.round((Math.random()*2-1)*540)}deg`);crown.style.setProperty('--scale',`${(.72+Math.random()*.55).toFixed(2)}`);crownRain.appendChild(crown)}const hideAt=mode==='big'?3450:2450;crownRainHideTimer=setTimeout(()=>crownRain.classList.remove('show'),hideAt);crownRainClearTimer=setTimeout(()=>{crownRain.innerHTML='';crownRain.className=''},hideAt+950)};
@@ -1220,13 +1263,23 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     startLowxxyShow(event);
   });
-  const shouldResumeAR=sessionStorage.getItem('lowxxy-resume-ar')==='1'||sessionStorage.getItem('lowxxy-session-started')==='1';if(!shouldResumeAR)requestAnimationFrame(()=>requestAnimationFrame(playIrisOpen));if(shouldResumeAR){sessionStorage.removeItem('lowxxy-resume-ar');const resumeScanner=async()=>{if(!arSystem)arSystem=scene.systems['mindar-image-system'];if(!arSystem)return;irisWipe.className='';startOverlay.classList.add('hidden');statusBar.classList.remove('hidden');shopBar.classList.remove('hidden');cameraTools.classList.remove('hidden');scanFrame.classList.remove('hidden');try{await arSystem.start()}catch(error){console.error(error);errorText.style.display='block';errorText.textContent='Camera or scanner could not start. Allow camera access, then refresh.'}};if(scene.hasLoaded)setTimeout(resumeScanner,180);else scene.addEventListener('loaded',()=>setTimeout(resumeScanner,180),{once:true})}
+  const shouldResumeAR=sessionStorage.getItem('lowxxy-resume-ar')==='1';if(!shouldResumeAR)requestAnimationFrame(()=>requestAnimationFrame(playIrisOpen));if(shouldResumeAR){sessionStorage.removeItem('lowxxy-resume-ar');const resumeScanner=async()=>{if(!arSystem)arSystem=scene.systems['mindar-image-system'];if(!arSystem)return;irisWipe.className='';startOverlay.classList.add('hidden');statusBar.classList.remove('hidden');shopBar.classList.remove('hidden');cameraTools.classList.remove('hidden');scanFrame.classList.remove('hidden');try{await arSystem.start()}catch(error){console.error(error);errorText.style.display='block';errorText.textContent='Camera or scanner could not start. Allow camera access, then refresh.'}};if(scene.hasLoaded)setTimeout(resumeScanner,180);else scene.addEventListener('loaded',()=>setTimeout(resumeScanner,180),{once:true})}
   if('serviceWorker'in navigator){window.addEventListener('load',async()=>{try{const registration=await navigator.serviceWorker.register('./service-worker.js',{updateViaCache:'none'});registration.update().catch(()=>{})}catch(err){console.warn('SW registration failed',err)}})}
   collectionButton.addEventListener('click',()=>{sessionStorage.setItem('lowxxy-return-url',location.href);sessionStorage.setItem('lowxxy-session-started','1');sessionStorage.setItem('lowxxy-resume-ar','1');filmTransitionTo('./collection.html?v=239','left')});openSelfie.addEventListener('click',()=>{sessionStorage.setItem('lowxxy-return-url',location.href);sessionStorage.setItem('lowxxy-session-started','1');sessionStorage.setItem('lowxxy-resume-ar','1');filmTransitionTo('./selfie.html?v=239','right')});
   function drawCover(ctx,source,width,height,mirror=false){const sw=source.videoWidth||source.width,sh=source.videoHeight||source.height;if(!sw||!sh)return false;const scale=Math.max(width/sw,height/sh),dw=sw*scale,dh=sh*scale,dx=(width-dw)/2,dy=(height-dh)/2;ctx.save();if(mirror){ctx.translate(width,0);ctx.scale(-1,1)}ctx.drawImage(source,dx,dy,dw,dh);ctx.restore();return true}
-  function showCaptureToast(message){captureToast.textContent=message;captureToast.classList.add('show');setTimeout(()=>captureToast.classList.remove('show'),1300)}
+  let captureToastTimer=null;
+  function showCaptureToast(message,hold=false){
+    clearTimeout(captureToastTimer);
+    captureToast.textContent=message;
+    captureToast.classList.add('show');
+    if(!hold)captureToastTimer=setTimeout(()=>captureToast.classList.remove('show'),1300);
+  }
+  function hideCaptureToast(){
+    clearTimeout(captureToastTimer);
+    captureToast.classList.remove('show');
+  }
   async function shareOrDownload(blob,filename){const file=new File([blob],filename,{type:'image/png'});if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file],title:'Lowxxy AR Photo'});return}catch(error){if(error.name==='AbortError')return}}const url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=filename;link.click();setTimeout(()=>URL.revokeObjectURL(url),5000)}
-  takeScannerPhoto.addEventListener('click',async()=>{LowxxySound.shutter();takeScannerPhoto.disabled=true;try{const cameraVideo=[...document.querySelectorAll('video')].find(video=>video.readyState>=2&&video.videoWidth>0),arCanvas=scene.canvas||scene.renderer?.domElement||scene.querySelector('canvas');if(!cameraVideo||!arCanvas)throw new Error('Camera or AR canvas is not ready');const width=cameraVideo.videoWidth||1280,height=cameraVideo.videoHeight||720;if(scene.renderer)scene.renderer.render(scene.object3D,scene.camera);const output=document.createElement('canvas');output.width=width;output.height=height;const ctx=output.getContext('2d');drawCover(ctx,cameraVideo,width,height,false);ctx.drawImage(arCanvas,0,0,width,height);ctx.fillStyle='rgba(0,0,0,.72)';ctx.fillRect(0,height-Math.max(64,height*.08),width,Math.max(64,height*.08));ctx.fillStyle='#fff';ctx.textAlign='center';ctx.font=`900 ${Math.max(26,width*.035)}px Arial`;ctx.fillText('@LOWXXY.BRAND',width/2,height-Math.max(22,height*.027));const blob=await new Promise(resolve=>output.toBlob(resolve,'image/png',.96));if(!blob)throw new Error('Photo could not be created');showCaptureToast('PHOTO READY!');await shareOrDownload(blob,`lowxxy-ar-${Date.now()}.png`)}catch(error){console.error(error);showCaptureToast('PHOTO FAILED — TRY AGAIN')}finally{takeScannerPhoto.disabled=false}});
+  takeScannerPhoto.addEventListener('click',async()=>{LowxxySound.shutter();takeScannerPhoto.disabled=true;showCaptureToast('CAPTURING...',true);await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));try{const cameraVideo=[...document.querySelectorAll('video')].find(video=>video.readyState>=2&&video.videoWidth>0),arCanvas=scene.canvas||scene.renderer?.domElement||scene.querySelector('canvas');if(!cameraVideo||!arCanvas)throw new Error('Camera or AR canvas is not ready');const width=cameraVideo.videoWidth||1280,height=cameraVideo.videoHeight||720;if(scene.renderer)scene.renderer.render(scene.object3D,scene.camera);const output=document.createElement('canvas');output.width=width;output.height=height;const ctx=output.getContext('2d');drawCover(ctx,cameraVideo,width,height,false);ctx.drawImage(arCanvas,0,0,width,height);ctx.fillStyle='rgba(0,0,0,.72)';ctx.fillRect(0,height-Math.max(64,height*.08),width,Math.max(64,height*.08));ctx.fillStyle='#fff';ctx.textAlign='center';ctx.font=`900 ${Math.max(26,width*.035)}px Arial`;ctx.fillText('@LOWXXY.BRAND',width/2,height-Math.max(22,height*.027));const blob=await new Promise(resolve=>output.toBlob(resolve,'image/png',.96));if(!blob)throw new Error('Photo could not be created');showCaptureToast('PHOTO READY!');await shareOrDownload(blob,`lowxxy-ar-${Date.now()}.png`)}catch(error){console.error(error);showCaptureToast('PHOTO FAILED — TRY AGAIN')}finally{takeScannerPhoto.disabled=false}});
 });
 </script>
 <script>
