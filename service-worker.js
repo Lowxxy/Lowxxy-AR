@@ -1,24 +1,24 @@
-const CACHE_NAME = 'lowxxy-ar-v239-rubberhose-motion';
-const ASSET_CACHE = [
-  './assets/targets.mind?v=239',
-  './assets/chainmail.glb?v=239',
-  './assets/grounded-gains.glb?v=239',
-  './assets/hang-v77.glb?v=239',
-  './assets/pop-art.glb?v=239',
-  './assets/lowxxy-shoulder.glb?v=239',
-  './assets/chainmail.webp', './assets/popart.webp',
-  './assets/grounded-gains.webp', './assets/hang.webp',
-  './assets/royal-script.webp', './assets/crown-column.webp',
-  './assets/double-vision.webp',
-  './assets/lowxxy-wordmark.png?v=239',
-  './assets/lowxxy-crown.png?v=239',
-  './icons/lowxxy-character-192.png?v=239', './icons/lowxxy-character-512.png?v=239'
+const CACHE_NAME = 'lowxxy-ar-v269-pwa-intro-photo';
+const APP_SHELL = [
+  './',
+  './index.html?v=269',
+  './manifest.webmanifest?v=269',
+  './assets/targets.mind',
+  './assets/chainmail.glb',
+  './assets/grounded-gains.glb',
+  './assets/hang-v77.glb',
+  './assets/pop-art.glb',
+  './icons/icon-192.png',
+  './icons/icon-512.png',
+  './icons/lowxxy-character-192.png?v=269',
+  './icons/lowxxy-character-512.png?v=269',
+  './icons/lowxxy-logo-white.png'
 ];
 
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(ASSET_CACHE))
+      .then(cache => cache.addAll(APP_SHELL))
       .then(() => self.skipWaiting())
   );
 });
@@ -36,28 +36,18 @@ self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin) return;
 
-  const isHtmlNavigation = event.request.mode === 'navigate' ||
-    url.pathname.endsWith('.html') ||
-    url.pathname.endsWith('/Lowxxy-AR/') ||
-    url.pathname.endsWith('/Lowxxy-AR');
-
-  if (isHtmlNavigation) {
-    event.respondWith(
-      fetch(event.request, { cache: 'reload' })
-        .then(response => response)
-        .catch(() => caches.match(event.request))
-    );
-    return;
-  }
-
   event.respondWith(
     fetch(event.request)
       .then(response => {
         if (response && response.ok) {
-          caches.open(CACHE_NAME).then(cache => cache.put(event.request, response.clone()));
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
         }
         return response;
       })
-      .catch(() => caches.match(event.request))
+      .catch(() =>
+        caches.match(event.request)
+          .then(hit => hit || caches.match('./index.html?v=269') || caches.match('./index.html'))
+      )
   );
 });
