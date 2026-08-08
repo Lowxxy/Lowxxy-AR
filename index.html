@@ -110,7 +110,7 @@
     #collectionButton:active{transform:translateY(3px) rotate(-2deg) scale(1.10,.86)!important;box-shadow:0 1px 0 #8e6b24,0 3px 0 #000!important}#takeScannerPhoto:active{transform:translateY(3px) scale(1.12,.82)!important;box-shadow:0 1px 0 #444,0 3px 0 #000!important}#openSelfie:active{transform:translateY(3px) rotate(3deg) scale(.90,1.10)!important;box-shadow:0 1px 0 #444,0 3px 0 #000!important}
 
 
-    /* NEW v258: v257 + iris sweep sounds + button tap sounds */
+    /* NEW v260: v259 + retro TV channel-change sound on TV hit */
     .projector-window,.projector-window *{color-scheme:only light!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;forced-color-adjust:none!important}
     .projector-window{position:relative;isolation:isolate;width:100%;height:260px;margin:0 auto 4px;padding:0;background:transparent!important;border:0!important;box-shadow:none!important;overflow:visible!important;display:flex;justify-content:center}
     .projector-window::before,.projector-window::after{display:none!important}
@@ -724,36 +724,125 @@ function buttonTap(){
 function irisClose(){
   const c=get();if(!c)return;
   const t=c.currentTime;
-  const o=c.createOscillator(),g=c.createGain(),lp=c.createBiquadFilter();
-  o.type='sine';
-  o.frequency.setValueAtTime(330,t);
-  o.frequency.exponentialRampToValueAtTime(72,t+1.35);
-  lp.type='lowpass';lp.frequency.value=1400;
-  g.gain.setValueAtTime(.0001,t);
-  g.gain.exponentialRampToValueAtTime(.055,t+.08);
-  g.gain.setValueAtTime(.045,t+.55);
-  g.gain.exponentialRampToValueAtTime(.0001,t+1.42);
-  o.connect(lp).connect(g).connect(c.destination);
-  o.start(t);o.stop(t+1.5);
-  noise(.34,.012,350,1900,.10);
+
+  /* Two voices + a soft wobble make the falling "OOOOOO" much more obvious. */
+  const master=c.createGain();
+  master.gain.setValueAtTime(.0001,t);
+  master.gain.exponentialRampToValueAtTime(.16,t+.05);
+  master.gain.setValueAtTime(.14,t+.80);
+  master.gain.exponentialRampToValueAtTime(.0001,t+2.05);
+  master.connect(c.destination);
+
+  const lp=c.createBiquadFilter();
+  lp.type='lowpass';
+  lp.frequency.setValueAtTime(1600,t);
+  lp.frequency.exponentialRampToValueAtTime(750,t+1.95);
+  lp.Q.value=.7;
+  lp.connect(master);
+
+  const o1=c.createOscillator();
+  o1.type='sine';
+  o1.frequency.setValueAtTime(470,t);
+  o1.frequency.exponentialRampToValueAtTime(74,t+1.95);
+
+  const o2=c.createOscillator();
+  o2.type='triangle';
+  o2.frequency.setValueAtTime(235,t);
+  o2.frequency.exponentialRampToValueAtTime(37,t+1.95);
+
+  const wobble=c.createOscillator();
+  const wobbleGain=c.createGain();
+  wobble.type='sine';
+  wobble.frequency.value=5.2;
+  wobbleGain.gain.value=9;
+  wobble.connect(wobbleGain);
+  wobbleGain.connect(o1.frequency);
+
+  const g1=c.createGain(),g2=c.createGain();
+  g1.gain.value=.78; g2.gain.value=.34;
+  o1.connect(g1).connect(lp);
+  o2.connect(g2).connect(lp);
+
+  o1.start(t);o2.start(t);wobble.start(t);
+  o1.stop(t+2.1);o2.stop(t+2.1);wobble.stop(t+2.1);
+
+  noise(.55,.018,250,1200,.04);
 }
 function irisOpen(){
   const c=get();if(!c)return;
   const t=c.currentTime;
-  const o=c.createOscillator(),g=c.createGain(),lp=c.createBiquadFilter();
-  o.type='sine';
-  o.frequency.setValueAtTime(72,t);
-  o.frequency.exponentialRampToValueAtTime(330,t+1.55);
-  lp.type='lowpass';lp.frequency.value=1500;
-  g.gain.setValueAtTime(.0001,t);
-  g.gain.exponentialRampToValueAtTime(.048,t+.08);
-  g.gain.setValueAtTime(.042,t+.78);
-  g.gain.exponentialRampToValueAtTime(.0001,t+1.62);
-  o.connect(lp).connect(g).connect(c.destination);
-  o.start(t);o.stop(t+1.7);
-  noise(.34,.010,350,1900,.12);
+
+  const master=c.createGain();
+  master.gain.setValueAtTime(.0001,t);
+  master.gain.exponentialRampToValueAtTime(.14,t+.06);
+  master.gain.setValueAtTime(.13,t+.95);
+  master.gain.exponentialRampToValueAtTime(.0001,t+2.18);
+  master.connect(c.destination);
+
+  const lp=c.createBiquadFilter();
+  lp.type='lowpass';
+  lp.frequency.setValueAtTime(760,t);
+  lp.frequency.exponentialRampToValueAtTime(1700,t+2.05);
+  lp.Q.value=.7;
+  lp.connect(master);
+
+  const o1=c.createOscillator();
+  o1.type='sine';
+  o1.frequency.setValueAtTime(74,t);
+  o1.frequency.exponentialRampToValueAtTime(470,t+2.05);
+
+  const o2=c.createOscillator();
+  o2.type='triangle';
+  o2.frequency.setValueAtTime(37,t);
+  o2.frequency.exponentialRampToValueAtTime(235,t+2.05);
+
+  const wobble=c.createOscillator();
+  const wobbleGain=c.createGain();
+  wobble.type='sine';
+  wobble.frequency.value=5.2;
+  wobbleGain.gain.value=7;
+  wobble.connect(wobbleGain);
+  wobbleGain.connect(o1.frequency);
+
+  const g1=c.createGain(),g2=c.createGain();
+  g1.gain.value=.76; g2.gain.value=.32;
+  o1.connect(g1).connect(lp);
+  o2.connect(g2).connect(lp);
+
+  o1.start(t);o2.start(t);wobble.start(t);
+  o1.stop(t+2.22);o2.stop(t+2.22);wobble.stop(t+2.22);
+
+  noise(.50,.015,250,1200,.08);
 }
-return{click,buttonTap,shutter,chime,tape,irisClose,irisOpen};})();
+
+function channelChange(){
+  const c=get();if(!c)return;
+  const t=c.currentTime;
+
+  /* Mechanical channel click */
+  tone(118,.035,'square',.055);
+  tone(76,.045,'square',.038,.018);
+
+  /* Short burst of tuning/static */
+  noise(.13,.075,650,5200,.015);
+  noise(.10,.035,250,1800,.105);
+
+  /* Tiny descending tuner chirp */
+  const o=c.createOscillator(),g=c.createGain(),bp=c.createBiquadFilter();
+  o.type='sawtooth';
+  o.frequency.setValueAtTime(620,t+.02);
+  o.frequency.exponentialRampToValueAtTime(145,t+.18);
+  bp.type='bandpass';
+  bp.frequency.value=900;
+  bp.Q.value=.8;
+  g.gain.setValueAtTime(.0001,t+.02);
+  g.gain.exponentialRampToValueAtTime(.045,t+.04);
+  g.gain.exponentialRampToValueAtTime(.0001,t+.19);
+  o.connect(bp).connect(g).connect(c.destination);
+  o.start(t+.02);
+  o.stop(t+.21);
+}
+return{click,buttonTap,shutter,chime,tape,irisClose,irisOpen,channelChange};})();
 
 </script>
 <script>
@@ -774,7 +863,7 @@ window.addEventListener('DOMContentLoaded', () => {
     introTV.classList.remove('tap-flicker');
     void introTV.offsetWidth;
     introTV.classList.add('tap-flicker');
-    try{LowxxySound.buttonTap()}catch(e){}
+    try{LowxxySound.channelChange()}catch(e){}
     if(!matchMedia('(prefers-reduced-motion: reduce)').matches&&introTV.animate){
       introTV.animate(
         [
@@ -816,6 +905,19 @@ window.addEventListener('DOMContentLoaded', () => {
   let crownTapCount=0,crownTapTimer=null;scanCrown?.addEventListener('click',()=>{LowxxySound.click();crownTapCount++;clearTimeout(crownTapTimer);crownTapTimer=setTimeout(()=>crownTapCount=0,1600);if(crownTapCount>=5){crownTapCount=0;crownEasterToast.classList.add('show');playCrownRain('big');LowxxySound.chime();setTimeout(()=>crownEasterToast.classList.remove('show'),2500)}});
   targets.forEach(target=>{const wrapper=target.querySelector('.model-wrapper'),model=target.querySelector('.ar-model'),name=target.dataset.name;let finishTimer=null,isActive=false;const releaseTarget=()=>{if(finishTimer)clearTimeout(finishTimer);finishTimer=null;target._finishTimer=null;wrapper.setAttribute('visible',false);wrapper.removeAttribute('animation__popout');isActive=false;target._stickyActive=false;statusBar.textContent='Looking for another Lowxxy design...'};target.addEventListener('targetFound',()=>{if(finishTimer){clearTimeout(finishTimer);finishTimer=null;target._finishTimer=null}targets.forEach(other=>{if(other!==target){if(other._finishTimer)clearTimeout(other._finishTimer);other._finishTimer=null;other._stickyActive=false;other.querySelector('.model-wrapper').setAttribute('visible',false)}});if(!isActive){restartAnimation(model);wrapper.removeAttribute('animation__popout');wrapper.setAttribute('visible',true);wrapper.setAttribute('scale','0.78 0.78 0.78');requestAnimationFrame(()=>wrapper.setAttribute('animation__popout','property: scale; from: 0.78 0.78 0.78; to: 1 1 1; dur: 650; easing: easeOutBack'))}else wrapper.setAttribute('visible',true);isActive=true;target._stickyActive=true;const unlockResult=unlockScannedShirt(name);if(unlockResult?.isNew){showUnlockCelebration(name);playCrownRain('small')}statusBar.textContent=unlockResult?.isNew?'NEW LOWXXY ANIMATION FOUND!':'LOWXXY DESIGN SCANNED — ALREADY COLLECTED';statusBar.classList.remove('scan-pop');void statusBar.offsetWidth;statusBar.classList.add('scan-pop')});target.addEventListener('targetLost',()=>{if(!isActive)return;if(finishTimer)clearTimeout(finishTimer);const durationSeconds=Math.max(.8,model._animationDuration||5),mixerComponent=model.components['animation-mixer'],mixerTime=mixerComponent?.mixer?.time||0;let remainingSeconds=durationSeconds-(mixerTime%durationSeconds);if(remainingSeconds<.65)remainingSeconds+=durationSeconds;statusBar.textContent='THE CARTOON IS FINISHING...';finishTimer=setTimeout(releaseTarget,remainingSeconds*1000);target._finishTimer=finishTimer})});
 
+
+  /* Prime mobile WebAudio on the first real user touch/click.
+     Browsers block audio before a user gesture, so the very first automatic
+     iris-opening animation on page load may be silent by browser policy.
+     After the first touch, all iris sounds can play normally. */
+  const primeLowxxyAudio=()=>{
+    try{LowxxySound.buttonTap()}catch(e){}
+    window.removeEventListener('pointerdown',primeLowxxyAudio,true);
+    window.removeEventListener('touchstart',primeLowxxyAudio,true);
+  };
+  window.addEventListener('pointerdown',primeLowxxyAudio,{capture:true,once:true});
+  window.addEventListener('touchstart',primeLowxxyAudio,{capture:true,once:true});
+
   /* Universal button-tap sound for the UI. START already has its own sound below. */
   document.querySelectorAll('button').forEach(button=>{
     if(button===startButton)return;
@@ -841,7 +943,7 @@ window.addEventListener('DOMContentLoaded', () => {
     void startButton.offsetWidth;
     startButton.classList.add('rubberTap');
     LowxxySound.buttonTap();
-    LowxxySound.tape();
+    setTimeout(()=>{try{LowxxySound.tape()}catch(e){}},850);
 
     startButton.disabled=true;
     startOverlay.classList.remove('ready');
