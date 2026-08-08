@@ -38,7 +38,62 @@ function noise(dur=.12,vol=.03,low=500,high=5000,delay=0){const c=get();if(!c)re
 function click(){noise(.055,.02,900,4200);tone(118,.055,'square',.025)}
 function shutter(){noise(.045,.055,700,6500);tone(105,.045,'square',.04);noise(.07,.04,500,4500,.06);tone(82,.065,'square',.028,.055)}
 function chime(){tone(523.25,.18,'triangle',.04);tone(659.25,.18,'triangle',.035,.09);tone(783.99,.25,'triangle',.04,.18);noise(.20,.008,1000,6000,.12)}
-function tape(){const c=get();if(!c)return;const dur=1.08,len=Math.floor(c.sampleRate*dur),buf=c.createBuffer(1,len,c.sampleRate),data=buf.getChannelData(0);for(let i=0;i<len;i++){const x=i/len;data[i]=(Math.random()*2-1)*(.55+.45*Math.sin(x*Math.PI));}const src=c.createBufferSource(),hp=c.createBiquadFilter(),lp=c.createBiquadFilter(),g=c.createGain(),t=c.currentTime;src.buffer=buf;hp.type='highpass';hp.frequency.value=380;lp.type='lowpass';lp.frequency.value=5200;g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(.055,t+.09);g.gain.setValueAtTime(.05,t+dur-.15);g.gain.exponentialRampToValueAtTime(.0001,t+dur);src.connect(hp).connect(lp).connect(g).connect(c.destination);src.start(t);src.stop(t+dur+.03);tone(76,dur,'sawtooth',.008)}
+function tape(){
+  const c=get();if(!c)return;
+  const t=c.currentTime,dur=1.12;
+
+  /* steady projector motor */
+  const motor=c.createOscillator(),motorGain=c.createGain(),motorLP=c.createBiquadFilter();
+  motor.type='sawtooth';
+  motor.frequency.setValueAtTime(47,t);
+  motor.frequency.linearRampToValueAtTime(52,t+dur);
+  motorLP.type='lowpass';motorLP.frequency.value=430;
+  motorGain.gain.setValueAtTime(.0001,t);
+  motorGain.gain.exponentialRampToValueAtTime(.027,t+.045);
+  motorGain.gain.setValueAtTime(.024,t+dur-.10);
+  motorGain.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  motor.connect(motorLP).connect(motorGain).connect(c.destination);
+  motor.start(t);motor.stop(t+dur+.03);
+
+  /* film rushing through the gate */
+  const len=Math.floor(c.sampleRate*dur),buf=c.createBuffer(1,len,c.sampleRate),data=buf.getChannelData(0);
+  for(let i=0;i<len;i++){
+    const x=i/len;
+    data[i]=(Math.random()*2-1)*(.18+.08*Math.sin(Math.PI*x));
+  }
+  const src=c.createBufferSource(),hp=c.createBiquadFilter(),lp=c.createBiquadFilter(),ng=c.createGain();
+  src.buffer=buf;
+  hp.type='highpass';hp.frequency.value=650;
+  lp.type='lowpass';lp.frequency.value=3600;
+  ng.gain.setValueAtTime(.0001,t);
+  ng.gain.linearRampToValueAtTime(.030,t+.055);
+  ng.gain.setValueAtTime(.027,t+dur-.09);
+  ng.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  src.connect(hp).connect(lp).connect(ng).connect(c.destination);
+  src.start(t);src.stop(t+dur+.02);
+
+  /* sprocket / frame-gate chatter */
+  for(let dt=.025,i=0;dt<dur-.04;dt+=.082,i++){
+    const o=c.createOscillator(),g=c.createGain(),bp=c.createBiquadFilter();
+    o.type=i%2?'square':'triangle';
+    o.frequency.setValueAtTime(i%3===0?142:116,t+dt);
+    bp.type='bandpass';bp.frequency.value=i%2?1250:920;bp.Q.value=1.1;
+    g.gain.setValueAtTime(.0001,t+dt);
+    g.gain.exponentialRampToValueAtTime(i%3===0?.021:.014,t+dt+.004);
+    g.gain.exponentialRampToValueAtTime(.0001,t+dt+.026);
+    o.connect(bp).connect(g).connect(c.destination);
+    o.start(t+dt);o.stop(t+dt+.032);
+  }
+
+  /* little reel flutter so it reads as a projector, not plain static */
+  const flutter=c.createOscillator(),fg=c.createGain();
+  flutter.type='triangle';flutter.frequency.value=12.5;
+  fg.gain.setValueAtTime(.0001,t);
+  fg.gain.exponentialRampToValueAtTime(.006,t+.04);
+  fg.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  flutter.connect(fg).connect(c.destination);
+  flutter.start(t);flutter.stop(t+dur+.02);
+}
 return{click,shutter,chime,tape};})();
 </script>
 <div id="stage"><img id="previewCrown" src="./assets/lowxxy-crown.png?v=239" alt=""><a-scene embedded renderer="alpha:true;antialias:true;colorManagement:true" vr-mode-ui="enabled:false" device-orientation-permission-ui="enabled:false"><a-assets><a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=239"></a-asset-item><a-asset-item id="groundedAsset" src="./assets/grounded-gains.glb?v=239"></a-asset-item><a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=239"></a-asset-item></a-assets><a-entity light="type:ambient;intensity:1.9;color:#ffffff"></a-entity><a-entity light="type:directional;intensity:2.2;color:#fff3d1" position="1 3 4"></a-entity><a-entity id="previewAnchor" position="0 0 -4"><a-entity id="gestureRoot"><a-entity id="modelRoot"></a-entity></a-entity></a-entity><a-camera position="0 0 0" fov="80" look-controls="enabled:false" wasd-controls="enabled:false"></a-camera></a-scene></div>
@@ -61,7 +116,7 @@ function lowxxyFilmNavigate(url,direction='right'){
   const wipe=ensureFilmWipe(),sheet=wipe.querySelector('.film-sheet');
   sheet.className='film-sheet '+(direction==='left'?'to-left':'to-right');
   wipe.classList.remove('active');void wipe.offsetWidth;wipe.classList.add('active');
-  setTimeout(()=>location.href=url,980);
+  setTimeout(()=>location.href=url,1120);
 }
 
 backBtn.onclick=()=>{LowxxySound.click();lowxxyFilmNavigate('./collection.html?v=239','right')};
