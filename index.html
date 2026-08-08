@@ -1030,7 +1030,13 @@ function channelChange(){
   o.connect(filter).connect(og).connect(c.destination);
   o.start(t+.015);o.stop(t+dur+.02);
 }
-return{click,buttonTap,shutter,chime,tape,irisClose,irisOpen,channelChange};})();
+function audioReady(){
+  try{
+    const c=get();
+    return !!c && c.state==='running';
+  }catch(e){return false}
+}
+return{click,buttonTap,shutter,chime,tape,irisClose,irisOpen,channelChange,audioReady};})();
 
 </script>
 <script>
@@ -1039,7 +1045,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const IRIS_OPEN_MS=3100,IRIS_CLOSE_MS=2250;
   function filmTransitionTo(url,direction='right'){lowxxyFilmNavigate(url,direction)}
   const positionIrisOnCrown=()=>{if(!irisWipe||!introCrownLogo)return;const r=introCrownLogo.getBoundingClientRect();irisWipe.style.setProperty('--iris-x',`${r.left+r.width*.5}px`);irisWipe.style.setProperty('--iris-y',`${r.top+r.height*.5}px`)};
-  const playIrisOpen=()=>{if(!irisWipe)return;positionIrisOnCrown();try{LowxxySound.irisOpen()}catch(e){};irisWipe.className='active opening';irisWipe.style.animation='none';void irisWipe.offsetWidth;irisWipe.style.animation='';setTimeout(()=>{irisWipe.className='';startOverlay.classList.add('ready')},IRIS_OPEN_MS+120)};
+  const playIrisOpen=()=>{if(!irisWipe)return;positionIrisOnCrown();try{if(LowxxySound.audioReady())LowxxySound.irisOpen()}catch(e){};irisWipe.className='active opening';irisWipe.style.animation='none';void irisWipe.offsetWidth;irisWipe.style.animation='';setTimeout(()=>{irisWipe.className='';startOverlay.classList.add('ready')},IRIS_OPEN_MS+120)};
   const playIrisClose=()=>new Promise(resolve=>{if(!irisWipe)return resolve();positionIrisOnCrown();try{LowxxySound.irisClose()}catch(e){};irisWipe.className='active closing';irisWipe.style.animation='none';void irisWipe.offsetWidth;irisWipe.style.animation='';setTimeout(resolve,IRIS_CLOSE_MS+80)});
   const shopBar=document.querySelector('#shopBar'),shopButton=document.querySelector('#shopButton'),errorText=document.querySelector('#errorText'),targets=[...document.querySelectorAll('.ar-target')],cameraTools=document.querySelector('#cameraTools'),collectionButton=document.querySelector('#collectionButton'),openSelfie=document.querySelector('#openSelfie'),takeScannerPhoto=document.querySelector('#takeScannerPhoto'),captureToast=document.querySelector('#captureToast'),unlockBurst=document.querySelector('#unlockBurst'),unlockName=document.querySelector('#unlockName'),crownEasterToast=document.querySelector('#crownEasterToast'),crownRain=document.querySelector('#crownRain'),scanCrown=document.querySelector('.scan-crown-watermark');
   let crownRainHideTimer=null,crownRainClearTimer=null;
