@@ -110,7 +110,7 @@
     #collectionButton:active{transform:translateY(3px) rotate(-2deg) scale(1.10,.86)!important;box-shadow:0 1px 0 #8e6b24,0 3px 0 #000!important}#takeScannerPhoto:active{transform:translateY(3px) scale(1.12,.82)!important;box-shadow:0 1px 0 #444,0 3px 0 #000!important}#openSelfie:active{transform:translateY(3px) rotate(3deg) scale(.90,1.10)!important;box-shadow:0 1px 0 #444,0 3px 0 #000!important}
 
 
-    /* NEW v256: punched-TV reaction + mobile-safe flicker */
+    /* NEW v257: v256 + reliable START THE SHOW button */
     .projector-window,.projector-window *{color-scheme:only light!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;forced-color-adjust:none!important}
     .projector-window{position:relative;isolation:isolate;width:100%;height:260px;margin:0 auto 4px;padding:0;background:transparent!important;border:0!important;box-shadow:none!important;overflow:visible!important;display:flex;justify-content:center}
     .projector-window::before,.projector-window::after{display:none!important}
@@ -654,6 +654,21 @@
       100%{visibility:visible}
     }
 
+
+    /* v257: more reliable START THE SHOW tapping */
+    #startButton{
+      position:relative;
+      z-index:25;
+      pointer-events:auto!important;
+      touch-action:manipulation;
+      -webkit-tap-highlight-color:transparent;
+      user-select:none;
+      -webkit-user-select:none;
+    }
+    #startButton.start-pressed{
+      transform:translateY(4px) scale(.97,.92)!important;
+    }
+
     @media(prefers-reduced-motion:reduce){*{animation:none!important}}
   </style>
 </head>
@@ -761,7 +776,106 @@ window.addEventListener('DOMContentLoaded', () => {
   const showUnlockCelebration=name=>{unlockName.textContent=name==='POP ART'||name==='CHAINMAIL'?'CHAINMAIL + POP ART':name;LowxxySound.chime();unlockBurst.classList.remove('show');void unlockBurst.offsetWidth;unlockBurst.classList.add('show');setTimeout(()=>unlockBurst.classList.remove('show'),1500)};
   let crownTapCount=0,crownTapTimer=null;scanCrown?.addEventListener('click',()=>{LowxxySound.click();crownTapCount++;clearTimeout(crownTapTimer);crownTapTimer=setTimeout(()=>crownTapCount=0,1600);if(crownTapCount>=5){crownTapCount=0;crownEasterToast.classList.add('show');playCrownRain('big');LowxxySound.chime();setTimeout(()=>crownEasterToast.classList.remove('show'),2500)}});
   targets.forEach(target=>{const wrapper=target.querySelector('.model-wrapper'),model=target.querySelector('.ar-model'),name=target.dataset.name;let finishTimer=null,isActive=false;const releaseTarget=()=>{if(finishTimer)clearTimeout(finishTimer);finishTimer=null;target._finishTimer=null;wrapper.setAttribute('visible',false);wrapper.removeAttribute('animation__popout');isActive=false;target._stickyActive=false;statusBar.textContent='Looking for another Lowxxy design...'};target.addEventListener('targetFound',()=>{if(finishTimer){clearTimeout(finishTimer);finishTimer=null;target._finishTimer=null}targets.forEach(other=>{if(other!==target){if(other._finishTimer)clearTimeout(other._finishTimer);other._finishTimer=null;other._stickyActive=false;other.querySelector('.model-wrapper').setAttribute('visible',false)}});if(!isActive){restartAnimation(model);wrapper.removeAttribute('animation__popout');wrapper.setAttribute('visible',true);wrapper.setAttribute('scale','0.78 0.78 0.78');requestAnimationFrame(()=>wrapper.setAttribute('animation__popout','property: scale; from: 0.78 0.78 0.78; to: 1 1 1; dur: 650; easing: easeOutBack'))}else wrapper.setAttribute('visible',true);isActive=true;target._stickyActive=true;const unlockResult=unlockScannedShirt(name);if(unlockResult?.isNew){showUnlockCelebration(name);playCrownRain('small')}statusBar.textContent=unlockResult?.isNew?'NEW LOWXXY ANIMATION FOUND!':'LOWXXY DESIGN SCANNED — ALREADY COLLECTED';statusBar.classList.remove('scan-pop');void statusBar.offsetWidth;statusBar.classList.add('scan-pop')});target.addEventListener('targetLost',()=>{if(!isActive)return;if(finishTimer)clearTimeout(finishTimer);const durationSeconds=Math.max(.8,model._animationDuration||5),mixerComponent=model.components['animation-mixer'],mixerTime=mixerComponent?.mixer?.time||0;let remainingSeconds=durationSeconds-(mixerTime%durationSeconds);if(remainingSeconds<.65)remainingSeconds+=durationSeconds;statusBar.textContent='THE CARTOON IS FINISHING...';finishTimer=setTimeout(releaseTarget,remainingSeconds*1000);target._finishTimer=finishTimer})});
-  startButton.addEventListener('click',async()=>{sessionStorage.setItem('lowxxy-session-started','1');startButton.classList.remove('rubberTap');void startButton.offsetWidth;startButton.classList.add('rubberTap');LowxxySound.click();LowxxySound.tape();startButton.disabled=true;startOverlay.classList.remove('ready');startButton.textContent='WARMING UP THE PROJECTOR...';errorText.style.display='none';if(!arSystem)arSystem=scene.systems['mindar-image-system'];if(!arSystem){errorText.style.display='block';errorText.textContent='The AR engine did not load. Refresh and try again.';startButton.disabled=false;startButton.textContent='RUN IT BACK';return}await new Promise(r=>setTimeout(r,330));await playIrisClose();startOverlay.classList.add('hidden');statusBar.classList.remove('hidden');shopBar.classList.remove('hidden');cameraTools.classList.remove('hidden');scanFrame.classList.remove('hidden');try{await arSystem.start();irisWipe.className=''}catch(error){console.error(error);irisWipe.className='';startOverlay.classList.remove('hidden');statusBar.classList.add('hidden');shopBar.classList.add('hidden');cameraTools.classList.add('hidden');scanFrame.classList.add('hidden');errorText.style.display='block';errorText.textContent='Camera or scanner could not start. Allow camera access, confirm targets.mind was uploaded, then refresh.';startButton.disabled=false;startButton.textContent='RUN IT BACK'}});
+  let lowxxyStartInProgress=false;
+  const startLowxxyShow=async(event)=>{
+    if(event){
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    if(lowxxyStartInProgress)return;
+    lowxxyStartInProgress=true;
+
+    startButton.classList.add('start-pressed');
+    setTimeout(()=>startButton.classList.remove('start-pressed'),180);
+
+    sessionStorage.setItem('lowxxy-session-started','1');
+    startButton.classList.remove('rubberTap');
+    void startButton.offsetWidth;
+    startButton.classList.add('rubberTap');
+    LowxxySound.click();
+    LowxxySound.tape();
+
+    startButton.disabled=true;
+    startOverlay.classList.remove('ready');
+    startButton.textContent='WARMING UP THE PROJECTOR...';
+    errorText.style.display='none';
+
+    try{
+      if(!arSystem)arSystem=scene.systems['mindar-image-system'];
+
+      /* On some phones the first tap can arrive just before A-Frame/MindAR
+         finishes attaching the system. Wait briefly instead of treating
+         that first tap like a failed press. */
+      if(!arSystem){
+        await new Promise(resolve=>{
+          let tries=0;
+          const waitForAR=()=>{
+            arSystem=scene.systems['mindar-image-system'];
+            if(arSystem||tries>=20)return resolve();
+            tries++;
+            setTimeout(waitForAR,100);
+          };
+          waitForAR();
+        });
+      }
+
+      if(!arSystem){
+        throw new Error('The AR engine did not load.');
+      }
+
+      await new Promise(r=>setTimeout(r,180));
+      await playIrisClose();
+
+      startOverlay.classList.add('hidden');
+      statusBar.classList.remove('hidden');
+      shopBar.classList.remove('hidden');
+      cameraTools.classList.remove('hidden');
+      scanFrame.classList.remove('hidden');
+
+      await arSystem.start();
+      irisWipe.className='';
+    }catch(error){
+      console.error(error);
+      irisWipe.className='';
+      startOverlay.classList.remove('hidden');
+      statusBar.classList.add('hidden');
+      shopBar.classList.add('hidden');
+      cameraTools.classList.add('hidden');
+      scanFrame.classList.add('hidden');
+      errorText.style.display='block';
+      errorText.textContent='Camera or scanner could not start. Allow camera access, then try START THE SHOW again.';
+      startButton.disabled=false;
+      startButton.textContent='START THE SHOW';
+      startOverlay.classList.add('ready');
+      lowxxyStartInProgress=false;
+      return;
+    }
+
+    lowxxyStartInProgress=false;
+  };
+
+  /* pointerup is the primary mobile/desktop action.
+     click remains as a keyboard/accessibility fallback. */
+  let lowxxyPointerHandled=false;
+  startButton.addEventListener('pointerdown',()=>{
+    startButton.classList.add('start-pressed');
+  });
+  startButton.addEventListener('pointercancel',()=>{
+    startButton.classList.remove('start-pressed');
+  });
+  startButton.addEventListener('pointerup',event=>{
+    startButton.classList.remove('start-pressed');
+    lowxxyPointerHandled=true;
+    startLowxxyShow(event);
+    setTimeout(()=>lowxxyPointerHandled=false,500);
+  });
+  startButton.addEventListener('click',event=>{
+    if(lowxxyPointerHandled){
+      event.preventDefault();
+      return;
+    }
+    startLowxxyShow(event);
+  });
   const shouldResumeAR=sessionStorage.getItem('lowxxy-resume-ar')==='1'||sessionStorage.getItem('lowxxy-session-started')==='1';if(!shouldResumeAR)requestAnimationFrame(()=>requestAnimationFrame(playIrisOpen));if(shouldResumeAR){sessionStorage.removeItem('lowxxy-resume-ar');const resumeScanner=async()=>{if(!arSystem)arSystem=scene.systems['mindar-image-system'];if(!arSystem)return;irisWipe.className='';startOverlay.classList.add('hidden');statusBar.classList.remove('hidden');shopBar.classList.remove('hidden');cameraTools.classList.remove('hidden');scanFrame.classList.remove('hidden');try{await arSystem.start()}catch(error){console.error(error);errorText.style.display='block';errorText.textContent='Camera or scanner could not start. Allow camera access, then refresh.'}};if(scene.hasLoaded)setTimeout(resumeScanner,180);else scene.addEventListener('loaded',()=>setTimeout(resumeScanner,180),{once:true})}
   if('serviceWorker'in navigator){window.addEventListener('load',async()=>{try{const registration=await navigator.serviceWorker.register('./service-worker.js',{updateViaCache:'none'});registration.update().catch(()=>{})}catch(err){console.warn('SW registration failed',err)}})}
   collectionButton.addEventListener('click',()=>{sessionStorage.setItem('lowxxy-return-url',location.href);sessionStorage.setItem('lowxxy-session-started','1');sessionStorage.setItem('lowxxy-resume-ar','1');filmTransitionTo('./collection.html?v=239','left')});openSelfie.addEventListener('click',()=>{sessionStorage.setItem('lowxxy-return-url',location.href);sessionStorage.setItem('lowxxy-session-started','1');sessionStorage.setItem('lowxxy-resume-ar','1');filmTransitionTo('./selfie.html?v=239','right')});
