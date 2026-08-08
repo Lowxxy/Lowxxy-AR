@@ -110,7 +110,7 @@
     #collectionButton:active{transform:translateY(3px) rotate(-2deg) scale(1.10,.86)!important;box-shadow:0 1px 0 #8e6b24,0 3px 0 #000!important}#takeScannerPhoto:active{transform:translateY(3px) scale(1.12,.82)!important;box-shadow:0 1px 0 #444,0 3px 0 #000!important}#openSelfie:active{transform:translateY(3px) rotate(3deg) scale(.90,1.10)!important;box-shadow:0 1px 0 #444,0 3px 0 #000!important}
 
 
-    /* NEW v253: neutral antennas + gold knobs + consistent bubble rubberhose title */
+    /* NEW v255: exaggerated punched-TV tap reaction */
     .projector-window,.projector-window *{color-scheme:only light!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;forced-color-adjust:none!important}
     .projector-window{position:relative;isolation:isolate;width:100%;height:260px;margin:0 auto 4px;padding:0;background:transparent!important;border:0!important;box-shadow:none!important;overflow:visible!important;display:flex;justify-content:center}
     .projector-window::before,.projector-window::after{display:none!important}
@@ -543,6 +543,60 @@
       .true-bubble-title .title-space{width:4px}
     }
 
+
+    /* v254: tap-react TV squash + flicker */
+    .retro-tv{
+      cursor:pointer;
+      -webkit-tap-highlight-color:transparent;
+      touch-action:manipulation;
+    }
+    .retro-tv.tap-flicker .tv-screen{
+      animation:tvTapScreenFlicker .36s steps(2,end) 1;
+    }
+    .retro-tv.tap-flicker .tv-static-layer{
+      animation:tvTapStaticFlicker .36s steps(3,end) 1;
+    }
+    .retro-tv.tap-flicker .screen-brand-logo{
+      animation:tvTapLogoFlicker .36s steps(3,end) 1;
+    }
+    .retro-tv.tap-flicker .tv-knob{
+      animation:tvTapKnobBlink .36s steps(2,end) 1;
+    }
+
+    @keyframes tvTapScreenFlicker{
+      0%{filter:brightness(1) contrast(1)}
+      12%{filter:brightness(1.7) contrast(1.45)}
+      24%{filter:brightness(.58) contrast(.82)}
+      38%{filter:brightness(1.85) contrast(1.55)}
+      52%{filter:brightness(.72) contrast(.9)}
+      66%{filter:brightness(1.55) contrast(1.35)}
+      82%{filter:brightness(.88) contrast(.96)}
+      100%{filter:brightness(1) contrast(1)}
+    }
+    @keyframes tvTapStaticFlicker{
+      0%{opacity:.34;filter:brightness(1)}
+      20%{opacity:.56;filter:brightness(1.24)}
+      40%{opacity:.25;filter:brightness(.92)}
+      60%{opacity:.62;filter:brightness(1.32)}
+      80%{opacity:.38;filter:brightness(1.05)}
+      100%{opacity:.34;filter:brightness(1)}
+    }
+    @keyframes tvTapLogoFlicker{
+      0%{opacity:.98;filter:brightness(1.06) drop-shadow(0 0 5px rgba(255,255,255,.14))}
+      12%{opacity:1;filter:brightness(1.85) drop-shadow(0 0 16px rgba(255,255,255,.42))}
+      26%{opacity:.58;filter:brightness(.62) drop-shadow(0 0 1px rgba(255,255,255,.03))}
+      42%{opacity:1;filter:brightness(1.95) drop-shadow(0 0 18px rgba(255,255,255,.48))}
+      58%{opacity:.72;filter:brightness(.78) drop-shadow(0 0 2px rgba(255,255,255,.05))}
+      76%{opacity:1;filter:brightness(1.5) drop-shadow(0 0 12px rgba(255,255,255,.30))}
+      100%{opacity:.98;filter:brightness(1.06) drop-shadow(0 0 5px rgba(255,255,255,.14))}
+    }
+    @keyframes tvTapKnobBlink{
+      0%{filter:none}
+      30%{filter:brightness(1.22)}
+      55%{filter:brightness(.9)}
+      100%{filter:none}
+    }
+
     @media(prefers-reduced-motion:reduce){*{animation:none!important}}
   </style>
 </head>
@@ -557,7 +611,7 @@
         <div class="tv-shirt shirt-left"></div>
         <div class="tv-shirt shirt-right"></div>
         <div class="tv-shadow"></div>
-        <div class="retro-tv">
+        <div class="retro-tv" role="button" tabindex="0" aria-label="Tap the TV">
           <span class="tv-antenna antenna-left"></span><span class="tv-antenna antenna-right"></span>
           <div class="tv-screen"><div class="tv-static-layer"></div><div class="screen-brand"><img class="brand-logo screen-brand-logo" src="./icons/lowxxy-logo-white.png" alt="Lowxxy" /></div></div>
           <div class="tv-side"><span class="tv-knob"></span><span class="tv-knob small"></span><span class="tv-speaker"></span></div>
@@ -602,6 +656,42 @@ window.addEventListener('DOMContentLoaded', () => {
   const shopBar=document.querySelector('#shopBar'),shopButton=document.querySelector('#shopButton'),errorText=document.querySelector('#errorText'),targets=[...document.querySelectorAll('.ar-target')],cameraTools=document.querySelector('#cameraTools'),collectionButton=document.querySelector('#collectionButton'),openSelfie=document.querySelector('#openSelfie'),takeScannerPhoto=document.querySelector('#takeScannerPhoto'),captureToast=document.querySelector('#captureToast'),unlockBurst=document.querySelector('#unlockBurst'),unlockName=document.querySelector('#unlockName'),crownEasterToast=document.querySelector('#crownEasterToast'),crownRain=document.querySelector('#crownRain'),scanCrown=document.querySelector('.scan-crown-watermark');
   let crownRainHideTimer=null,crownRainClearTimer=null;
   const playCrownRain=(mode='big')=>{if(!crownRain)return;clearTimeout(crownRainHideTimer);clearTimeout(crownRainClearTimer);crownRain.innerHTML='';crownRain.className=mode==='big'?'show big':'show';const count=mode==='big'?34:15,maxDelay=mode==='big'?.85:.45;for(let i=0;i<count;i++){const crown=document.createElement('img');crown.className='crown-drop';crown.src='./assets/lowxxy-crown.png?v=239';crown.alt='';crown.style.left=`${Math.random()*100}vw`;crown.style.width=`${(mode==='big'?25:20)+Math.random()*(mode==='big'?34:22)}px`;crown.style.setProperty('--delay',`${(Math.random()*maxDelay).toFixed(2)}s`);crown.style.setProperty('--dur',`${(mode==='big'?2.5:2.0)+Math.random()*(mode==='big'?1.4:.8)}s`);crown.style.setProperty('--drift',`${Math.round((Math.random()*2-1)*(mode==='big'?100:65))}px`);crown.style.setProperty('--spin',`${Math.round((Math.random()*2-1)*540)}deg`);crown.style.setProperty('--scale',`${(.72+Math.random()*.55).toFixed(2)}`);crownRain.appendChild(crown)}const hideAt=mode==='big'?3450:2450;crownRainHideTimer=setTimeout(()=>crownRain.classList.remove('show'),hideAt);crownRainClearTimer=setTimeout(()=>{crownRain.innerHTML='';crownRain.className=''},hideAt+950)};
+
+  const introTV=document.querySelector('.retro-tv');
+  const triggerTVTapReact=()=>{
+    if(!introTV)return;
+    introTV.classList.remove('tap-flicker');
+    void introTV.offsetWidth;
+    introTV.classList.add('tap-flicker');
+    try{LowxxySound.click()}catch(e){}
+    if(!matchMedia('(prefers-reduced-motion: reduce)').matches&&introTV.animate){
+      introTV.animate(
+        [
+          {transform:'translateX(-50%) translate(0,0) scale(1,1) rotate(0deg)'},
+          {transform:'translateX(-50%) translate(-10px,3px) scale(1.16,.72) rotate(-7deg)',offset:.16},
+          {transform:'translateX(-50%) translate(13px,-7px) scale(.82,1.18) rotate(6deg)',offset:.34},
+          {transform:'translateX(-50%) translate(-7px,5px) scale(1.10,.86) rotate(-4deg)',offset:.52},
+          {transform:'translateX(-50%) translate(5px,-3px) scale(.92,1.08) rotate(2.5deg)',offset:.68},
+          {transform:'translateX(-50%) translate(-2px,1px) scale(1.035,.97) rotate(-1deg)',offset:.84},
+          {transform:'translateX(-50%) translate(0,0) scale(1,1) rotate(0deg)'}
+        ],
+        {duration:680,easing:'cubic-bezier(.15,.9,.18,1)'}
+      );
+    }
+    clearTimeout(triggerTVTapReact._t);
+    triggerTVTapReact._t=setTimeout(()=>introTV.classList.remove('tap-flicker'),690);
+  };
+  if(introTV){
+    introTV.addEventListener('click',triggerTVTapReact);
+    introTV.addEventListener('touchend',event=>{event.preventDefault();triggerTVTapReact()},{passive:false});
+    introTV.addEventListener('keydown',event=>{
+      if(event.key==='Enter'||event.key===' '){
+        event.preventDefault();
+        triggerTVTapReact();
+      }
+    });
+  }
+
   let arSystem=null,deferredInstallPrompt=null,loadedModels=0;
   const isStandalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true,isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent),isAndroid=/android/i.test(navigator.userAgent);if(isStandalone)installButton.classList.add('hidden');
   window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();deferredInstallPrompt=event;installButton.classList.remove('hidden')});
