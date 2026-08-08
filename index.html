@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Lowxxy AR</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=269" />
+  <link rel="manifest" href="./manifest.webmanifest?v=272" />
   <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=239" />
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
@@ -805,6 +805,134 @@
     gap:6px;
     font-size:12px!important;
     letter-spacing:.055em!important;
+  }
+}
+
+
+/* v272 — cross-device intro appearance lock */
+html,body,#startOverlay,.panel,.projector-window,.tv-stage,.retro-tv,
+.tv-screen,.tv-side,.tv-knob,.tv-speaker,.tv-foot,.screen-brand,.screen-brand-logo,
+.true-bubble-title,.show-title-rubber,#startButton,.subtitle,.eyebrow,.flourish{
+  forced-color-adjust:none!important;
+  -webkit-print-color-adjust:exact!important;
+  print-color-adjust:exact!important;
+}
+html,body{
+  color-scheme:dark only!important;
+  background:#050505!important;
+}
+#startOverlay{
+  background:radial-gradient(circle at 50% 0,#181818 0,#0b0b0b 42%,#050505 78%)!important;
+}
+.panel{
+  background:#090909!important;
+  border-color:#4a4944!important;
+  box-shadow:inset 0 0 0 3px #272723,0 14px 40px rgba(0,0,0,.68)!important;
+}
+.panel::after{border-color:#4a4944!important}
+.projector-window{background:transparent!important}
+
+.retro-tv{
+  background:linear-gradient(145deg,#5e5d58 0%,#3d3c39 23%,#20201f 58%,#464540 100%)!important;
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.08),inset 0 -8px 18px rgba(0,0,0,.42),0 7px 0 #292927,0 14px 22px rgba(0,0,0,.48)!important;
+  filter:none!important;
+}
+.retro-tv::before{border-color:rgba(255,255,255,.12)!important}
+.tv-side{
+  background:linear-gradient(#42413d,#252522)!important;
+  border-color:#161615!important;
+  filter:none!important;
+}
+.tv-knob{
+  background:radial-gradient(circle at 33% 28%,#74716b 0%,#504d48 27%,#282725 62%,#111 100%)!important;
+  filter:none!important;
+}
+.tv-knob::after{background:#c99b2e!important}
+.tv-speaker{background:repeating-linear-gradient(0deg,#111 0 2px,#494843 2px 4px)!important}
+.tv-foot{background:#31312e!important}
+
+.tv-screen{
+  background:#171717!important;
+  box-shadow:inset 0 0 16px rgba(0,0,0,.82),inset 0 0 0 2px #3b3b38,0 0 0 2px #111!important;
+  filter:none!important;
+  isolation:isolate;
+}
+.tv-static-layer{
+  opacity:.62!important;
+  mix-blend-mode:screen!important;
+  filter:contrast(1.28) brightness(.72)!important;
+}
+.tv-screen::after{opacity:.26!important}
+.screen-glow{
+  opacity:.38!important;
+  background:radial-gradient(ellipse at center,rgba(255,255,255,.15),transparent 72%)!important;
+}
+.screen-brand{
+  opacity:1!important;
+  visibility:visible!important;
+  mix-blend-mode:normal!important;
+}
+.screen-brand-logo{
+  opacity:1!important;
+  visibility:visible!important;
+  filter:brightness(1.08) contrast(1.12) drop-shadow(0 0 4px rgba(255,255,255,.08))!important;
+}
+.tv-shirt{
+  opacity:1!important;
+  filter:brightness(1.02) contrast(1.02) saturate(0)!important;
+}
+.tv-antenna{background:linear-gradient(#d8d8d8,#8a8a86 22%,#30302e)!important}
+.tv-antenna::before{background:#777773!important;border-color:#111!important}
+
+.eyebrow{color:#c8a45b!important;background:#090909!important}
+.subtitle{color:#c8a45b!important}
+.true-bubble-title .bubble-char{
+  color:#f2f0e8!important;
+  -webkit-text-fill-color:#f2f0e8!important;
+  -webkit-text-stroke:2px #050505!important;
+}
+#startButton{
+  background:#56534c!important;
+  color:#f4f4f1!important;
+  -webkit-text-fill-color:#f4f4f1!important;
+  border-color:#66635c!important;
+  box-shadow:0 6px 0 #34332f,0 10px 0 #111!important;
+}
+
+@media(max-width:430px){
+  .retro-tv{
+    background:linear-gradient(145deg,#5e5d58 0%,#3d3c39 23%,#20201f 58%,#464540 100%)!important;
+  }
+  .tv-side{background:linear-gradient(#42413d,#252522)!important}
+  .tv-knob{background:radial-gradient(circle at 33% 28%,#74716b 0%,#504d48 27%,#282725 62%,#111 100%)!important}
+  .tv-screen{background:#171717!important;filter:none!important}
+  .tv-static-layer{
+    opacity:.62!important;
+    mix-blend-mode:screen!important;
+    filter:contrast(1.28) brightness(.72)!important;
+  }
+  .screen-brand-logo{
+    opacity:1!important;
+    visibility:visible!important;
+    filter:brightness(1.08) contrast(1.12) drop-shadow(0 0 4px rgba(255,255,255,.08))!important;
+  }
+  .tv-shirt{filter:brightness(1.02) contrast(1.02) saturate(0)!important}
+  #startButton{
+    background:#56534c!important;
+    color:#f4f4f1!important;
+    -webkit-text-fill-color:#f4f4f1!important;
+  }
+}
+
+@media (max-width:520px), (max-device-width:520px){
+  .panel{
+    width:min(94vw,430px)!important;
+    margin-left:auto!important;
+    margin-right:auto!important;
+  }
+  .tv-stage{
+    transform:scale(.90)!important;
+    transform-origin:50% 0!important;
   }
 }
 
