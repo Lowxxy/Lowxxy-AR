@@ -242,7 +242,19 @@ async function makePhotoCanvas(source){const sw=source.width||source.videoWidth,
       window.LowxxyShoulderAR.drawToPhoto(ctx,out.width,out.height);
     }
   }catch(e){console.warn('Lowxxy shoulder photo overlay skipped',e)}const footer=Math.max(120,out.height*.11);ctx.fillStyle='rgba(0,0,0,.84)';ctx.fillRect(0,out.height-footer,out.width,footer);ctx.fillStyle='#fff';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font=`900 ${Math.max(38,out.width*.05)}px Arial`;ctx.fillText('@LOWXXY.BRAND',out.width/2,out.height-footer/2);return out}
-async function savePhoto(){LowxxySound.shutter();if(!cameraReady||!stream){showToast('CAMERA IS STILL LOADING');return}shoot.disabled=true;showToast('CAPTURING…');let drawable=null;try{try{drawable=await captureWithTakePhoto()}catch(e){}let canvas=null;if(drawable){canvas=await makePhotoCanvas(drawable);if(canvasLooksBlack(canvas))canvas=null;if(drawable instanceof ImageBitmap)drawable.close()}if(!canvas){drawable=await captureFromVideo();canvas=await makePhotoCanvas(drawable)}if(canvasLooksBlack(canvas))throw new Error('Camera returned a black frame');const blob=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('Encoding failed')),'image/png'));const file=new File([blob],`lowxxy-selfie-${Date.now()}.png`,{type:'image/png'});showToast('PHOTO READY!');if(navigator.share&&navigator.canShare?.({files:[file]}))await navigator.share({files:[file],title:'Lowxxy Selfie'});else{const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=file.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),10000)}}catch(error){console.error(error);showToast('CAMERA BLOCKED THE PHOTO — TRY CHROME')}finally{shoot.disabled=false}}
+async function savePhoto(){LowxxySound.shutter();if(!cameraReady||!stream){showToast('CAMERA IS STILL LOADING');return}shoot.disabled=true;showToast('CAPTURING…');try{
+  // Use the exact live selfie frame instead of ImageCapture.takePhoto().
+  // Some phones return a different sensor crop/FOV from takePhoto(), which made
+  // the shoulder character appear to jump in the saved image.
+  const drawable=await captureFromVideo();
+  const canvas=await makePhotoCanvas(drawable);
+  if(canvasLooksBlack(canvas))throw new Error('Camera returned a black frame');
+  const blob=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('Encoding failed')),'image/png'));
+  const file=new File([blob],`lowxxy-selfie-${Date.now()}.png`,{type:'image/png'});
+  showToast('PHOTO READY!');
+  if(navigator.share&&navigator.canShare?.({files:[file]}))await navigator.share({files:[file],title:'Lowxxy Selfie'});
+  else{const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=file.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),10000)}
+}catch(error){console.error(error);showToast('CAMERA BLOCKED THE PHOTO — TRY CHROME')}finally{shoot.disabled=false}}
 
 function ensureFilmWipe(){
   let wipe=document.getElementById('lowxxyFilmWipe');
@@ -462,7 +474,13 @@ function detectPose(now){
   try{
     const result=poseLandmarker.detectForVideo(videoEl,now);
     lastLandmarks=result?.landmarks?.[0]||null;
-    updateTarget(lastLandmarks);
+    if(!lastLandmarks){
+      target.visible=false;
+      if(shoulderRoot) shoulderRoot.visible=false;
+      smooth.ready=false;
+    }else{
+      updateTarget(lastLandmarks);
+    }
     lostFrames=0;
   }catch(e){
     console.warn("Lowxxy shoulder tracking frame skipped",e); diagErr(e?.message||e);
@@ -500,10 +518,9 @@ function render(now=performance.now()){
     status(false);
   }else{
     lostFrames++;
-    if(lostFrames>8){
-      shoulderRoot.visible=false;
-      status(true);
-    }
+    shoulderRoot.visible=false;
+    smooth.ready=false;
+    status(false);
   }
 
   if(mixer)mixer.update(Math.min(clock.getDelta(),.05));
@@ -550,17 +567,32 @@ async function init(){
 }
 
 
-/* v278: cleaner selfie mode — smaller, moved up toward the neck, and hidden when no solid shoulder is in frame. */
+/* v280: clean shoulder mode + instant hide + photo position lock. */
 updateTarget=function(landmarks){
   if(!landmarks?.length){ target.visible=false; return; }
 
   const left=landmarks[11];
   const right=landmarks[12];
-  const rightOK=!!right && (right.visibility??1)>.42 && (right.presence??1)>.42;
-  const leftOK=!!left && (left.visibility??1)>.42 && (left.presence??1)>.42;
+  const rightOK=!!right && (right.visibility??1)>.60 && (right.presence??1)>.60;
+  const leftOK=!!left && (left.visibility??1)>.60 && (left.presence??1)>.60;
 
   if(!rightOK && !leftOK){
     target.visible=false;
+    if(shoulderRoot) shoulderRoot.visible=false;
+    return;
+  }
+
+  // Reject stale/phantom pose results when the camera is no longer on a person.
+  // We are NOT using the face to decide placement; this only checks that another
+  // upper-body point is currently visible in the same frame.
+  const upperBodyIndices=[0,13,14,15,16];
+  const currentUpperBody=upperBodyIndices.some(i=>{
+    const p=landmarks[i];
+    return !!p && (p.visibility??1)>.45 && (p.presence??1)>.45;
+  });
+  if(!currentUpperBody){
+    target.visible=false;
+    if(shoulderRoot) shoulderRoot.visible=false;
     return;
   }
 
@@ -585,7 +617,7 @@ updateTarget=function(landmarks){
   }
 
   // Slightly smaller than v277 so he stays inside frame better.
-  const desiredHeight=Math.max(118,Math.min(230,shoulderWidth*.54));
+  const desiredHeight=Math.max(125,Math.min(250,shoulderWidth*.59));
 
   // Move inward toward the neck and slightly upward.
   const inward=shoulderWidth*.12;
