@@ -28,7 +28,6 @@
         const object = this.el.object3D;
         const camera = this.el.sceneEl.camera;
         if (!camera || !object.visible) return;
-
         object.getWorldPosition(this.worldPosition);
         camera.getWorldPosition(this.cameraPosition);
 
@@ -36,7 +35,6 @@
         // preventing diagonal or downward-facing scans.
         this.cameraPosition.y = this.worldPosition.y;
         if (this.cameraPosition.distanceToSquared(this.worldPosition) < 0.000001) return;
-
         this.lookMatrix.lookAt(this.worldPosition, this.cameraPosition, this.up);
         this.worldQuaternion.setFromRotationMatrix(this.lookMatrix);
 
@@ -46,7 +44,6 @@
         } else {
           this.localQuaternion.copy(this.worldQuaternion);
         }
-
         object.quaternion.slerp(this.localQuaternion, this.data.smoothing);
       }
     });
@@ -66,7 +63,6 @@
     html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#000}
     #app,a-scene{position:fixed;inset:0;width:100%;height:100%}
     .hidden{display:none!important}
-
     #filmOverlay{position:fixed;inset:0;z-index:800;pointer-events:none;overflow:hidden}
     #filmOverlay::before{
       content:"";position:absolute;inset:-35%;opacity:.20;mix-blend-mode:screen;
@@ -88,7 +84,6 @@
     }
     @keyframes grain{0%{transform:translate(0,0)}20%{transform:translate(3%,-2%)}40%{transform:translate(-2%,3%)}60%{transform:translate(2%,1%)}80%{transform:translate(-3%,-1%)}100%{transform:translate(1%,2%)}}
     @keyframes flicker{0%,100%{opacity:.60}5%{opacity:.72}6%{opacity:.50}31%{opacity:.63}32%{opacity:.76}68%{opacity:.56}69%{opacity:.67}}
-
     .overlay{
       position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;
       padding:18px;text-align:center;color:var(--paper);overflow:hidden;background:#090909
@@ -96,14 +91,13 @@
     .overlay::before{
       content:"";position:absolute;inset:-18vmax;
       background:repeating-radial-gradient(circle at center,#0b0b0b 0 8.5vmin,#2d2d2d 8.7vmin 15.5vmin,#0b0b0b 15.7vmin 23vmin);
-      opacity:.95;animation:ringPulse 7s ease-in-out infinite
+      opacity:.95;animation:ringPulse 3.7s ease-in-out infinite
     }
     .overlay::after{
       content:"";position:absolute;inset:0;
       background:radial-gradient(circle at center,transparent 0 34%,rgba(0,0,0,.25) 55%,rgba(0,0,0,.88) 100%)
     }
-    @keyframes ringPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.025)}}
-
+    @keyframes ringPulse{0%,100%{transform:scale(1)}32%{transform:scale(1.018)}55%{transform:scale(1.035)}72%{transform:scale(1.012)}}
     .panel{
       position:relative;z-index:2;width:min(470px,96vw);padding:34px 25px 28px;
       border:3px solid var(--paper);background:rgba(7,7,7,.88);
@@ -136,7 +130,6 @@
     button:disabled{opacity:.55;cursor:wait}
     #installHelp,#errorText{display:none;margin:15px 0 0;font:700 14px/1.45 Georgia,serif;color:#ddd}
     #errorText{color:#fff;text-decoration:underline}
-
     #scanFrame{position:fixed;z-index:700;left:50%;top:50%;transform:translate(-50%,-57%);width:min(73vw,390px);aspect-ratio:3/4;pointer-events:none}
     #scanFrame::before{
       content:"";position:absolute;inset:0;
@@ -155,7 +148,6 @@
     .scan-crown-watermark{position:absolute;z-index:0;left:50%;top:50%;width:72%;height:auto;transform:translate(-50%,-50%) rotate(0deg);opacity:.065;filter:drop-shadow(0 0 14px rgba(255,255,255,.10));pointer-events:none}#scanFrame::before,#scanFrame::after{z-index:2}.frame-label{z-index:4}
     .frame-label{position:absolute;left:50%;bottom:-46px;transform:translateX(-50%);white-space:nowrap;padding:8px 19px;border:2px solid #fff;border-radius:999px;background:rgba(0,0,0,.78);color:#fff;font:900 11px/1 "Arial Rounded MT Bold",Arial,sans-serif;letter-spacing:.11em;text-transform:uppercase;box-shadow:0 4px 10px rgba(0,0,0,.6)}
     @keyframes frameBreathe{0%,100%{opacity:.82;transform:scale(.995)}50%{opacity:1;transform:scale(1.005)}}
-
     #statusBar{
       position:fixed;z-index:900;left:50%;top:max(14px,env(safe-area-inset-top));transform:translateX(-50%);
       width:min(76%,390px);padding:11px 15px;border:2px solid #fff;border-radius:999px;background:rgba(0,0,0,.82);color:#fff;
@@ -165,21 +157,18 @@
     #statusBar::before,#statusBar::after{content:"✦";margin:0 8px;font-family:Georgia,serif}
     #statusBar.scan-pop{animation:scanPop .62s cubic-bezier(.18,.9,.25,1.35)}
     @keyframes scanPop{0%{transform:translateX(-50%) scale(.3,.75)}55%{transform:translateX(-50%) scale(1.12,.9)}100%{transform:translateX(-50%) scale(1)}}
-
     /* Shop moved to the Collection page in v211. Keep the old node hidden so
        scanner logic stays untouched. */
     #shopBar{display:none!important}
-
     @media (max-height:690px){.panel{padding:27px 20px 23px}.brand-logo{width:min(255px,78%)}.subtitle{margin:11px auto 17px}.button-stack{gap:9px}button{min-height:49px}.show-title{font-size:31px}}
 70%,100%{opacity:1}}
     @media (prefers-reduced-motion:reduce){*{animation:none!important}}
-  
+
     .intro-character{display:block;width:92px;height:92px;object-fit:contain;margin:-4px auto 6px;filter:grayscale(1) contrast(1.15) drop-shadow(0 4px 0 #000)}
     .projector-window{position:relative;margin:8px auto 13px;width:min(360px,94%);padding:18px 16px 13px;border:2px solid #d8d8d8;border-radius:18px;background:radial-gradient(ellipse at center,#b7b7b7 0,#777 43%,#292929 77%,#080808 100%);box-shadow:inset 0 0 28px #000,0 7px 0 #222;overflow:hidden}
     .projector-window::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(255,255,255,.03) 0 1px,rgba(0,0,0,.04) 1px 3px),radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,.55) 100%)}
     .projector-window .brand-logo{position:relative;z-index:1;width:min(250px,80%);margin-bottom:0}
     .projector-window .intro-character{position:relative;z-index:1}
-
     #cameraTools{position:fixed;z-index:1150;left:50%;right:auto;top:auto;bottom:max(18px,calc(env(safe-area-inset-bottom) + 8px));transform:translateX(-50%);display:flex;align-items:flex-end;justify-content:center;gap:18px;padding:10px 16px 11px;border:2px solid rgba(242,240,232,.72);border-radius:999px;background:rgba(7,7,7,.84);box-shadow:0 8px 26px #000b;backdrop-filter:blur(7px)}
     .tool-wrap{width:68px;display:flex;flex-direction:column;align-items:center;gap:6px}
     .round-tool,#collectionButton{position:relative!important;inset:auto!important;width:64px!important;height:64px!important;min-height:64px!important;border-radius:20px!important;border:3px solid #f5f1e8!important;background:linear-gradient(#242424,#0b0b0b)!important;color:#fff!important;box-shadow:0 4px 0 #444,0 7px 0 #000!important;display:grid!important;place-items:center!important;padding:0!important;margin:0!important;transform:none!important}
@@ -193,7 +182,6 @@
     #captureToast{position:fixed;z-index:1500;left:50%;top:50%;transform:translate(-50%,-50%) scale(.85);background:#171717;color:#fff;border:4px solid #f5f1e8;border-radius:999px;padding:16px 24px;font-weight:900;letter-spacing:1px;opacity:0;pointer-events:none;transition:.2s}
     #captureToast.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
 50%{transform:translateX(-1.6vw)}100%{transform:translateX(.9vw)}}
-
 
   /* v217 — oversized horizontal vintage film strip */
   .film-wipe{position:fixed;inset:0;z-index:999999;pointer-events:none;overflow:hidden;visibility:hidden;background:transparent}
@@ -212,16 +200,14 @@
   .film-frame::before{content:"";position:absolute;inset:0;background:linear-gradient(108deg,transparent 0 37%,rgba(255,245,215,.13) 40%,transparent 45%),radial-gradient(circle at 18% 22%,rgba(255,255,255,.12),transparent 10%),radial-gradient(circle at 76% 63%,rgba(255,255,255,.08),transparent 12%);mix-blend-mode:screen}
   .film-frame::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 7px,rgba(255,255,255,.018) 8px,transparent 9px);opacity:.8}
   .film-scratches{position:absolute;inset:0;z-index:5;pointer-events:none;opacity:.22;background:linear-gradient(90deg,transparent 13%,#fff 13.2%,transparent 13.35% 46%,#fff 46.12%,transparent 46.27% 78%,#fff 78.1%,transparent 78.22%);animation:filmFlicker .14s steps(2,end) infinite}
-  @keyframes filmTapeRight{0%{transform:translateY(-50%) translateX(0) rotate(-7deg)}50%{transform:translateY(-50%) translateX(180vw) rotate(-5deg)}100%{transform:translateY(-50%) translateX(500vw) rotate(-3deg)}}
-  @keyframes filmTapeLeft{0%{transform:translateY(-50%) translateX(0) rotate(7deg)}50%{transform:translateY(-50%) translateX(-180vw) rotate(5deg)}100%{transform:translateY(-50%) translateX(-500vw) rotate(3deg)}}
+  @keyframes filmTapeRight{0%{transform:translateY(-50%) translateX(0) rotate(0deg)}50%{transform:translateY(-50%) translateX(180vw) rotate(0deg)}100%{transform:translateY(-50%) translateX(500vw) rotate(0deg)}}
+  @keyframes filmTapeLeft{0%{transform:translateY(-50%) translateX(0) rotate(0deg)}50%{transform:translateY(-50%) translateX(-180vw) rotate(0deg)}100%{transform:translateY(-50%) translateX(-500vw) rotate(0deg)}}
   @keyframes filmFramesRoll{from{transform:translateX(0)}to{transform:translateX(-34vw)}}
   @keyframes filmFlicker{0%,100%{opacity:.18}50%{opacity:.34}}
   @media(max-width:430px){.film-sheet{height:42vh;min-height:260px;grid-template-rows:48px 1fr 48px}.film-frame{width:72vw;min-width:250px}.film-track{gap:16px}.film-holes::before{inset:8px 0;background:repeating-linear-gradient(90deg,transparent 0 13px,#e7dfc8 13px 34px,transparent 34px 55px)}@keyframes filmFramesRoll{from{transform:translateX(0)}to{transform:translateX(-76vw)}}}
 
-
-  .film-crown{position:absolute;left:50%;top:50%;width:46%;height:auto;transform:translate(-50%,-50%) rotate(-4deg);opacity:.58;filter:sepia(1) saturate(.65) brightness(1.35);z-index:3;pointer-events:none;mix-blend-mode:screen}
-  .film-frame:nth-child(even) .film-crown{transform:translate(-50%,-50%) rotate(4deg);opacity:.58}
-
+  .film-crown{position:absolute;left:50%;top:50%;width:46%;height:auto;transform:translate(-50%,-50%) rotate(0deg);opacity:.58;filter:sepia(1) saturate(.65) brightness(1.35);z-index:3;pointer-events:none;mix-blend-mode:screen}
+  .film-frame:nth-child(even) .film-crown{transform:translate(-50%,-50%) rotate(0deg);opacity:.58}
 
     /* v232 phone title-card match: keep the same theatrical look on mobile */
     .show-title{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;font-family:"Cooper Black","URW Bookman","Bookman Old Style",Georgia,serif;font-weight:900;font-size:clamp(31px,7.2vw,48px);line-height:.79;letter-spacing:.01em;transform:rotate(-1deg)}
@@ -240,7 +226,6 @@
       .subtitle{max-width:315px;margin:12px auto 20px;font:italic 700 15px/1.36 Georgia,serif;color:#f0eee8;text-shadow:0 1px 0 #000}
       .eyebrow{font-size:11px;letter-spacing:.22em}
     }
-
     /* v228 finishing touches */
     .global-film-grain{position:fixed;inset:0;z-index:500;pointer-events:none;opacity:.045;mix-blend-mode:screen;background-image:radial-gradient(#fff 0 .55px,transparent .8px),radial-gradient(#000 0 .65px,transparent .9px);background-size:7px 7px,9px 9px;background-position:0 0,4px 5px;animation:grain .18s steps(2) infinite}
     .brand-logo,.show-title,#statusBar{animation:headerProjectorFlicker 8.5s steps(1,end) infinite}@keyframes headerProjectorFlicker{0%,92%,94%,96%,100%{opacity:1}93%{opacity:.82}95%{opacity:.94}}
@@ -250,7 +235,6 @@
     .scan-crown-watermark{pointer-events:auto!important;cursor:pointer}
     .overlay.ready .panel{animation:introPanelSettle .8s ease-out both}
     @keyframes introPanelSettle{0%{transform:translateY(8px) scale(.985);opacity:.88}100%{transform:translateY(0) scale(1);opacity:1}}
-
     /* v235 true vintage iris reveal: the title stays visible inside the hole */
     @property --iris-radius{syntax:"<length>";inherits:false;initial-value:18px}
     #irisWipe{
@@ -290,11 +274,16 @@
     @keyframes irisFilmFlicker{0%,100%{opacity:.15}35%{opacity:.24}50%{opacity:.30}75%{opacity:.19}}
     @media(max-width:430px){#irisWipe{background:radial-gradient(circle at center,rgba(255,255,255,.03) 0 16%,transparent 40%),repeating-radial-gradient(circle at center,#070707 0 10vmin,#2c2c2c 10.2vmin 18vmin,#0a0a0a 18.2vmin 26vmin)}}
 
-
-    /* v239 selective rubber-hose motion */
-    .show-title span{transform-origin:50% 80%;animation:rubberTitleIdle 6.4s ease-in-out infinite}
-    .show-title span:nth-child(2){animation-delay:.18s}.show-title span:nth-child(3){animation-delay:.34s}.show-title span:nth-child(4){animation-delay:.5s}
-    @keyframes rubberTitleIdle{0%,68%,100%{transform:translateY(0) rotate(0deg) scale(1)}72%{transform:translateY(-2px) rotate(-.7deg) scale(1.015,.985)}76%{transform:translateY(1px) rotate(.6deg) scale(.992,1.012)}80%{transform:translateY(-1px) rotate(-.3deg) scale(1.006,.995)}84%{transform:translateY(0) rotate(0deg) scale(1)}}
+    /* v240 selective rubber-hose motion */
+    .show-title span{transform-origin:50% 80%;animation:rubberTitleIdle 5.5s ease-in-out infinite}
+    .show-title span:nth-child(2){animation-delay:.14s}.show-title span:nth-child(3){animation-delay:.28s}.show-title span:nth-child(4){animation-delay:.42s}
+    @keyframes rubberTitleIdle{0%,66%,100%{transform:translateY(0) rotate(0deg) scale(1)}70%{transform:translateY(2px) rotate(-1deg) scale(1.08,.90)}74%{transform:translateY(-4px) rotate(.9deg) scale(.94,1.11)}78%{transform:translateY(1px) rotate(-.45deg) scale(1.035,.97)}82%{transform:translateY(-1px) rotate(.2deg) scale(.99,1.025)}86%{transform:translateY(0) rotate(0deg) scale(1)}}
+    .projector-window .brand-logo{transform-origin:center;animation:headerProjectorFlicker 8.5s steps(1,end) infinite,introLogoRubber 7.2s ease-in-out infinite}
+    @keyframes introLogoRubber{0%,72%,100%{transform:translateY(0) rotate(0) scale(1)}76%{transform:translateY(2px) rotate(-1deg) scale(1.045,.95)}80%{transform:translateY(-3px) rotate(1deg) scale(.97,1.055)}84%{transform:translateY(0) rotate(-.25deg) scale(1.012,.99)}88%{transform:translateY(0) rotate(0) scale(1)}}
+    .flourish span{display:inline-block;transform-origin:center;animation:flourishHop 6.4s ease-in-out infinite}
+    @keyframes flourishHop{0%,74%,100%{transform:translateY(0) rotate(0) scale(1)}78%{transform:translateY(-4px) rotate(-12deg) scale(.88,1.14)}82%{transform:translateY(1px) rotate(8deg) scale(1.12,.9)}86%{transform:translateY(0) rotate(0) scale(1)}}
+    #startButton:not(:disabled){transform-origin:center;animation:startButtonIdle 7s ease-in-out infinite}
+    @keyframes startButtonIdle{0%,76%,100%{transform:translateY(0) scale(1)}80%{transform:translateY(2px) scale(1.035,.95)}84%{transform:translateY(-2px) scale(.98,1.04)}88%{transform:translateY(0) scale(1)}}
     #startButton.rubberTap{animation:rubberButtonTap .34s cubic-bezier(.2,.9,.25,1) both}
     @keyframes rubberButtonTap{0%{transform:scale(1,1)}28%{transform:scale(.91,1.12)}55%{transform:scale(1.09,.91)}76%{transform:scale(.98,1.04)}100%{transform:scale(1,1)}}
     #unlockBurst.show .unlock-small{animation:rubberRewardWord .62s cubic-bezier(.18,.9,.25,1.35) both}
@@ -302,12 +291,11 @@
     #unlockBurst.show .unlock-crown{animation:rubberCrownPop .78s cubic-bezier(.18,.9,.25,1.3) both}
     @keyframes rubberRewardWord{0%{transform:scale(.55,1.28);opacity:0}45%{transform:scale(1.15,.88);opacity:1}68%{transform:scale(.96,1.07)}100%{transform:scale(1)}}
     @keyframes rubberCrownPop{0%{transform:scale(.5) rotate(-12deg)}48%{transform:scale(1.18,.88) rotate(7deg)}70%{transform:scale(.94,1.08) rotate(-3deg)}100%{transform:scale(1) rotate(0)}}
-    @media (prefers-reduced-motion:reduce){.show-title span,#startButton.rubberTap,#unlockBurst.show .unlock-small,#unlockBurst.show .unlock-name,#unlockBurst.show .unlock-crown{animation:none!important}}
-
+    @media (prefers-reduced-motion:reduce){.show-title span,.projector-window .brand-logo,.flourish span,#startButton,#startButton.rubberTap,#unlockBurst.show .unlock-small,#unlockBurst.show .unlock-name,#unlockBurst.show .unlock-crown{animation:none!important}}
 </style>
 </head>
 <body>
-  
+
 <div id="app"><div id="irisWipe"><div id="irisHole"></div></div><div class="global-film-grain"></div>
   <div id="filmOverlay"></div>
   <div id="scanFrame" class="hidden"><img class="scan-crown-watermark" src="./assets/lowxxy-crown.png?v=239" alt=""><span class="frame-label">Line up the full design</span></div>
@@ -323,7 +311,6 @@
   </div></div>
   <div id="statusBar" class="hidden">Looking for a Lowxxy design...</div>
   <div id="shopBar" class="hidden"><div class="shop-copy"><span class="shop-title">More from Lowxxy</span><span class="shop-subtitle">See the latest designs.</span></div><button id="shopButton" class="shop-button">VISIT THE SHOP</button></div>
-
 
   <div id="cameraTools" class="hidden">
     <div class="tool-wrap collect">
@@ -343,7 +330,6 @@
     </div>
   </div>
   <div id="captureToast">PHOTO READY!</div><div id="unlockBurst"><div class="unlock-card"><img class="unlock-crown" src="./assets/lowxxy-crown.png?v=239" alt=""><div class="unlock-small">ANIMATION FOUND</div><div class="unlock-name" id="unlockName">LOWXXY</div></div></div><div id="crownRain"></div><div id="crownEasterToast"><span>STAND OUT.</span><span>STAY HUMBLE.</span></div>
-
   <a-scene
     mindar-image="imageTargetSrc: ./assets/targets.mind?v=239; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.00001; filterBeta: 0.0001; warmupTolerance: 15; missTolerance: 18;"
     embedded
@@ -351,7 +337,6 @@
     renderer="colorManagement: true; alpha: true; antialias: true; logarithmicDepthBuffer: true; preserveDrawingBuffer: true;"
     vr-mode-ui="enabled:false"
     device-orientation-permission-ui="enabled:false">
-
     <a-camera position="0 0 0" near="0.01" far="1000" look-controls="enabled:false"></a-camera>
 
     <a-assets timeout="90000">
@@ -360,35 +345,30 @@
       <a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=239"></a-asset-item>
       <a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=239"></a-asset-item>
     </a-assets>
-
     <!-- Target 0: Pop Art. Placed first in the scanner database so the dotted comic-book print gets priority over the similar regular Chainmail artwork. -->
     <a-entity id="target-pop-art" class="ar-target" data-name="POP ART" mindar-image-target="targetIndex: 0">
       <a-entity class="model-wrapper" visible="false" face-camera-upright="smoothing: 0.22" position="0 -0.08 0.07">
         <a-entity class="ar-model" gltf-model="#popArtAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1" position="0.18 -0.238 0" rotation="0 180 0" scale="3.4 3.4 3.4"></a-entity>
       </a-entity>
     </a-entity>
-
     <!-- Target 1: Grounded Gains. Enlarged aggressively and centered over its taller artwork. -->
     <a-entity id="target-grounded-gains" class="ar-target" data-name="GROUNDED GAINS" mindar-image-target="targetIndex: 1">
       <a-entity class="model-wrapper" visible="false" face-camera-upright="smoothing: 0.22" position="0 -0.12 0.08">
         <a-entity class="ar-model" gltf-model="#groundedGainsAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1" position="0 -0.28 0" rotation="0 180 0" scale="1.25 1.25 1.25"></a-entity>
       </a-entity>
     </a-entity>
-
     <!-- Target 2: Hang. Uses the same grouped Hang(7).glb with a major size reduction and centroid-based recentering. -->
     <a-entity id="target-hang" class="ar-target" data-name="HANG" mindar-image-target="targetIndex: 2">
       <a-entity class="model-wrapper" visible="false" face-camera-upright="smoothing: 0.22" position="0 -0.03 0.08">
         <a-entity class="ar-model" gltf-model="#hangAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1" position="0 -0.68 -0.013" rotation="0 180 0" scale="7 7 7"></a-entity>
       </a-entity>
     </a-entity>
-
     <!-- Target 3: Chainmail. Intentionally mapped to the Pop Art animation so both similar designs now trigger the Pop Art experience. -->
     <a-entity id="target-chainmail" class="ar-target" data-name="CHAINMAIL" mindar-image-target="targetIndex: 3">
       <a-entity class="model-wrapper" visible="false" face-camera-upright="smoothing: 0.22" position="0 -0.08 0.07">
         <a-entity class="ar-model" gltf-model="#popArtAsset" animation-mixer="clip:*; loop:repeat; repetitions:Infinity; timeScale:1" position="-0.193 -0.238 0" rotation="0 180 0" scale="3.4 3.4 3.4"></a-entity>
       </a-entity>
     </a-entity>
-
     <a-light type="ambient" intensity="2.2"></a-light>
     <a-light type="directional" intensity="2.2" position="1 2 3"></a-light>
   </a-scene>
@@ -410,9 +390,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const introCrownLogo = document.querySelector('.projector-window .brand-logo');
   const IRIS_OPEN_MS = 3100;
   const IRIS_CLOSE_MS = 2250;
-
   function filmTransitionTo(url,direction='right'){ lowxxyFilmNavigate(url,direction); }
-
   const positionIrisOnCrown = () => {
     if (!irisWipe || !introCrownLogo) return;
     const r = introCrownLogo.getBoundingClientRect();
@@ -433,7 +411,7 @@ window.addEventListener('DOMContentLoaded', () => {
     irisWipe.style.animation = 'none'; void irisWipe.offsetWidth; irisWipe.style.animation = '';
     setTimeout(resolve, IRIS_CLOSE_MS + 80);
   });
-    
+
   const shopBar = document.querySelector('#shopBar');
   const shopButton = document.querySelector('#shopButton');
   const errorText = document.querySelector('#errorText');
@@ -448,7 +426,6 @@ window.addEventListener('DOMContentLoaded', () => {
   const crownEasterToast = document.querySelector('#crownEasterToast');
   const crownRain = document.querySelector('#crownRain');
   const scanCrown = document.querySelector('.scan-crown-watermark');
-
   let crownRainHideTimer = null;
   let crownRainClearTimer = null;
   const playCrownRain = (mode='big') => {
@@ -477,7 +454,6 @@ window.addEventListener('DOMContentLoaded', () => {
     crownRainHideTimer = setTimeout(() => crownRain.classList.remove('show'), hideAt);
     crownRainClearTimer = setTimeout(() => { crownRain.innerHTML = ''; crownRain.className=''; }, hideAt + 950);
   };
-
   let arSystem = null;
   let deferredInstallPrompt = null;
   let loadedModels = 0;
@@ -486,13 +462,11 @@ window.addEventListener('DOMContentLoaded', () => {
   const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
   const isAndroid = /android/i.test(navigator.userAgent);
   if (isStandalone) installButton.classList.add('hidden');
-
   window.addEventListener('beforeinstallprompt', event => {
     event.preventDefault();
     deferredInstallPrompt = event;
     installButton.classList.remove('hidden');
   });
-
   installButton.addEventListener('click', async () => {
     installHelp.style.display = 'block';
     if (deferredInstallPrompt) {
@@ -507,14 +481,12 @@ window.addEventListener('DOMContentLoaded', () => {
       ? 'Use Chrome’s three-dot menu and choose Install app or Add to Home screen.'
       : 'Use your browser’s install option.';
   });
-
   shopButton.addEventListener('click', () => { filmTransitionTo('https://lowxxy.myshopify.com'); });
   scene.addEventListener('loaded', () => { arSystem = scene.systems['mindar-image-system']; });
 
   document.querySelectorAll('.ar-model').forEach(model => {
     model.addEventListener('model-loaded', () => {
       loadedModels += 1;
-
       // Animated skinned meshes can otherwise disappear when a moving limb
       // leaves the mesh's original static bounding box. Keep every model part
       // renderable for the full animation and show both sides of thin geometry.
@@ -531,12 +503,10 @@ window.addEventListener('DOMContentLoaded', () => {
           }
         });
       }
-
       const clips = modelObject?.animations || [];
       model._animationDuration = clips.length
         ? Math.max(...clips.map(clip => clip.duration || 0))
         : 5;
-
       console.log('Loaded AR model', loadedModels, 'of 4', 'duration:', model._animationDuration);
     });
     model.addEventListener('model-error', event => {
@@ -545,7 +515,6 @@ window.addEventListener('DOMContentLoaded', () => {
       errorText.textContent = 'One of the 3D animations could not load. Confirm all four GLB files are inside the assets folder.';
     });
   });
-
   const restartAnimation = model => {
     const mixer = model.components['animation-mixer'];
     if (mixer && mixer.mixer) {
@@ -555,7 +524,6 @@ window.addEventListener('DOMContentLoaded', () => {
       requestAnimationFrame(() => model.setAttribute('animation-mixer', 'clip:*; loop:repeat; repetitions:Infinity; timeScale:1'));
     }
   };
-
   // Smooth-release behavior:
   // - models stay upright and camera-facing while anchored to the design
   // - brief tracking wobble is smoothed by MindAR's filter
@@ -592,14 +560,12 @@ window.addEventListener('DOMContentLoaded', () => {
   };
   let crownTapCount=0,crownTapTimer=null;
   scanCrown?.addEventListener('click',()=>{LowxxySound.click();crownTapCount++;clearTimeout(crownTapTimer);crownTapTimer=setTimeout(()=>crownTapCount=0,1600);if(crownTapCount>=5){crownTapCount=0;crownEasterToast.classList.add('show');playCrownRain('big');LowxxySound.chime();setTimeout(()=>crownEasterToast.classList.remove('show'),2500);}});
-
   targets.forEach(target => {
     const wrapper = target.querySelector('.model-wrapper');
     const model = target.querySelector('.ar-model');
     const name = target.dataset.name;
     let finishTimer = null;
     let isActive = false;
-
     const releaseTarget = () => {
       if (finishTimer) clearTimeout(finishTimer);
       finishTimer = null;
@@ -610,7 +576,6 @@ window.addEventListener('DOMContentLoaded', () => {
       target._stickyActive = false;
       statusBar.textContent = 'Looking for another Lowxxy design...';
     };
-
     target.addEventListener('targetFound', () => {
       if (finishTimer) {
         clearTimeout(finishTimer);
@@ -626,7 +591,6 @@ window.addEventListener('DOMContentLoaded', () => {
           other.querySelector('.model-wrapper').setAttribute('visible', false);
         }
       });
-
       if (!isActive) {
         restartAnimation(model);
         wrapper.removeAttribute('animation__popout');
@@ -638,7 +602,6 @@ window.addEventListener('DOMContentLoaded', () => {
       } else {
         wrapper.setAttribute('visible', true);
       }
-
       isActive = true;
       target._stickyActive = true;
       const unlockResult = unlockScannedShirt(name);
@@ -648,7 +611,6 @@ window.addEventListener('DOMContentLoaded', () => {
       void statusBar.offsetWidth;
       statusBar.classList.add('scan-pop');
     });
-
     target.addEventListener('targetLost', () => {
       if (!isActive) return;
       if (finishTimer) clearTimeout(finishTimer);
@@ -657,7 +619,6 @@ window.addEventListener('DOMContentLoaded', () => {
       const mixerComponent = model.components['animation-mixer'];
       const mixerTime = mixerComponent?.mixer?.time || 0;
       let remainingSeconds = durationSeconds - (mixerTime % durationSeconds);
-
       // Avoid an almost-instant cutoff when tracking is lost right at the end.
       if (remainingSeconds < 0.65) remainingSeconds += durationSeconds;
 
@@ -666,7 +627,6 @@ window.addEventListener('DOMContentLoaded', () => {
       target._finishTimer = finishTimer;
     });
   });
-
   startButton.addEventListener('click', async () => {
     sessionStorage.setItem('lowxxy-session-started','1');
     startButton.classList.remove('rubberTap'); void startButton.offsetWidth; startButton.classList.add('rubberTap');
@@ -708,10 +668,8 @@ window.addEventListener('DOMContentLoaded', () => {
       startButton.textContent = 'RUN IT BACK';
     }
   });
-
   const shouldResumeAR = sessionStorage.getItem('lowxxy-resume-ar') === '1' || sessionStorage.getItem('lowxxy-session-started') === '1';
   if (!shouldResumeAR) requestAnimationFrame(() => requestAnimationFrame(playIrisOpen));
-
   // Once START THE SHOW has been used in this app session, any return to index
   // goes straight back to the scanner. The title/iris screen only returns after
   // the app/session is reopened.
@@ -736,7 +694,6 @@ window.addEventListener('DOMContentLoaded', () => {
     if (scene.hasLoaded) setTimeout(resumeScanner, 180);
     else scene.addEventListener('loaded', () => setTimeout(resumeScanner, 180), { once:true });
   }
-
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', async () => {
       try {
@@ -745,21 +702,18 @@ window.addEventListener('DOMContentLoaded', () => {
       } catch (err) { console.warn('SW registration failed', err); }
     });
   }
-
   collectionButton.addEventListener('click', () => {
     sessionStorage.setItem('lowxxy-return-url', location.href);
     sessionStorage.setItem('lowxxy-session-started','1');
     sessionStorage.setItem('lowxxy-resume-ar','1');
     filmTransitionTo('./collection.html?v=239','left');
   });
-
   openSelfie.addEventListener('click', () => {
     sessionStorage.setItem('lowxxy-return-url', location.href);
     sessionStorage.setItem('lowxxy-session-started','1');
     sessionStorage.setItem('lowxxy-resume-ar','1');
     filmTransitionTo('./selfie.html?v=239','right');
   });
-
   function drawCover(ctx, source, width, height, mirror = false) {
     const sw = source.videoWidth || source.width;
     const sh = source.videoHeight || source.height;
@@ -778,13 +732,11 @@ window.addEventListener('DOMContentLoaded', () => {
     ctx.restore();
     return true;
   }
-
   function showCaptureToast(message) {
     captureToast.textContent = message;
     captureToast.classList.add('show');
     setTimeout(() => captureToast.classList.remove('show'), 1300);
   }
-
   async function shareOrDownload(blob, filename) {
     const file = new File([blob], filename, { type: 'image/png' });
     if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
@@ -798,7 +750,6 @@ window.addEventListener('DOMContentLoaded', () => {
     link.click();
     setTimeout(() => URL.revokeObjectURL(url), 5000);
   }
-
   takeScannerPhoto.addEventListener('click', async () => {
     LowxxySound.shutter();
     takeScannerPhoto.disabled = true;
@@ -832,10 +783,8 @@ window.addEventListener('DOMContentLoaded', () => {
       takeScannerPhoto.disabled = false;
     }
   });
-
 });
 </script>
-
 
 <script>
 (function(){
@@ -862,6 +811,5 @@ window.addEventListener('DOMContentLoaded', () => {
   };
 })();
 </script>
-
 </body>
 </html>
