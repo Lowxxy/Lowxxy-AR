@@ -110,7 +110,7 @@
     #collectionButton:active{transform:translateY(3px) rotate(-2deg) scale(1.10,.86)!important;box-shadow:0 1px 0 #8e6b24,0 3px 0 #000!important}#takeScannerPhoto:active{transform:translateY(3px) scale(1.12,.82)!important;box-shadow:0 1px 0 #444,0 3px 0 #000!important}#openSelfie:active{transform:translateY(3px) rotate(3deg) scale(.90,1.10)!important;box-shadow:0 1px 0 #444,0 3px 0 #000!important}
 
 
-    /* NEW v255: exaggerated punched-TV tap reaction */
+    /* NEW v256: punched-TV reaction + mobile-safe flicker */
     .projector-window,.projector-window *{color-scheme:only light!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;forced-color-adjust:none!important}
     .projector-window{position:relative;isolation:isolate;width:100%;height:260px;margin:0 auto 4px;padding:0;background:transparent!important;border:0!important;box-shadow:none!important;overflow:visible!important;display:flex;justify-content:center}
     .projector-window::before,.projector-window::after{display:none!important}
@@ -597,6 +597,63 @@
       100%{filter:none}
     }
 
+
+    /* v256: mobile-safe tap flicker overlay
+       Uses its own overlay so Samsung phone CSS cannot cancel the flicker. */
+    .tv-tap-flash{
+      position:absolute;
+      inset:0;
+      z-index:8;
+      pointer-events:none;
+      opacity:0;
+      background:#fff;
+      mix-blend-mode:screen;
+    }
+    .retro-tv.tap-flicker .tv-tap-flash{
+      animation:tvTapFlash256 .68s steps(1,end) 1!important;
+    }
+    .retro-tv.tap-flicker .tv-static-layer{
+      animation:tvTapStaticJolt256 .68s steps(2,end) 1!important;
+    }
+    .retro-tv.tap-flicker .screen-brand{
+      animation:tvTapBrandBlink256 .68s steps(1,end) 1!important;
+    }
+
+    @keyframes tvTapFlash256{
+      0%{opacity:0;background:#fff}
+      8%{opacity:.82;background:#fff}
+      16%{opacity:.05;background:#000}
+      24%{opacity:.68;background:#fff}
+      34%{opacity:.34;background:#000}
+      44%{opacity:.90;background:#fff}
+      55%{opacity:.08;background:#000}
+      67%{opacity:.58;background:#fff}
+      78%{opacity:.18;background:#000}
+      88%{opacity:.34;background:#fff}
+      100%{opacity:0;background:#fff}
+    }
+    @keyframes tvTapStaticJolt256{
+      0%{transform:translate(0,0) scale(1)}
+      16%{transform:translate(-10px,5px) scale(1.10)}
+      32%{transform:translate(8px,-8px) scale(1.04)}
+      48%{transform:translate(-6px,9px) scale(1.12)}
+      64%{transform:translate(9px,-3px) scale(1.06)}
+      82%{transform:translate(-3px,4px) scale(1.03)}
+      100%{transform:translate(0,0) scale(1)}
+    }
+    @keyframes tvTapBrandBlink256{
+      0%{visibility:visible}
+      10%{visibility:hidden}
+      18%{visibility:visible}
+      31%{visibility:hidden}
+      39%{visibility:visible}
+      52%{visibility:hidden}
+      61%{visibility:visible}
+      75%{visibility:hidden}
+      82%{visibility:visible}
+      100%{visibility:visible}
+    }
+
     @media(prefers-reduced-motion:reduce){*{animation:none!important}}
   </style>
 </head>
@@ -613,7 +670,7 @@
         <div class="tv-shadow"></div>
         <div class="retro-tv" role="button" tabindex="0" aria-label="Tap the TV">
           <span class="tv-antenna antenna-left"></span><span class="tv-antenna antenna-right"></span>
-          <div class="tv-screen"><div class="tv-static-layer"></div><div class="screen-brand"><img class="brand-logo screen-brand-logo" src="./icons/lowxxy-logo-white.png" alt="Lowxxy" /></div></div>
+          <div class="tv-screen"><div class="tv-static-layer"></div><div class="screen-brand"><img class="brand-logo screen-brand-logo" src="./icons/lowxxy-logo-white.png" alt="Lowxxy" /></div><div class="tv-tap-flash"></div></div>
           <div class="tv-side"><span class="tv-knob"></span><span class="tv-knob small"></span><span class="tv-speaker"></span></div>
           <span class="tv-foot left"></span><span class="tv-foot right"></span>
         </div>
