@@ -90,8 +90,8 @@
   .film-frame::before{content:"";position:absolute;inset:0;background:linear-gradient(108deg,transparent 0 37%,rgba(255,245,215,.13) 40%,transparent 45%),radial-gradient(circle at 18% 22%,rgba(255,255,255,.12),transparent 10%),radial-gradient(circle at 76% 63%,rgba(255,255,255,.08),transparent 12%);mix-blend-mode:screen}
   .film-frame::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 7px,rgba(255,255,255,.018) 8px,transparent 9px);opacity:.8}
   .film-scratches{position:absolute;inset:0;z-index:5;pointer-events:none;opacity:.22;background:linear-gradient(90deg,transparent 13%,#fff 13.2%,transparent 13.35% 46%,#fff 46.12%,transparent 46.27% 78%,#fff 78.1%,transparent 78.22%);animation:filmFlicker .14s steps(2,end) infinite}
-  @keyframes filmTapeRight{0%{transform:translateY(-50%) translateX(0) rotate(-7deg)}50%{transform:translateY(-50%) translateX(180vw) rotate(-5deg)}100%{transform:translateY(-50%) translateX(500vw) rotate(-3deg)}}
-  @keyframes filmTapeLeft{0%{transform:translateY(-50%) translateX(0) rotate(7deg)}50%{transform:translateY(-50%) translateX(-180vw) rotate(5deg)}100%{transform:translateY(-50%) translateX(-500vw) rotate(3deg)}}
+  @keyframes filmTapeRight{0%{transform:translateY(-50%) translateX(0) rotate(0deg)}50%{transform:translateY(-50%) translateX(180vw) rotate(0deg)}100%{transform:translateY(-50%) translateX(500vw) rotate(0deg)}}
+  @keyframes filmTapeLeft{0%{transform:translateY(-50%) translateX(0) rotate(0deg)}50%{transform:translateY(-50%) translateX(-180vw) rotate(0deg)}100%{transform:translateY(-50%) translateX(-500vw) rotate(0deg)}}
   @keyframes filmFramesRoll{from{transform:translateX(0)}to{transform:translateX(-34vw)}}
   @keyframes filmFlicker{0%,100%{opacity:.18}50%{opacity:.34}}
   @media(max-width:430px){.film-sheet{height:42vh;min-height:260px;grid-template-rows:48px 1fr 48px}.film-frame{width:72vw;min-width:250px}.film-track{gap:16px}.film-holes::before{inset:8px 0;background:repeating-linear-gradient(90deg,transparent 0 13px,#e7dfc8 13px 34px,transparent 34px 55px)}@keyframes filmFramesRoll{from{transform:translateX(0)}to{transform:translateX(-76vw)}}}
