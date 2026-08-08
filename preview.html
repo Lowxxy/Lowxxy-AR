@@ -29,11 +29,13 @@
     .film-crown{position:absolute;left:50%;top:50%;width:46%;height:auto;transform:translate(-50%,-50%) rotate(0deg);opacity:.58;filter:sepia(1) saturate(.65) brightness(1.35);z-index:3;pointer-events:none;mix-blend-mode:screen}
     .film-frame:nth-child(even) .film-crown{transform:translate(-50%,-50%) rotate(0deg);opacity:.58}
 body::after{content:"";position:fixed;inset:0;z-index:9;pointer-events:none;opacity:.035;mix-blend-mode:screen;background-image:radial-gradient(#fff 0 .5px,transparent .8px),radial-gradient(#000 0 .7px,transparent 1px);background-size:7px 7px,10px 10px;animation:previewGrain .18s steps(2) infinite}@keyframes previewGrain{50%{transform:translate(1px,-1px)}}.logo img,.gestureHint{animation:previewProjector 9s steps(1,end) infinite}@keyframes previewProjector{0%,91%,93%,95%,100%{opacity:1}92%{opacity:.84}94%{opacity:.96}}
-    /* v239 selective rubber-hose motion */
+    /* v240 selective rubber-hose motion */
     .bottomCard .title{animation:previewTitleRubber 6s ease-in-out infinite;transform-origin:center}
-    @keyframes previewTitleRubber{0%,72%,100%{transform:translateY(0) rotate(0) scale(1)}77%{transform:translateY(-2px) rotate(-1deg) scale(1.025,.975)}82%{transform:translateY(1px) rotate(.7deg) scale(.985,1.025)}87%{transform:translateY(0) rotate(0) scale(1)}}
+    @keyframes previewTitleRubber{0%,70%,100%{transform:translateY(0) rotate(0) scale(1)}74%{transform:translateY(2px) rotate(-1deg) scale(1.08,.90)}78%{transform:translateY(-3px) rotate(1deg) scale(.94,1.10)}82%{transform:translateY(1px) rotate(-.4deg) scale(1.025,.98)}86%{transform:translateY(0) rotate(0) scale(1)}}
+    .gestureHint{transform-origin:center;animation:previewProjector 9s steps(1,end) infinite,gestureRubberNudge 7.4s ease-in-out infinite}
+    @keyframes gestureRubberNudge{0%,72%,100%{transform:translateX(-50%) translateY(0) scale(1)}76%{transform:translateX(calc(-50% - 4px)) translateY(1px) scale(1.03,.97)}80%{transform:translateX(calc(-50% + 5px)) translateY(-1px) scale(.98,1.03)}84%{transform:translateX(calc(-50% - 2px)) translateY(0) scale(1.01,.99)}88%{transform:translateX(-50%) translateY(0) scale(1)}}
     .replay:active,.reset:active,.iconBtn:active{transform:scale(.9,1.1) translateY(2px)}
-    @media (prefers-reduced-motion:reduce){.bottomCard .title{animation:none!important}}
+    @media (prefers-reduced-motion:reduce){.bottomCard .title,.gestureHint{animation:none!important}}
 </style>
 </head>
 <body>
