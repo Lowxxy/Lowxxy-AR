@@ -1421,8 +1421,37 @@ window.addEventListener('DOMContentLoaded', () => {
     clearTimeout(captureToastTimer);
     captureToast.classList.remove('show');
   }
-  async function shareOrDownload(blob,filename){const file=new File([blob],filename,{type:'image/png'});if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file],title:'Lowxxy AR Photo'});return}catch(error){if(error.name==='AbortError')return}}const url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=filename;link.click();setTimeout(()=>URL.revokeObjectURL(url),5000)}
-  takeScannerPhoto.addEventListener('click',async()=>{LowxxySound.shutter();takeScannerPhoto.disabled=true;showCaptureToast('CAPTURING...',true);await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));try{const cameraVideo=[...document.querySelectorAll('video')].find(video=>video.readyState>=2&&video.videoWidth>0),arCanvas=scene.canvas||scene.renderer?.domElement||scene.querySelector('canvas');if(!cameraVideo||!arCanvas)throw new Error('Camera or AR canvas is not ready');const width=cameraVideo.videoWidth||1280,height=cameraVideo.videoHeight||720;if(scene.renderer)scene.renderer.render(scene.object3D,scene.camera);const output=document.createElement('canvas');output.width=width;output.height=height;const ctx=output.getContext('2d');drawCover(ctx,cameraVideo,width,height,false);ctx.drawImage(arCanvas,0,0,width,height);ctx.fillStyle='rgba(0,0,0,.72)';ctx.fillRect(0,height-Math.max(64,height*.08),width,Math.max(64,height*.08));ctx.fillStyle='#fff';ctx.textAlign='center';ctx.font=`900 ${Math.max(26,width*.035)}px Arial`;ctx.fillText('@LOWXXY.BRAND',width/2,height-Math.max(22,height*.027));const blob=await new Promise(resolve=>output.toBlob(resolve,'image/png',.96));if(!blob)throw new Error('Photo could not be created');showCaptureToast('PHOTO READY!');await shareOrDownload(blob,`lowxxy-ar-${Date.now()}.png`)}catch(error){console.error(error);showCaptureToast('PHOTO FAILED — TRY AGAIN')}finally{takeScannerPhoto.disabled=false}});
+  async function savePhotoEverywhere(blob,filename){
+    const isiOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+    const file=new File([blob],filename,{type:'image/png'});
+
+    // Android / Samsung / Pixel / desktop browsers: direct file download.
+    if(!isiOS){
+      const url=URL.createObjectURL(blob),link=document.createElement('a');
+      link.href=url;link.download=filename;link.style.display='none';
+      document.body.appendChild(link);link.click();link.remove();
+      setTimeout(()=>URL.revokeObjectURL(url),15000);
+      return 'download';
+    }
+
+    // iPhone/iPad browsers cannot silently write into Photos.
+    // The native share sheet is the supported path and includes "Save Image".
+    if(navigator.share && navigator.canShare?.({files:[file]})){
+      showCaptureToast('TAP “SAVE IMAGE” TO ADD TO PHOTOS');
+      await navigator.share({files:[file],title:'Lowxxy Photo'}).catch(err=>{
+        if(err?.name!=='AbortError')throw err;
+      });
+      return 'share';
+    }
+
+    // Older iOS fallback: open the PNG itself so it can be saved from the browser.
+    const url=URL.createObjectURL(blob);
+    const win=window.open(url,'_blank');
+    if(!win)location.href=url;
+    setTimeout(()=>URL.revokeObjectURL(url),60000);
+    return 'open';
+  }
+  takeScannerPhoto.addEventListener('click',async()=>{LowxxySound.shutter();takeScannerPhoto.disabled=true;showCaptureToast('CAPTURING...',true);await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));try{const cameraVideo=[...document.querySelectorAll('video')].find(video=>video.readyState>=2&&video.videoWidth>0),arCanvas=scene.canvas||scene.renderer?.domElement||scene.querySelector('canvas');if(!cameraVideo||!arCanvas)throw new Error('Camera or AR canvas is not ready');const width=cameraVideo.videoWidth||1280,height=cameraVideo.videoHeight||720;if(scene.renderer)scene.renderer.render(scene.object3D,scene.camera);const output=document.createElement('canvas');output.width=width;output.height=height;const ctx=output.getContext('2d');drawCover(ctx,cameraVideo,width,height,false);ctx.drawImage(arCanvas,0,0,width,height);ctx.fillStyle='rgba(0,0,0,.72)';ctx.fillRect(0,height-Math.max(64,height*.08),width,Math.max(64,height*.08));ctx.fillStyle='#fff';ctx.textAlign='center';ctx.font=`900 ${Math.max(26,width*.035)}px Arial`;ctx.fillText('@LOWXXY.BRAND',width/2,height-Math.max(22,height*.027));const blob=await new Promise(resolve=>output.toBlob(resolve,'image/png',.96));if(!blob)throw new Error('Photo could not be created');const saveMode=await savePhotoEverywhere(blob,`lowxxy-ar-${Date.now()}.png`);if(saveMode==='download')showCaptureToast('PHOTO SAVED!')}catch(error){console.error(error);showCaptureToast('PHOTO FAILED — TRY AGAIN')}finally{takeScannerPhoto.disabled=false}});
 });
 </script>
 <script>
