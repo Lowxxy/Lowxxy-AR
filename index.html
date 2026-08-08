@@ -1092,7 +1092,10 @@ window.addEventListener('DOMContentLoaded', () => {
   };
   const playIrisClose=()=>{
     return runIrisAnimation('closing',IRIS_CLOSE_MS,null,()=>{
-      try{LowxxySound.irisClose()}catch(e){}
+      /* Let the circle visibly start shrinking before the OOO comes in. */
+      setTimeout(()=>{
+        try{LowxxySound.irisClose()}catch(e){}
+      },420);
     });
   };
   const shopBar=document.querySelector('#shopBar'),shopButton=document.querySelector('#shopButton'),errorText=document.querySelector('#errorText'),targets=[...document.querySelectorAll('.ar-target')],cameraTools=document.querySelector('#cameraTools'),collectionButton=document.querySelector('#collectionButton'),openSelfie=document.querySelector('#openSelfie'),takeScannerPhoto=document.querySelector('#takeScannerPhoto'),captureToast=document.querySelector('#captureToast'),unlockBurst=document.querySelector('#unlockBurst'),unlockName=document.querySelector('#unlockName'),crownEasterToast=document.querySelector('#crownEasterToast'),crownRain=document.querySelector('#crownRain'),scanCrown=document.querySelector('.scan-crown-watermark');
