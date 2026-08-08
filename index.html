@@ -98,8 +98,8 @@
     .overlay.ready .panel{animation:introPanelSettle .8s ease-out both}@keyframes introPanelSettle{0%{transform:translateY(8px) scale(.985);opacity:.88}100%{transform:translateY(0) scale(1);opacity:1}}
 
     @property --iris-radius{syntax:"<length>";inherits:false;initial-value:18px}
-    #irisWipe{--iris-x:50%;--iris-y:50%;--iris-radius:18px;position:fixed;inset:0;z-index:12000;pointer-events:none;overflow:hidden;visibility:hidden;background:radial-gradient(circle at center,rgba(255,255,255,.035) 0 16%,transparent 40%),repeating-radial-gradient(circle at center,#070707 0 8.6vmin,#2a2a2a 8.8vmin 15.8vmin,#0a0a0a 16vmin 23vmin);-webkit-mask:radial-gradient(circle var(--iris-radius) at var(--iris-x) var(--iris-y),transparent 0 calc(var(--iris-radius) - 1px),#000 var(--iris-radius));mask:radial-gradient(circle var(--iris-radius) at var(--iris-x) var(--iris-y),transparent 0 calc(var(--iris-radius) - 1px),#000 var(--iris-radius));will-change:--iris-radius}#irisWipe.active{visibility:visible}#irisHole{display:none}#irisWipe.opening{animation:lowxxyIrisOpen 3.1s cubic-bezier(.38,.02,.18,1) forwards}#irisWipe.closing{animation:lowxxyIrisClose 2.25s cubic-bezier(.52,.02,.82,.42) forwards}#irisWipe::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at center,transparent 0 46%,rgba(0,0,0,.14) 65%,rgba(0,0,0,.46) 100%);opacity:.9}#irisWipe::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.20;mix-blend-mode:screen;background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.04) 4px,transparent 5px);animation:irisFilmFlicker .13s steps(2,end) infinite}
-    @keyframes lowxxyIrisOpen{0%{--iris-radius:14px}10%{--iris-radius:24px}22%{--iris-radius:48px}38%{--iris-radius:110px}58%{--iris-radius:34vmax}78%{--iris-radius:72vmax}100%{--iris-radius:150vmax}}@keyframes lowxxyIrisClose{0%{--iris-radius:150vmax}12%{--iris-radius:112vmax}34%{--iris-radius:64vmax}56%{--iris-radius:30vmax}75%{--iris-radius:120px}89%{--iris-radius:48px}100%{--iris-radius:14px}}@keyframes irisFilmFlicker{0%,100%{opacity:.15}35%{opacity:.24}50%{opacity:.30}75%{opacity:.19}}
+    #irisWipe{--iris-x:50%;--iris-y:50%;--iris-radius:18px;position:fixed;inset:0;z-index:12000;pointer-events:none;overflow:hidden;visibility:hidden;background:radial-gradient(circle at center,rgba(255,255,255,.035) 0 16%,transparent 40%),repeating-radial-gradient(circle at center,#070707 0 8.6vmin,#2a2a2a 8.8vmin 15.8vmin,#0a0a0a 16vmin 23vmin);-webkit-mask:radial-gradient(circle var(--iris-radius) at var(--iris-x) var(--iris-y),transparent 0 calc(var(--iris-radius) - 1px),#000 var(--iris-radius));mask:radial-gradient(circle var(--iris-radius) at var(--iris-x) var(--iris-y),transparent 0 calc(var(--iris-radius) - 1px),#000 var(--iris-radius));will-change:--iris-radius}#irisWipe.active{visibility:visible}#irisHole{display:none}#irisWipe.opening{animation:lowxxyIrisOpen 3.1s cubic-bezier(.22,.61,.36,1) forwards}#irisWipe.closing{animation:lowxxyIrisClose 2.25s cubic-bezier(.42,0,.58,1) forwards}#irisWipe::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at center,transparent 0 46%,rgba(0,0,0,.14) 65%,rgba(0,0,0,.46) 100%);opacity:.9}#irisWipe::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.20;mix-blend-mode:screen;background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.04) 4px,transparent 5px);animation:irisFilmFlicker .13s steps(2,end) infinite}
+    @keyframes lowxxyIrisOpen{0%{--iris-radius:14px}100%{--iris-radius:150vmax}}@keyframes lowxxyIrisClose{0%{--iris-radius:150vmax}100%{--iris-radius:14px}}@keyframes irisFilmFlicker{0%,100%{opacity:.15}35%{opacity:.24}50%{opacity:.30}75%{opacity:.19}}
 
     /* existing rubber-hose UI motion */
     .show-title{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;font-family:"Cooper Black","URW Bookman","Bookman Old Style",Georgia,serif;font-weight:900;font-size:clamp(31px,7.2vw,48px);line-height:.79;letter-spacing:.01em;transform:rotate(-1deg)}.show-title span{display:block;white-space:nowrap;transform-origin:50% 80%;animation:rubberTitleIdle 5.5s ease-in-out infinite}.show-title span:nth-child(2){animation-delay:.14s}.show-title span:nth-child(3){animation-delay:.28s}.show-title span:nth-child(4){animation-delay:.42s}@keyframes rubberTitleIdle{0%,66%,100%{transform:translateY(0) rotate(0deg) scale(1)}70%{transform:translateY(2px) rotate(-1deg) scale(1.08,.90)}74%{transform:translateY(-4px) rotate(.9deg) scale(.94,1.11)}78%{transform:translateY(1px) rotate(-.45deg) scale(1.035,.97)}82%{transform:translateY(-1px) rotate(.2deg) scale(.99,1.025)}86%{transform:translateY(0) rotate(0deg) scale(1)}}
@@ -778,96 +778,77 @@ function buttonTap(){
 }
 function irisClose(){
   const c=get();if(!c)return;
-  const t=c.currentTime;
+  const t=c.currentTime,dur=2.25;
 
-  /* Two voices + a soft wobble make the falling "OOOOOO" much more obvious. */
   const master=c.createGain();
   master.gain.setValueAtTime(.0001,t);
-  master.gain.exponentialRampToValueAtTime(.16,t+.05);
-  master.gain.setValueAtTime(.14,t+.80);
-  master.gain.exponentialRampToValueAtTime(.0001,t+2.05);
+  master.gain.exponentialRampToValueAtTime(.15,t+.06);
+  master.gain.setValueAtTime(.135,t+dur-.22);
+  master.gain.exponentialRampToValueAtTime(.0001,t+dur);
   master.connect(c.destination);
 
   const lp=c.createBiquadFilter();
   lp.type='lowpass';
-  lp.frequency.setValueAtTime(1600,t);
-  lp.frequency.exponentialRampToValueAtTime(750,t+1.95);
-  lp.Q.value=.7;
+  lp.frequency.setValueAtTime(1650,t);
+  lp.frequency.exponentialRampToValueAtTime(680,t+dur);
+  lp.Q.value=.65;
   lp.connect(master);
 
-  const o1=c.createOscillator();
-  o1.type='sine';
+  const o1=c.createOscillator(),o2=c.createOscillator();
+  o1.type='sine';o2.type='triangle';
   o1.frequency.setValueAtTime(470,t);
-  o1.frequency.exponentialRampToValueAtTime(74,t+1.95);
-
-  const o2=c.createOscillator();
-  o2.type='triangle';
+  o1.frequency.exponentialRampToValueAtTime(70,t+dur);
   o2.frequency.setValueAtTime(235,t);
-  o2.frequency.exponentialRampToValueAtTime(37,t+1.95);
-
-  const wobble=c.createOscillator();
-  const wobbleGain=c.createGain();
-  wobble.type='sine';
-  wobble.frequency.value=5.2;
-  wobbleGain.gain.value=9;
-  wobble.connect(wobbleGain);
-  wobbleGain.connect(o1.frequency);
+  o2.frequency.exponentialRampToValueAtTime(35,t+dur);
 
   const g1=c.createGain(),g2=c.createGain();
-  g1.gain.value=.78; g2.gain.value=.34;
+  g1.gain.value=.76;g2.gain.value=.31;
   o1.connect(g1).connect(lp);
   o2.connect(g2).connect(lp);
 
-  o1.start(t);o2.start(t);wobble.start(t);
-  o1.stop(t+2.1);o2.stop(t+2.1);wobble.stop(t+2.1);
+  const wobble=c.createOscillator(),wg=c.createGain();
+  wobble.type='sine';wobble.frequency.value=4.8;wg.gain.value=7;
+  wobble.connect(wg);wg.connect(o1.frequency);
 
-  noise(.55,.018,250,1200,.04);
+  o1.start(t);o2.start(t);wobble.start(t);
+  o1.stop(t+dur+.03);o2.stop(t+dur+.03);wobble.stop(t+dur+.03);
 }
 function irisOpen(){
   const c=get();if(!c)return;
-  const t=c.currentTime;
+  const t=c.currentTime,dur=3.10;
 
   const master=c.createGain();
   master.gain.setValueAtTime(.0001,t);
-  master.gain.exponentialRampToValueAtTime(.14,t+.06);
-  master.gain.setValueAtTime(.13,t+.95);
-  master.gain.exponentialRampToValueAtTime(.0001,t+2.18);
+  master.gain.exponentialRampToValueAtTime(.14,t+.07);
+  master.gain.setValueAtTime(.128,t+dur-.25);
+  master.gain.exponentialRampToValueAtTime(.0001,t+dur);
   master.connect(c.destination);
 
   const lp=c.createBiquadFilter();
   lp.type='lowpass';
-  lp.frequency.setValueAtTime(760,t);
-  lp.frequency.exponentialRampToValueAtTime(1700,t+2.05);
-  lp.Q.value=.7;
+  lp.frequency.setValueAtTime(680,t);
+  lp.frequency.exponentialRampToValueAtTime(1700,t+dur);
+  lp.Q.value=.65;
   lp.connect(master);
 
-  const o1=c.createOscillator();
-  o1.type='sine';
-  o1.frequency.setValueAtTime(74,t);
-  o1.frequency.exponentialRampToValueAtTime(470,t+2.05);
-
-  const o2=c.createOscillator();
-  o2.type='triangle';
-  o2.frequency.setValueAtTime(37,t);
-  o2.frequency.exponentialRampToValueAtTime(235,t+2.05);
-
-  const wobble=c.createOscillator();
-  const wobbleGain=c.createGain();
-  wobble.type='sine';
-  wobble.frequency.value=5.2;
-  wobbleGain.gain.value=7;
-  wobble.connect(wobbleGain);
-  wobbleGain.connect(o1.frequency);
+  const o1=c.createOscillator(),o2=c.createOscillator();
+  o1.type='sine';o2.type='triangle';
+  o1.frequency.setValueAtTime(70,t);
+  o1.frequency.exponentialRampToValueAtTime(470,t+dur);
+  o2.frequency.setValueAtTime(35,t);
+  o2.frequency.exponentialRampToValueAtTime(235,t+dur);
 
   const g1=c.createGain(),g2=c.createGain();
-  g1.gain.value=.76; g2.gain.value=.32;
+  g1.gain.value=.74;g2.gain.value=.30;
   o1.connect(g1).connect(lp);
   o2.connect(g2).connect(lp);
 
-  o1.start(t);o2.start(t);wobble.start(t);
-  o1.stop(t+2.22);o2.stop(t+2.22);wobble.stop(t+2.22);
+  const wobble=c.createOscillator(),wg=c.createGain();
+  wobble.type='sine';wobble.frequency.value=4.5;wg.gain.value=6;
+  wobble.connect(wg);wg.connect(o1.frequency);
 
-  noise(.50,.015,250,1200,.08);
+  o1.start(t);o2.start(t);wobble.start(t);
+  o1.stop(t+dur+.03);o2.stop(t+dur+.03);wobble.stop(t+dur+.03);
 }
 
 function channelChange(){
