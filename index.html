@@ -110,7 +110,7 @@
     #collectionButton:active{transform:translateY(3px) rotate(-2deg) scale(1.10,.86)!important;box-shadow:0 1px 0 #8e6b24,0 3px 0 #000!important}#takeScannerPhoto:active{transform:translateY(3px) scale(1.12,.82)!important;box-shadow:0 1px 0 #444,0 3px 0 #000!important}#openSelfie:active{transform:translateY(3px) rotate(3deg) scale(.90,1.10)!important;box-shadow:0 1px 0 #444,0 3px 0 #000!important}
 
 
-    /* NEW v257: v256 + reliable START THE SHOW button */
+    /* NEW v258: v257 + iris sweep sounds + button tap sounds */
     .projector-window,.projector-window *{color-scheme:only light!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;forced-color-adjust:none!important}
     .projector-window{position:relative;isolation:isolate;width:100%;height:260px;margin:0 auto 4px;padding:0;background:transparent!important;border:0!important;box-shadow:none!important;overflow:visible!important;display:flex;justify-content:center}
     .projector-window::before,.projector-window::after{display:none!important}
@@ -715,7 +715,46 @@
   </a-scene>
 </div>
 <script>
-window.LowxxySound=window.LowxxySound||(()=>{let ctx=null;const AC=window.AudioContext||window.webkitAudioContext;function get(){if(!AC)return null;if(!ctx)ctx=new AC();if(ctx.state==='suspended')ctx.resume().catch(()=>{});return ctx}function tone(freq=220,dur=.08,type='triangle',vol=.035,delay=0){const c=get();if(!c)return;const o=c.createOscillator(),g=c.createGain(),t=c.currentTime+delay;o.type=type;o.frequency.setValueAtTime(freq,t);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(vol,t+.008);g.gain.exponentialRampToValueAtTime(.0001,t+dur);o.connect(g).connect(c.destination);o.start(t);o.stop(t+dur+.03)}function noise(dur=.12,vol=.03,low=500,high=5000,delay=0){const c=get();if(!c)return;const len=Math.max(1,Math.floor(c.sampleRate*dur)),buf=c.createBuffer(1,len,c.sampleRate),data=buf.getChannelData(0);for(let i=0;i<len;i++)data[i]=(Math.random()*2-1)*(1-i/len*.35);const src=c.createBufferSource(),bp=c.createBiquadFilter(),g=c.createGain(),t=c.currentTime+delay;src.buffer=buf;bp.type='bandpass';bp.frequency.value=(low+high)/2;bp.Q.value=.55;g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(vol,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+dur);src.connect(bp).connect(g).connect(c.destination);src.start(t);src.stop(t+dur+.03)}function click(){noise(.055,.02,900,4200);tone(118,.055,'square',.025)}function shutter(){noise(.045,.055,700,6500);tone(105,.045,'square',.04);noise(.07,.04,500,4500,.06);tone(82,.065,'square',.028,.055)}function chime(){tone(523.25,.18,'triangle',.04);tone(659.25,.18,'triangle',.035,.09);tone(783.99,.25,'triangle',.04,.18);noise(.20,.008,1000,6000,.12)}function tape(){const c=get();if(!c)return;const dur=1.08,len=Math.floor(c.sampleRate*dur),buf=c.createBuffer(1,len,c.sampleRate),data=buf.getChannelData(0);for(let i=0;i<len;i++){const x=i/len;data[i]=(Math.random()*2-1)*(.55+.45*Math.sin(x*Math.PI));}const src=c.createBufferSource(),hp=c.createBiquadFilter(),lp=c.createBiquadFilter(),g=c.createGain(),t=c.currentTime;src.buffer=buf;hp.type='highpass';hp.frequency.value=380;lp.type='lowpass';lp.frequency.value=5200;g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(.055,t+.09);g.gain.setValueAtTime(.05,t+dur-.15);g.gain.exponentialRampToValueAtTime(.0001,t+dur);src.connect(hp).connect(lp).connect(g).connect(c.destination);src.start(t);src.stop(t+dur+.03);tone(76,dur,'sawtooth',.008)}return{click,shutter,chime,tape};})();
+window.LowxxySound=window.LowxxySound||(()=>{let ctx=null;const AC=window.AudioContext||window.webkitAudioContext;function get(){if(!AC)return null;if(!ctx)ctx=new AC();if(ctx.state==='suspended')ctx.resume().catch(()=>{});return ctx}function tone(freq=220,dur=.08,type='triangle',vol=.035,delay=0){const c=get();if(!c)return;const o=c.createOscillator(),g=c.createGain(),t=c.currentTime+delay;o.type=type;o.frequency.setValueAtTime(freq,t);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(vol,t+.008);g.gain.exponentialRampToValueAtTime(.0001,t+dur);o.connect(g).connect(c.destination);o.start(t);o.stop(t+dur+.03)}function noise(dur=.12,vol=.03,low=500,high=5000,delay=0){const c=get();if(!c)return;const len=Math.max(1,Math.floor(c.sampleRate*dur)),buf=c.createBuffer(1,len,c.sampleRate),data=buf.getChannelData(0);for(let i=0;i<len;i++)data[i]=(Math.random()*2-1)*(1-i/len*.35);const src=c.createBufferSource(),bp=c.createBiquadFilter(),g=c.createGain(),t=c.currentTime+delay;src.buffer=buf;bp.type='bandpass';bp.frequency.value=(low+high)/2;bp.Q.value=.55;g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(vol,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+dur);src.connect(bp).connect(g).connect(c.destination);src.start(t);src.stop(t+dur+.03)}function click(){noise(.055,.02,900,4200);tone(118,.055,'square',.025)}function shutter(){noise(.045,.055,700,6500);tone(105,.045,'square',.04);noise(.07,.04,500,4500,.06);tone(82,.065,'square',.028,.055)}function chime(){tone(523.25,.18,'triangle',.04);tone(659.25,.18,'triangle',.035,.09);tone(783.99,.25,'triangle',.04,.18);noise(.20,.008,1000,6000,.12)}function tape(){const c=get();if(!c)return;const dur=1.08,len=Math.floor(c.sampleRate*dur),buf=c.createBuffer(1,len,c.sampleRate),data=buf.getChannelData(0);for(let i=0;i<len;i++){const x=i/len;data[i]=(Math.random()*2-1)*(.55+.45*Math.sin(x*Math.PI));}const src=c.createBufferSource(),hp=c.createBiquadFilter(),lp=c.createBiquadFilter(),g=c.createGain(),t=c.currentTime;src.buffer=buf;hp.type='highpass';hp.frequency.value=380;lp.type='lowpass';lp.frequency.value=5200;g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(.055,t+.09);g.gain.setValueAtTime(.05,t+dur-.15);g.gain.exponentialRampToValueAtTime(.0001,t+dur);src.connect(hp).connect(lp).connect(g).connect(c.destination);src.start(t);src.stop(t+dur+.03);tone(76,dur,'sawtooth',.008)}
+function buttonTap(){
+  click();
+  tone(178,.045,'square',.024);
+  tone(94,.055,'triangle',.014,.012);
+}
+function irisClose(){
+  const c=get();if(!c)return;
+  const t=c.currentTime;
+  const o=c.createOscillator(),g=c.createGain(),lp=c.createBiquadFilter();
+  o.type='sine';
+  o.frequency.setValueAtTime(330,t);
+  o.frequency.exponentialRampToValueAtTime(72,t+1.35);
+  lp.type='lowpass';lp.frequency.value=1400;
+  g.gain.setValueAtTime(.0001,t);
+  g.gain.exponentialRampToValueAtTime(.055,t+.08);
+  g.gain.setValueAtTime(.045,t+.55);
+  g.gain.exponentialRampToValueAtTime(.0001,t+1.42);
+  o.connect(lp).connect(g).connect(c.destination);
+  o.start(t);o.stop(t+1.5);
+  noise(.34,.012,350,1900,.10);
+}
+function irisOpen(){
+  const c=get();if(!c)return;
+  const t=c.currentTime;
+  const o=c.createOscillator(),g=c.createGain(),lp=c.createBiquadFilter();
+  o.type='sine';
+  o.frequency.setValueAtTime(72,t);
+  o.frequency.exponentialRampToValueAtTime(330,t+1.55);
+  lp.type='lowpass';lp.frequency.value=1500;
+  g.gain.setValueAtTime(.0001,t);
+  g.gain.exponentialRampToValueAtTime(.048,t+.08);
+  g.gain.setValueAtTime(.042,t+.78);
+  g.gain.exponentialRampToValueAtTime(.0001,t+1.62);
+  o.connect(lp).connect(g).connect(c.destination);
+  o.start(t);o.stop(t+1.7);
+  noise(.34,.010,350,1900,.12);
+}
+return{click,buttonTap,shutter,chime,tape,irisClose,irisOpen};})();
+
 </script>
 <script>
 window.addEventListener('DOMContentLoaded', () => {
@@ -723,8 +762,8 @@ window.addEventListener('DOMContentLoaded', () => {
   const IRIS_OPEN_MS=3100,IRIS_CLOSE_MS=2250;
   function filmTransitionTo(url,direction='right'){lowxxyFilmNavigate(url,direction)}
   const positionIrisOnCrown=()=>{if(!irisWipe||!introCrownLogo)return;const r=introCrownLogo.getBoundingClientRect();irisWipe.style.setProperty('--iris-x',`${r.left+r.width*.5}px`);irisWipe.style.setProperty('--iris-y',`${r.top+r.height*.5}px`)};
-  const playIrisOpen=()=>{if(!irisWipe)return;positionIrisOnCrown();irisWipe.className='active opening';irisWipe.style.animation='none';void irisWipe.offsetWidth;irisWipe.style.animation='';setTimeout(()=>{irisWipe.className='';startOverlay.classList.add('ready')},IRIS_OPEN_MS+120)};
-  const playIrisClose=()=>new Promise(resolve=>{if(!irisWipe)return resolve();positionIrisOnCrown();irisWipe.className='active closing';irisWipe.style.animation='none';void irisWipe.offsetWidth;irisWipe.style.animation='';setTimeout(resolve,IRIS_CLOSE_MS+80)});
+  const playIrisOpen=()=>{if(!irisWipe)return;positionIrisOnCrown();try{LowxxySound.irisOpen()}catch(e){};irisWipe.className='active opening';irisWipe.style.animation='none';void irisWipe.offsetWidth;irisWipe.style.animation='';setTimeout(()=>{irisWipe.className='';startOverlay.classList.add('ready')},IRIS_OPEN_MS+120)};
+  const playIrisClose=()=>new Promise(resolve=>{if(!irisWipe)return resolve();positionIrisOnCrown();try{LowxxySound.irisClose()}catch(e){};irisWipe.className='active closing';irisWipe.style.animation='none';void irisWipe.offsetWidth;irisWipe.style.animation='';setTimeout(resolve,IRIS_CLOSE_MS+80)});
   const shopBar=document.querySelector('#shopBar'),shopButton=document.querySelector('#shopButton'),errorText=document.querySelector('#errorText'),targets=[...document.querySelectorAll('.ar-target')],cameraTools=document.querySelector('#cameraTools'),collectionButton=document.querySelector('#collectionButton'),openSelfie=document.querySelector('#openSelfie'),takeScannerPhoto=document.querySelector('#takeScannerPhoto'),captureToast=document.querySelector('#captureToast'),unlockBurst=document.querySelector('#unlockBurst'),unlockName=document.querySelector('#unlockName'),crownEasterToast=document.querySelector('#crownEasterToast'),crownRain=document.querySelector('#crownRain'),scanCrown=document.querySelector('.scan-crown-watermark');
   let crownRainHideTimer=null,crownRainClearTimer=null;
   const playCrownRain=(mode='big')=>{if(!crownRain)return;clearTimeout(crownRainHideTimer);clearTimeout(crownRainClearTimer);crownRain.innerHTML='';crownRain.className=mode==='big'?'show big':'show';const count=mode==='big'?34:15,maxDelay=mode==='big'?.85:.45;for(let i=0;i<count;i++){const crown=document.createElement('img');crown.className='crown-drop';crown.src='./assets/lowxxy-crown.png?v=239';crown.alt='';crown.style.left=`${Math.random()*100}vw`;crown.style.width=`${(mode==='big'?25:20)+Math.random()*(mode==='big'?34:22)}px`;crown.style.setProperty('--delay',`${(Math.random()*maxDelay).toFixed(2)}s`);crown.style.setProperty('--dur',`${(mode==='big'?2.5:2.0)+Math.random()*(mode==='big'?1.4:.8)}s`);crown.style.setProperty('--drift',`${Math.round((Math.random()*2-1)*(mode==='big'?100:65))}px`);crown.style.setProperty('--spin',`${Math.round((Math.random()*2-1)*540)}deg`);crown.style.setProperty('--scale',`${(.72+Math.random()*.55).toFixed(2)}`);crownRain.appendChild(crown)}const hideAt=mode==='big'?3450:2450;crownRainHideTimer=setTimeout(()=>crownRain.classList.remove('show'),hideAt);crownRainClearTimer=setTimeout(()=>{crownRain.innerHTML='';crownRain.className=''},hideAt+950)};
@@ -735,7 +774,7 @@ window.addEventListener('DOMContentLoaded', () => {
     introTV.classList.remove('tap-flicker');
     void introTV.offsetWidth;
     introTV.classList.add('tap-flicker');
-    try{LowxxySound.click()}catch(e){}
+    try{LowxxySound.buttonTap()}catch(e){}
     if(!matchMedia('(prefers-reduced-motion: reduce)').matches&&introTV.animate){
       introTV.animate(
         [
@@ -776,6 +815,15 @@ window.addEventListener('DOMContentLoaded', () => {
   const showUnlockCelebration=name=>{unlockName.textContent=name==='POP ART'||name==='CHAINMAIL'?'CHAINMAIL + POP ART':name;LowxxySound.chime();unlockBurst.classList.remove('show');void unlockBurst.offsetWidth;unlockBurst.classList.add('show');setTimeout(()=>unlockBurst.classList.remove('show'),1500)};
   let crownTapCount=0,crownTapTimer=null;scanCrown?.addEventListener('click',()=>{LowxxySound.click();crownTapCount++;clearTimeout(crownTapTimer);crownTapTimer=setTimeout(()=>crownTapCount=0,1600);if(crownTapCount>=5){crownTapCount=0;crownEasterToast.classList.add('show');playCrownRain('big');LowxxySound.chime();setTimeout(()=>crownEasterToast.classList.remove('show'),2500)}});
   targets.forEach(target=>{const wrapper=target.querySelector('.model-wrapper'),model=target.querySelector('.ar-model'),name=target.dataset.name;let finishTimer=null,isActive=false;const releaseTarget=()=>{if(finishTimer)clearTimeout(finishTimer);finishTimer=null;target._finishTimer=null;wrapper.setAttribute('visible',false);wrapper.removeAttribute('animation__popout');isActive=false;target._stickyActive=false;statusBar.textContent='Looking for another Lowxxy design...'};target.addEventListener('targetFound',()=>{if(finishTimer){clearTimeout(finishTimer);finishTimer=null;target._finishTimer=null}targets.forEach(other=>{if(other!==target){if(other._finishTimer)clearTimeout(other._finishTimer);other._finishTimer=null;other._stickyActive=false;other.querySelector('.model-wrapper').setAttribute('visible',false)}});if(!isActive){restartAnimation(model);wrapper.removeAttribute('animation__popout');wrapper.setAttribute('visible',true);wrapper.setAttribute('scale','0.78 0.78 0.78');requestAnimationFrame(()=>wrapper.setAttribute('animation__popout','property: scale; from: 0.78 0.78 0.78; to: 1 1 1; dur: 650; easing: easeOutBack'))}else wrapper.setAttribute('visible',true);isActive=true;target._stickyActive=true;const unlockResult=unlockScannedShirt(name);if(unlockResult?.isNew){showUnlockCelebration(name);playCrownRain('small')}statusBar.textContent=unlockResult?.isNew?'NEW LOWXXY ANIMATION FOUND!':'LOWXXY DESIGN SCANNED — ALREADY COLLECTED';statusBar.classList.remove('scan-pop');void statusBar.offsetWidth;statusBar.classList.add('scan-pop')});target.addEventListener('targetLost',()=>{if(!isActive)return;if(finishTimer)clearTimeout(finishTimer);const durationSeconds=Math.max(.8,model._animationDuration||5),mixerComponent=model.components['animation-mixer'],mixerTime=mixerComponent?.mixer?.time||0;let remainingSeconds=durationSeconds-(mixerTime%durationSeconds);if(remainingSeconds<.65)remainingSeconds+=durationSeconds;statusBar.textContent='THE CARTOON IS FINISHING...';finishTimer=setTimeout(releaseTarget,remainingSeconds*1000);target._finishTimer=finishTimer})});
+
+  /* Universal button-tap sound for the UI. START already has its own sound below. */
+  document.querySelectorAll('button').forEach(button=>{
+    if(button===startButton)return;
+    button.addEventListener('pointerdown',()=>{
+      try{LowxxySound.buttonTap()}catch(e){}
+    },{passive:true});
+  });
+
   let lowxxyStartInProgress=false;
   const startLowxxyShow=async(event)=>{
     if(event){
@@ -792,7 +840,7 @@ window.addEventListener('DOMContentLoaded', () => {
     startButton.classList.remove('rubberTap');
     void startButton.offsetWidth;
     startButton.classList.add('rubberTap');
-    LowxxySound.click();
+    LowxxySound.buttonTap();
     LowxxySound.tape();
 
     startButton.disabled=true;
