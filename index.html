@@ -920,8 +920,8 @@ function irisClose(){
 
   const master=c.createGain();
   master.gain.setValueAtTime(.0001,t);
-  master.gain.exponentialRampToValueAtTime(.15,t+.06);
-  master.gain.setValueAtTime(.135,t+dur-.22);
+  master.gain.exponentialRampToValueAtTime(.15,t+.025);
+  master.gain.setValueAtTime(.14,t+dur-.12);
   master.gain.exponentialRampToValueAtTime(.0001,t+dur);
   master.connect(c.destination);
 
@@ -949,7 +949,7 @@ function irisClose(){
   wobble.connect(wg);wg.connect(o1.frequency);
 
   o1.start(t);o2.start(t);wobble.start(t);
-  o1.stop(t+dur+.03);o2.stop(t+dur+.03);wobble.stop(t+dur+.03);
+  o1.stop(t+dur);o2.stop(t+dur);wobble.stop(t+dur);
 }
 function irisOpen(){
   const c=get();if(!c)return;
@@ -1046,7 +1046,7 @@ window.addEventListener('DOMContentLoaded', () => {
   function filmTransitionTo(url,direction='right'){lowxxyFilmNavigate(url,direction)}
   const positionIrisOnCrown=()=>{if(!irisWipe||!introCrownLogo)return;const r=introCrownLogo.getBoundingClientRect();irisWipe.style.setProperty('--iris-x',`${r.left+r.width*.5}px`);irisWipe.style.setProperty('--iris-y',`${r.top+r.height*.5}px`)};
   let irisRunToken=0,irisFallbackTimer=null;
-  const runIrisAnimation=(mode,durationMs,onDone)=>new Promise(resolve=>{
+  const runIrisAnimation=(mode,durationMs,onDone,onVisualStart)=>new Promise(resolve=>{
     if(!irisWipe){onDone?.();return resolve()}
     const token=++irisRunToken;
     clearTimeout(irisFallbackTimer);
@@ -1076,19 +1076,24 @@ window.addEventListener('DOMContentLoaded', () => {
       positionIrisOnCrown();
       irisWipe.style.animation='';
       irisWipe.classList.add('active',mode);
+      /* Fire transition audio only after the visual animation class is on-screen. */
+      requestAnimationFrame(()=>{
+        if(token!==irisRunToken)return;
+        try{onVisualStart?.()}catch(e){}
+      });
       irisFallbackTimer=setTimeout(finish,durationMs+300);
     }));
   });
   const playIrisOpen=()=>{
-    try{if(LowxxySound.audioReady())LowxxySound.irisOpen()}catch(e){}
     return runIrisAnimation('opening',IRIS_OPEN_MS,()=>{
       irisWipe.classList.remove('active','opening','closing');
       startOverlay.classList.add('ready');
     });
   };
   const playIrisClose=()=>{
-    try{LowxxySound.irisClose()}catch(e){}
-    return runIrisAnimation('closing',IRIS_CLOSE_MS);
+    return runIrisAnimation('closing',IRIS_CLOSE_MS,null,()=>{
+      try{LowxxySound.irisClose()}catch(e){}
+    });
   };
   const shopBar=document.querySelector('#shopBar'),shopButton=document.querySelector('#shopButton'),errorText=document.querySelector('#errorText'),targets=[...document.querySelectorAll('.ar-target')],cameraTools=document.querySelector('#cameraTools'),collectionButton=document.querySelector('#collectionButton'),openSelfie=document.querySelector('#openSelfie'),takeScannerPhoto=document.querySelector('#takeScannerPhoto'),captureToast=document.querySelector('#captureToast'),unlockBurst=document.querySelector('#unlockBurst'),unlockName=document.querySelector('#unlockName'),crownEasterToast=document.querySelector('#crownEasterToast'),crownRain=document.querySelector('#crownRain'),scanCrown=document.querySelector('.scan-crown-watermark');
   let crownRainHideTimer=null,crownRainClearTimer=null;
