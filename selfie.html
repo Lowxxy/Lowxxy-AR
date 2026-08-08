@@ -272,9 +272,24 @@ async function savePhoto(){LowxxySound.shutter();if(!cameraReady||!stream){showT
   if(canvasLooksBlack(canvas))throw new Error('Camera returned a black frame');
   const blob=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('Encoding failed')),'image/png'));
   const file=new File([blob],`lowxxy-selfie-${Date.now()}.png`,{type:'image/png'});
-  showToast('PHOTO READY!');
-  if(navigator.share&&navigator.canShare?.({files:[file]}))await navigator.share({files:[file],title:'Lowxxy Selfie'});
-  else{const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=file.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),10000)}
+  const isiOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  if(!isiOS){
+    showToast('PHOTO SAVED!');
+    const url=URL.createObjectURL(blob),a=document.createElement('a');
+    a.href=url;a.download=file.name;a.style.display='none';
+    document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),15000);
+  }else if(navigator.share&&navigator.canShare?.({files:[file]})){
+    showToast('TAP “SAVE IMAGE” TO ADD TO PHOTOS');
+    await navigator.share({files:[file],title:'Lowxxy Selfie'}).catch(err=>{
+      if(err?.name!=='AbortError')throw err;
+    });
+  }else{
+    showToast('OPEN IMAGE, THEN SAVE TO PHOTOS');
+    const url=URL.createObjectURL(blob),win=window.open(url,'_blank');
+    if(!win)location.href=url;
+    setTimeout(()=>URL.revokeObjectURL(url),60000);
+  }
 }catch(error){console.error(error);showToast('CAMERA BLOCKED THE PHOTO — TRY CHROME')}finally{shoot.disabled=false}}
 
 function ensureFilmWipe(){
