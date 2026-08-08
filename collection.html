@@ -116,7 +116,16 @@
   @keyframes rubberComplete{0%{transform:scale(.55,1.22);filter:brightness(.6)}45%{transform:scale(1.12,.88);filter:brightness(1.22)}68%{transform:scale(.96,1.07)}84%{transform:scale(1.025,.985)}100%{transform:scale(1);filter:none}}
   @keyframes completionWords{0%{transform:scale(.65,1.28);opacity:0}45%{transform:scale(1.13,.9);opacity:1}70%{transform:scale(.97,1.05)}100%{transform:scale(1)}}
   .collectionModalCard button:active,.iconBtn:active{transform:scale(.9,1.1) translateY(2px)!important}
-  @media (prefers-reduced-motion:reduce){.goldTitle,.gold .card.unlocked.playable .type,.collectionModalCard img,.completionCard,.completionCard h3,#backBtn .glovePng{animation:none!important}}
+  /* v240 rubber-hose idle polish */
+  .goldTitle .star{display:inline-block;transform-origin:50% 80%;animation:goldStarHop 6.8s ease-in-out infinite}
+  .goldTitle .star:last-child{animation-delay:1.05s}
+  @keyframes goldStarHop{0%,68%,100%{transform:translateY(0) rotate(0) scale(1)}72%{transform:translateY(-4px) rotate(-10deg) scale(.9,1.12)}76%{transform:translateY(1px) rotate(7deg) scale(1.12,.9)}80%{transform:translateY(-1px) rotate(-3deg) scale(.98,1.04)}84%{transform:translateY(0) rotate(0) scale(1)}}
+  .progressPill.goldPill{transform-origin:center;animation:collectionProgressPop 7.4s ease-in-out infinite}
+  @keyframes collectionProgressPop{0%,72%,100%{transform:scale(1)}76%{transform:translateY(1px) scale(1.07,.91)}79%{transform:translateY(-2px) scale(.96,1.09)}83%{transform:scale(1.02,.98)}87%{transform:scale(1)}}
+  .card.unlocked::before{transform-origin:center;animation:collectedBadgeBump 8.3s ease-in-out infinite}
+  .card.unlocked:nth-child(2)::before{animation-delay:.7s}.card.unlocked:nth-child(3)::before{animation-delay:1.4s}
+  @keyframes collectedBadgeBump{0%,76%,100%{transform:translateY(0) rotate(0) scale(1)}80%{transform:translateY(-2px) rotate(-2deg) scale(1.08,.92)}84%{transform:translateY(1px) rotate(1deg) scale(.96,1.05)}88%{transform:translateY(0) rotate(0) scale(1)}}
+  @media (prefers-reduced-motion:reduce){.goldTitle,.goldTitle .star,.progressPill.goldPill,.card.unlocked::before,.gold .card.unlocked.playable .type,.collectionModalCard img,.completionCard,.completionCard h3,#backBtn .glovePng{animation:none!important}}
 </style>
 </head>
 <body>
