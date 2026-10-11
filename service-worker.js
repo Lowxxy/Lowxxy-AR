@@ -1,8 +1,8 @@
-const CACHE_NAME = 'lowxxy-ar-v277-gold-clean-scanner';
+const CACHE_NAME = 'lowxxy-ar-v278-home-name';
 const APP_SHELL = [
   './',
-  './index.html?v=277',
-  './manifest.webmanifest?v=277',
+  './index.html?v=278',
+  './manifest.webmanifest?v=278',
   './assets/targets.mind',
   './assets/chainmail.glb',
   './assets/grounded-gains.glb',
@@ -10,8 +10,8 @@ const APP_SHELL = [
   './assets/pop-art.glb',
   './icons/icon-192.png',
   './icons/icon-512.png',
-  './icons/lowxxy-character-192.png?v=277',
-  './icons/lowxxy-character-512.png?v=277',
+  './icons/lowxxy-character-192.png?v=278',
+  './icons/lowxxy-character-512.png?v=278',
   './icons/lowxxy-logo-white.png'
 ];
 
@@ -47,7 +47,7 @@ self.addEventListener('fetch', event => {
       })
       .catch(() =>
         caches.match(event.request)
-          .then(hit => hit || caches.match('./index.html?v=277') || caches.match('./index.html'))
+          .then(hit => hit || caches.match('./index.html?v=278') || caches.match('./index.html'))
       )
   );
 });
