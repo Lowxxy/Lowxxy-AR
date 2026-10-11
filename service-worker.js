@@ -1,8 +1,8 @@
-const CACHE_NAME = 'lowxxy-ar-v275-visual-install';
+const CACHE_NAME = 'lowxxy-ar-v276-camera-repair';
 const APP_SHELL = [
   './',
-  './index.html?v=275',
-  './manifest.webmanifest?v=275',
+  './index.html?v=276',
+  './manifest.webmanifest?v=276',
   './assets/targets.mind',
   './assets/chainmail.glb',
   './assets/grounded-gains.glb',
@@ -10,8 +10,8 @@ const APP_SHELL = [
   './assets/pop-art.glb',
   './icons/icon-192.png',
   './icons/icon-512.png',
-  './icons/lowxxy-character-192.png?v=275',
-  './icons/lowxxy-character-512.png?v=275',
+  './icons/lowxxy-character-192.png?v=276',
+  './icons/lowxxy-character-512.png?v=276',
   './icons/lowxxy-logo-white.png'
 ];
 
@@ -47,7 +47,7 @@ self.addEventListener('fetch', event => {
       })
       .catch(() =>
         caches.match(event.request)
-          .then(hit => hit || caches.match('./index.html?v=275') || caches.match('./index.html'))
+          .then(hit => hit || caches.match('./index.html?v=276') || caches.match('./index.html'))
       )
   );
 });
