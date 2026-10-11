@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Lowxxy AR</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=273" />
+  <link rel="manifest" href="./manifest.webmanifest?v=275" />
   <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=273" />
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
@@ -79,9 +79,16 @@
     .install-guide-logo{display:block;width:min(220px,72%);height:auto;margin:0 auto 14px;filter:grayscale(1) brightness(10)}
     .install-guide-title{margin:0 0 10px;font-size:clamp(24px,7vw,34px);line-height:.95;text-transform:uppercase;letter-spacing:.03em}
     .install-guide-copy{margin:0 auto 16px;max-width:340px;color:#ddd;font:700 15px/1.5 Georgia,serif}
-    .install-steps{margin:14px auto 18px;padding:0;max-width:330px;list-style:none;text-align:left;counter-reset:installstep}
-    .install-steps li{position:relative;margin:11px 0;padding:11px 12px 11px 46px;border:1px solid #555;background:#111;color:#f2f0e8;font:800 14px/1.35 "Arial Rounded MT Bold","Trebuchet MS",Arial,sans-serif;counter-increment:installstep}
-    .install-steps li::before{content:counter(installstep);position:absolute;left:12px;top:50%;transform:translateY(-50%);width:24px;height:24px;border:2px solid #fff;border-radius:50%;display:grid;place-items:center;font:900 12px/1 Arial,sans-serif}
+    .install-steps{margin:14px auto 18px;padding:0;max-width:350px;list-style:none;text-align:left;counter-reset:installstep}
+    .install-steps li{position:relative;margin:12px 0;padding:12px 12px 12px 46px;border:1px solid #555;background:#111;color:#f2f0e8;font:800 14px/1.35 "Arial Rounded MT Bold","Trebuchet MS",Arial,sans-serif;counter-increment:installstep}
+    .install-steps li::before{content:counter(installstep);position:absolute;left:12px;top:16px;width:24px;height:24px;border:2px solid #fff;border-radius:50%;display:grid;place-items:center;font:900 12px/1 Arial,sans-serif}
+    .install-step-text{display:block;padding-top:2px}
+    .install-visual{display:flex;align-items:center;gap:10px;margin-top:10px;padding:10px 12px;border:2px solid #f2f0e8;border-radius:12px;background:#f2f0e8;color:#090909;font:900 14px/1.15 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;box-shadow:0 3px 0 #777;letter-spacing:0;text-transform:none}
+    .install-visual-icon{width:28px;height:28px;min-width:28px;display:grid;place-items:center;border-radius:8px;background:#0b0b0b;color:#fff;font:900 22px/1 Arial,sans-serif}
+    .install-visual-icon svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .install-visual-label{flex:1}
+    .install-visual.subtle{background:#171717;color:#f2f0e8;border-color:#777;box-shadow:none}
+    .install-visual.subtle .install-visual-icon{background:#f2f0e8;color:#090909}
     #installGuideClose{margin-top:4px}
     #installGuideNative{margin:0 0 12px}
     #installGuideNative.hidden{display:none!important}
@@ -1292,39 +1299,163 @@ window.addEventListener('DOMContentLoaded', () => {
 
   let arSystem=null,deferredInstallPrompt=null,loadedModels=0;
   const ua=navigator.userAgent||'';
+  const vendor=navigator.vendor||'';
   const isStandalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
   const isIOS=/iphone|ipad|ipod/i.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
   const isAndroid=/android/i.test(ua);
   const isSamsung=/SamsungBrowser/i.test(ua);
-  const isInstagram=/Instagram/i.test(ua),isFacebook=/FBAN|FBAV/i.test(ua),isTikTok=/TikTok|musical_ly/i.test(ua),isSnapchat=/Snapchat/i.test(ua);
-  const isInAppBrowser=isInstagram||isFacebook||isTikTok||isSnapchat;
+  const isEdge=/EdgA|EdgiOS|Edg\//i.test(ua);
+  const isFirefox=/FxiOS|Firefox/i.test(ua);
+  const isOpera=/OPR\/|OPT\//i.test(ua);
+  const isChromeIOS=/CriOS/i.test(ua);
+  const isChromeAndroid=isAndroid&&/Chrome\//i.test(ua)&&!isSamsung&&!isEdge&&!isOpera;
+  const isSafari=isIOS&&/Safari/i.test(ua)&&!isChromeIOS&&!isEdge&&!isFirefox&&!/OPiOS/i.test(ua);
+  const isInstagram=/Instagram/i.test(ua),isFacebook=/FBAN|FBAV/i.test(ua),isTikTok=/TikTok|musical_ly/i.test(ua),isSnapchat=/Snapchat/i.test(ua),isThreads=/Threads/i.test(ua),isPinterest=/Pinterest/i.test(ua);
+  const isInAppBrowser=isInstagram||isFacebook||isTikTok||isSnapchat||isThreads||isPinterest;
+  const socialBrowserName=isInstagram?'Instagram':isFacebook?'Facebook':isTikTok?'TikTok':isSnapchat?'Snapchat':isThreads?'Threads':isPinterest?'Pinterest':'this app';
+  const browserName=isSamsung?'Samsung Internet':isChromeIOS||isChromeAndroid?'Chrome':isEdge?'Edge':isFirefox?'Firefox':isOpera?'Opera':isSafari?'Safari':(/Chrome\//i.test(ua)?'Chrome':/Safari/i.test(ua)?'Safari':'your browser');
+  const deviceName=isIOS?(/ipad/i.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1)?'iPad':'iPhone'):isAndroid?'Android phone':'device';
   const installGuide=document.querySelector('#installGuide'),installGuideTitle=document.querySelector('#installGuideTitle'),installGuideCopy=document.querySelector('#installGuideCopy'),installGuideSteps=document.querySelector('#installGuideSteps'),installGuideClose=document.querySelector('#installGuideClose'),installGuideNative=document.querySelector('#installGuideNative');
-  const setInstallSteps=steps=>{installGuideSteps.innerHTML='';steps.forEach(step=>{const li=document.createElement('li');li.textContent=step;installGuideSteps.appendChild(li)})};
+  const installVisualIcon=(kind)=>{if(kind==='share')return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V3"></path><path d="M7 8l5-5 5 5"></path><path d="M5 13v7h14v-7"></path></svg>';if(kind==='menu')return '<span aria-hidden="true">⋮</span>';if(kind==='hamburger')return '<span aria-hidden="true">☰</span>';if(kind==='safari')return '<span aria-hidden="true">◉</span>';if(kind==='chrome')return '<span aria-hidden="true">◎</span>';if(kind==='home')return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5L12 4l9 7.5"></path><path d="M5.5 10.5V20h13v-9.5"></path></svg>';if(kind==='install')return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11"></path><path d="M8 10l4 4 4-4"></path><path d="M5 20h14"></path></svg>';return '<span aria-hidden="true">✓</span>'};
+  const setInstallSteps=steps=>{installGuideSteps.innerHTML='';steps.forEach(step=>{const data=typeof step==='string'?{text:step}:step;const li=document.createElement('li');const text=document.createElement('span');text.className='install-step-text';text.textContent=data.text;li.appendChild(text);if(data.visual){const visual=document.createElement('div');visual.className='install-visual'+(data.subtle?' subtle':'');visual.innerHTML=`<span class="install-visual-icon">${installVisualIcon(data.icon||'check')}</span><span class="install-visual-label"></span>`;visual.querySelector('.install-visual-label').textContent=data.visual;li.appendChild(visual)}installGuideSteps.appendChild(li)})};
   const closeInstallGuide=()=>{installGuide.classList.remove('show')};
   const showInstallGuide=()=>{
     installGuideNative.classList.add('hidden');
     installGuideTitle.textContent='ADD LOWXXY AR';
-    if(isStandalone){installGuideCopy.textContent='Lowxxy AR is already installed on this device.';setInstallSteps(['Close this message and launch Lowxxy AR from your Home Screen.']);installGuide.classList.add('show');return}
+    if(isStandalone){installGuideCopy.textContent='Lowxxy AR is already installed on this device.';setInstallSteps([{text:'Close this message and launch Lowxxy AR from your Home Screen.',visual:'LOWXXY AR',icon:'home'}]);installGuide.classList.add('show');return}
+
     if(isInAppBrowser){
-      installGuideTitle.textContent='OPEN IN YOUR BROWSER';
-      installGuideCopy.textContent='This social-media browser cannot reliably install Lowxxy AR.';
-      setInstallSteps(isIOS?['Tap the browser menu or Share button.','Choose Open in Safari.','In Safari, tap Share, then Add to Home Screen.']:['Tap the menu in this app.','Choose Open in Chrome or Open in browser.','On the Lowxxy page, tap DOWNLOAD APP again.']);
+      installGuideTitle.textContent=`${socialBrowserName.toUpperCase()} → ${isIOS?'SAFARI':'CHROME'}`;
+      installGuideCopy.textContent=`You are viewing Lowxxy AR inside ${socialBrowserName}. Open it in your phone browser first.`;
+      if(isIOS){
+        setInstallSteps([
+          {text:`Tap the menu or Share button inside ${socialBrowserName}.`,visual:'•••  or  Share',icon:'menu'},
+          {text:'Choose Open in Safari. If you do not see it, use Copy Link and paste the link into Safari.',visual:'Open in Safari',icon:'safari'},
+          {text:'In Safari, tap the Share button.',visual:'Share',icon:'share'},
+          {text:'Tap Add to Home Screen, then tap Add.',visual:'Add to Home Screen',icon:'home'}
+        ]);
+      }else{
+        setInstallSteps([
+          {text:`Tap the menu inside ${socialBrowserName}.`,visual:'⋮',icon:'menu'},
+          {text:'Choose Open in Chrome, Open in browser, or External browser.',visual:'Open in Chrome',icon:'chrome'},
+          {text:'When Lowxxy opens in Chrome, tap DOWNLOAD APP again.',visual:'DOWNLOAD APP',icon:'install'},
+          {text:'Tap Install when your phone asks.',visual:'Install',icon:'install'}
+        ]);
+      }
     }else if(isIOS){
-      installGuideCopy.textContent='On iPhone or iPad, Lowxxy AR is added from Safari.';
-      setInstallSteps(['Make sure this page is open in Safari.','Tap the Share button (square with the up arrow).','Scroll and tap Add to Home Screen.','Tap Add.']);
+      installGuideTitle.textContent=`${deviceName.toUpperCase()} + ${browserName.toUpperCase()}`;
+      if(isSafari){
+        installGuideCopy.textContent='Your iPhone is using Safari. Match the pictures below to what you see on your phone.';
+        setInstallSteps([
+          {text:'Tap the Share button in Safari. It looks like a square with an arrow pointing up.',visual:'Share',icon:'share'},
+          {text:'Scroll the menu if needed, then tap Add to Home Screen.',visual:'Add to Home Screen',icon:'home'},
+          {text:'Tap Add in the top-right corner.',visual:'Add',icon:'check'},
+          {text:'Look for the Lowxxy AR icon on your Home Screen and open it.',visual:'LOWXXY AR',icon:'home'}
+        ]);
+      }else if(isChromeIOS){
+        installGuideCopy.textContent='You are using Chrome on iPhone. Use the matching button below; if it is missing, switch to Safari.';
+        setInstallSteps([
+          {text:'Tap the Share button in Chrome.',visual:'Share',icon:'share'},
+          {text:'If you see Add to Home Screen, tap it.',visual:'Add to Home Screen',icon:'home'},
+          {text:'If that option is missing, open this page in Safari.',visual:'Open in Safari',icon:'safari'},
+          {text:'In Safari, tap Share → Add to Home Screen → Add.',visual:'Add to Home Screen',icon:'home'}
+        ]);
+      }else if(isEdge){
+        installGuideCopy.textContent='You are using Edge on iPhone. Safari gives the clearest install option.';
+        setInstallSteps([
+          {text:'Tap the Share or menu button in Edge.',visual:'•••  or  Share',icon:'menu'},
+          {text:'Choose Open in Safari. If needed, Copy Link and paste it into Safari.',visual:'Open in Safari',icon:'safari'},
+          {text:'In Safari, tap Share.',visual:'Share',icon:'share'},
+          {text:'Tap Add to Home Screen, then Add.',visual:'Add to Home Screen',icon:'home'}
+        ]);
+      }else if(isFirefox){
+        installGuideCopy.textContent='You are using Firefox on iPhone. Safari gives the clearest install option.';
+        setInstallSteps([
+          {text:'Tap the menu or Share button in Firefox.',visual:'•••  or  Share',icon:'menu'},
+          {text:'Choose Open in Safari. If needed, Copy Link and paste it into Safari.',visual:'Open in Safari',icon:'safari'},
+          {text:'In Safari, tap Share.',visual:'Share',icon:'share'},
+          {text:'Tap Add to Home Screen, then Add.',visual:'Add to Home Screen',icon:'home'}
+        ]);
+      }else{
+        installGuideCopy.textContent=`You are using ${browserName} on ${deviceName}. Safari is the easiest way to add Lowxxy AR.`;
+        setInstallSteps([
+          {text:'Use your browser menu to open this page in Safari.',visual:'Open in Safari',icon:'safari'},
+          {text:'In Safari, tap the Share button.',visual:'Share',icon:'share'},
+          {text:'Tap Add to Home Screen.',visual:'Add to Home Screen',icon:'home'},
+          {text:'Tap Add.',visual:'Add',icon:'check'}
+        ]);
+      }
     }else if(deferredInstallPrompt){
-      installGuideCopy.textContent='Your browser is ready to install Lowxxy AR.';
-      setInstallSteps(['Tap INSTALL NOW below.','Approve the browser install prompt.','Launch Lowxxy AR from your Home Screen.']);
+      installGuideTitle.textContent=`${deviceName.toUpperCase()} + ${browserName.toUpperCase()}`;
+      installGuideCopy.textContent=`${browserName} says Lowxxy AR is ready to install. Tap the big button below.`;
+      setInstallSteps([
+        {text:'Tap INSTALL NOW.',visual:'INSTALL NOW',icon:'install'},
+        {text:'When your phone asks, tap Install or Add.',visual:'Install',icon:'install'},
+        {text:'Open Lowxxy AR from your Home Screen.',visual:'LOWXXY AR',icon:'home'}
+      ]);
       installGuideNative.classList.remove('hidden');
     }else if(isSamsung){
-      installGuideCopy.textContent='Samsung Internet can add Lowxxy AR to your Home Screen.';
-      setInstallSteps(['Tap the menu button (three lines).','Tap Add page to.','Choose Home screen, then confirm Add.']);
+      installGuideTitle.textContent='SAMSUNG + SAMSUNG INTERNET';
+      installGuideCopy.textContent='Samsung Internet detected. Match these large examples to the buttons on your screen.';
+      setInstallSteps([
+        {text:'Tap the menu button at the bottom of Samsung Internet.',visual:'☰  Menu',icon:'hamburger'},
+        {text:'Tap Add page to.',visual:'Add page to',icon:'check'},
+        {text:'Tap Home screen.',visual:'Home screen',icon:'home'},
+        {text:'Tap Add to confirm.',visual:'Add',icon:'check'}
+      ]);
+    }else if(isChromeAndroid){
+      installGuideTitle.textContent='ANDROID + CHROME';
+      installGuideCopy.textContent='Chrome detected. Match these examples to what you see on your phone.';
+      setInstallSteps([
+        {text:'Tap the three-dot menu in the top-right corner.',visual:'⋮',icon:'menu'},
+        {text:'Tap Install app or Add to Home screen.',visual:'Install app / Add to Home screen',icon:'install'},
+        {text:'Tap Install or Add to confirm.',visual:'Install',icon:'check'},
+        {text:'Open Lowxxy AR from your Home Screen.',visual:'LOWXXY AR',icon:'home'}
+      ]);
+    }else if(isEdge&&isAndroid){
+      installGuideTitle.textContent='ANDROID + EDGE';
+      installGuideCopy.textContent='Microsoft Edge detected. Look for buttons that match these examples.';
+      setInstallSteps([
+        {text:'Tap the Edge menu button.',visual:'•••  Menu',icon:'menu'},
+        {text:'Look for Add to phone, Add to Home screen, or Apps.',visual:'Add to phone / Home screen',icon:'home'},
+        {text:'Choose Install this site as an app if shown.',visual:'Install this site as an app',icon:'install'},
+        {text:'Confirm the installation.',visual:'Install',icon:'check'}
+      ]);
+    }else if(isFirefox&&isAndroid){
+      installGuideTitle.textContent='ANDROID + FIREFOX';
+      installGuideCopy.textContent='Firefox detected. Look for buttons that match these examples.';
+      setInstallSteps([
+        {text:'Tap the three-dot menu.',visual:'⋮',icon:'menu'},
+        {text:'Tap Install or Add to Home screen.',visual:'Install / Add to Home screen',icon:'install'},
+        {text:'Confirm Add or Install.',visual:'Add / Install',icon:'check'},
+        {text:'Open Lowxxy AR from your Home Screen.',visual:'LOWXXY AR',icon:'home'}
+      ]);
+    }else if(isOpera&&isAndroid){
+      installGuideTitle.textContent='ANDROID + OPERA';
+      installGuideCopy.textContent='Opera detected. Look for buttons that match these examples.';
+      setInstallSteps([
+        {text:'Open the Opera menu.',visual:'Menu',icon:'menu'},
+        {text:'Choose Add to Home screen or Install app.',visual:'Add to Home screen / Install app',icon:'home'},
+        {text:'Confirm the installation.',visual:'Install',icon:'check'},
+        {text:'Open Lowxxy AR from your Home Screen.',visual:'LOWXXY AR',icon:'home'}
+      ]);
     }else if(isAndroid){
-      installGuideCopy.textContent='Use your browser menu to add Lowxxy AR.';
-      setInstallSteps(['In Chrome, tap the three-dot menu.','Tap Install app or Add to Home screen.','Confirm Install or Add.']);
+      installGuideTitle.textContent=`ANDROID + ${browserName.toUpperCase()}`;
+      installGuideCopy.textContent=`${browserName} detected. Look for buttons that match these examples.`;
+      setInstallSteps([
+        {text:'Open your browser menu.',visual:'Menu',icon:'menu'},
+        {text:'Tap Install app or Add to Home screen.',visual:'Install app / Add to Home screen',icon:'install'},
+        {text:'Confirm Install or Add.',visual:'Install / Add',icon:'check'},
+        {text:'Open Lowxxy AR from your Home Screen.',visual:'LOWXXY AR',icon:'home'}
+      ]);
     }else{
-      installGuideCopy.textContent='Use your browser install control to add Lowxxy AR.';
-      setInstallSteps(['Open the browser menu or install icon in the address bar.','Choose Install app or Add to Home screen.','Confirm the installation.']);
+      installGuideTitle.textContent=browserName.toUpperCase();
+      installGuideCopy.textContent='Use your browser install control. The buttons may look similar to these examples.';
+      setInstallSteps([
+        {text:'Open the browser menu or look for an install icon.',visual:'Menu / Install',icon:'menu'},
+        {text:'Choose Install app or Add to Home screen.',visual:'Install app / Add to Home screen',icon:'install'},
+        {text:'Confirm the installation.',visual:'Install / Add',icon:'check'}
+      ]);
     }
     installGuide.classList.add('show');
   };
