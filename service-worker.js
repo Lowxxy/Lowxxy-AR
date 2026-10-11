@@ -1,8 +1,8 @@
-const CACHE_NAME = 'lowxxy-ar-v272-cross-device-intro';
+const CACHE_NAME = 'lowxxy-ar-v273-install-repair';
 const APP_SHELL = [
   './',
-  './index.html?v=272',
-  './manifest.webmanifest?v=272',
+  './index.html?v=273',
+  './manifest.webmanifest?v=273',
   './assets/targets.mind',
   './assets/chainmail.glb',
   './assets/grounded-gains.glb',
@@ -10,8 +10,8 @@ const APP_SHELL = [
   './assets/pop-art.glb',
   './icons/icon-192.png',
   './icons/icon-512.png',
-  './icons/lowxxy-character-192.png?v=272',
-  './icons/lowxxy-character-512.png?v=272',
+  './icons/lowxxy-character-192.png?v=273',
+  './icons/lowxxy-character-512.png?v=273',
   './icons/lowxxy-logo-white.png'
 ];
 
@@ -47,7 +47,7 @@ self.addEventListener('fetch', event => {
       })
       .catch(() =>
         caches.match(event.request)
-          .then(hit => hit || caches.match('./index.html?v=272') || caches.match('./index.html'))
+          .then(hit => hit || caches.match('./index.html?v=273') || caches.match('./index.html'))
       )
   );
 });
