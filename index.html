@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Lowxxy AR</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=272" />
-  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=239" />
+  <link rel="manifest" href="./manifest.webmanifest?v=273" />
+  <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=273" />
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
@@ -73,6 +73,18 @@
     button{width:100%;min-height:56px;border:3px solid var(--paper);border-radius:999px;padding:12px 20px;background:var(--paper);color:#080808;font:900 15px/1 "Arial Rounded MT Bold","Trebuchet MS",Arial,sans-serif;letter-spacing:.08em;cursor:pointer;box-shadow:0 5px 0 #5e5e5e,0 8px 0 #111;transition:transform .12s ease,box-shadow .12s ease}
     button:active{transform:translateY(5px) scale(.98,.94);box-shadow:0 1px 0 #5e5e5e,0 3px 0 #111}button.secondary{background:#111;color:var(--paper);box-shadow:0 5px 0 #555,0 8px 0 #000}button:disabled{opacity:.55;cursor:wait}
     #installHelp,#errorText{display:none;margin:15px 0 0;font:700 14px/1.45 Georgia,serif;color:#ddd}#errorText{color:#fff;text-decoration:underline}
+    #installGuide{position:fixed;inset:0;z-index:1600;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.88);backdrop-filter:blur(6px)}
+    #installGuide.show{display:flex}
+    .install-guide-card{position:relative;width:min(430px,94vw);max-height:min(78vh,650px);overflow:auto;padding:28px 22px 22px;border:3px solid var(--paper);background:#090909;color:var(--paper);text-align:center;box-shadow:0 0 0 6px #111,0 0 0 8px var(--paper),0 18px 45px #000}
+    .install-guide-logo{display:block;width:min(220px,72%);height:auto;margin:0 auto 14px;filter:grayscale(1) brightness(10)}
+    .install-guide-title{margin:0 0 10px;font-size:clamp(24px,7vw,34px);line-height:.95;text-transform:uppercase;letter-spacing:.03em}
+    .install-guide-copy{margin:0 auto 16px;max-width:340px;color:#ddd;font:700 15px/1.5 Georgia,serif}
+    .install-steps{margin:14px auto 18px;padding:0;max-width:330px;list-style:none;text-align:left;counter-reset:installstep}
+    .install-steps li{position:relative;margin:11px 0;padding:11px 12px 11px 46px;border:1px solid #555;background:#111;color:#f2f0e8;font:800 14px/1.35 "Arial Rounded MT Bold","Trebuchet MS",Arial,sans-serif;counter-increment:installstep}
+    .install-steps li::before{content:counter(installstep);position:absolute;left:12px;top:50%;transform:translateY(-50%);width:24px;height:24px;border:2px solid #fff;border-radius:50%;display:grid;place-items:center;font:900 12px/1 Arial,sans-serif}
+    #installGuideClose{margin-top:4px}
+    #installGuideNative{margin:0 0 12px}
+    #installGuideNative.hidden{display:none!important}
     #scanFrame{position:fixed;z-index:700;left:50%;top:50%;transform:translate(-50%,-57%);width:min(73vw,390px);aspect-ratio:3/4;pointer-events:none}
     #scanFrame::before{content:"";position:absolute;inset:0;background:linear-gradient(#fff,#fff) left top/58px 3px no-repeat,linear-gradient(#fff,#fff) left top/3px 58px no-repeat,linear-gradient(#fff,#fff) right top/58px 3px no-repeat,linear-gradient(#fff,#fff) right top/3px 58px no-repeat,linear-gradient(#fff,#fff) left bottom/58px 3px no-repeat,linear-gradient(#fff,#fff) left bottom/3px 58px no-repeat,linear-gradient(#fff,#fff) right bottom/58px 3px no-repeat,linear-gradient(#fff,#fff) right bottom/3px 58px no-repeat;filter:drop-shadow(0 2px 2px #000);animation:frameBreathe 2.4s ease-in-out infinite}
     #scanFrame::after{content:"";position:absolute;inset:13px;border:1px solid rgba(255,255,255,.48);border-radius:48% 52% 49% 51%/3% 4% 3% 4%}
@@ -962,6 +974,16 @@ html,body{
     <div class="button-stack"><button id="installButton" class="secondary">DOWNLOAD APP</button><button id="startButton">START THE SHOW</button></div>
     <p id="installHelp"></p><p id="errorText"></p>
   </div></div>
+  <div id="installGuide" role="dialog" aria-modal="true" aria-labelledby="installGuideTitle">
+    <div class="install-guide-card">
+      <img class="install-guide-logo" src="./icons/lowxxy-logo-white.png" alt="Lowxxy">
+      <h2 id="installGuideTitle" class="install-guide-title">ADD LOWXXY AR</h2>
+      <p id="installGuideCopy" class="install-guide-copy">Follow the steps below to add Lowxxy AR to your phone.</p>
+      <button id="installGuideNative" class="secondary hidden">INSTALL NOW</button>
+      <ol id="installGuideSteps" class="install-steps"></ol>
+      <button id="installGuideClose">GOT IT</button>
+    </div>
+  </div>
   <div id="statusBar" class="hidden">Looking for a Lowxxy design...</div>
   <div id="shopBar" class="hidden"><div class="shop-copy"><span class="shop-title">More from Lowxxy</span><span class="shop-subtitle">See the latest designs.</span></div><button id="shopButton" class="shop-button">VISIT THE SHOP</button></div>
   <div id="cameraTools" class="hidden">
@@ -1269,9 +1291,64 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   let arSystem=null,deferredInstallPrompt=null,loadedModels=0;
-  const isStandalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true,isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent),isAndroid=/android/i.test(navigator.userAgent);if(isStandalone)installButton.classList.add('hidden');
-  window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();deferredInstallPrompt=event;installButton.classList.remove('hidden')});
-  installButton.addEventListener('click',async()=>{installHelp.style.display='block';if(deferredInstallPrompt){deferredInstallPrompt.prompt();await deferredInstallPrompt.userChoice;deferredInstallPrompt=null;return}installHelp.textContent=isIOS?'In Safari, tap Share, then Add to Home Screen, then Add.':isAndroid?'Use Chrome’s three-dot menu and choose Install app or Add to Home screen.':'Use your browser’s install option.'});
+  const ua=navigator.userAgent||'';
+  const isStandalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+  const isIOS=/iphone|ipad|ipod/i.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  const isAndroid=/android/i.test(ua);
+  const isSamsung=/SamsungBrowser/i.test(ua);
+  const isInstagram=/Instagram/i.test(ua),isFacebook=/FBAN|FBAV/i.test(ua),isTikTok=/TikTok|musical_ly/i.test(ua),isSnapchat=/Snapchat/i.test(ua);
+  const isInAppBrowser=isInstagram||isFacebook||isTikTok||isSnapchat;
+  const installGuide=document.querySelector('#installGuide'),installGuideTitle=document.querySelector('#installGuideTitle'),installGuideCopy=document.querySelector('#installGuideCopy'),installGuideSteps=document.querySelector('#installGuideSteps'),installGuideClose=document.querySelector('#installGuideClose'),installGuideNative=document.querySelector('#installGuideNative');
+  const setInstallSteps=steps=>{installGuideSteps.innerHTML='';steps.forEach(step=>{const li=document.createElement('li');li.textContent=step;installGuideSteps.appendChild(li)})};
+  const closeInstallGuide=()=>{installGuide.classList.remove('show')};
+  const showInstallGuide=()=>{
+    installGuideNative.classList.add('hidden');
+    installGuideTitle.textContent='ADD LOWXXY AR';
+    if(isStandalone){installGuideCopy.textContent='Lowxxy AR is already installed on this device.';setInstallSteps(['Close this message and launch Lowxxy AR from your Home Screen.']);installGuide.classList.add('show');return}
+    if(isInAppBrowser){
+      installGuideTitle.textContent='OPEN IN YOUR BROWSER';
+      installGuideCopy.textContent='This social-media browser cannot reliably install Lowxxy AR.';
+      setInstallSteps(isIOS?['Tap the browser menu or Share button.','Choose Open in Safari.','In Safari, tap Share, then Add to Home Screen.']:['Tap the menu in this app.','Choose Open in Chrome or Open in browser.','On the Lowxxy page, tap DOWNLOAD APP again.']);
+    }else if(isIOS){
+      installGuideCopy.textContent='On iPhone or iPad, Lowxxy AR is added from Safari.';
+      setInstallSteps(['Make sure this page is open in Safari.','Tap the Share button (square with the up arrow).','Scroll and tap Add to Home Screen.','Tap Add.']);
+    }else if(deferredInstallPrompt){
+      installGuideCopy.textContent='Your browser is ready to install Lowxxy AR.';
+      setInstallSteps(['Tap INSTALL NOW below.','Approve the browser install prompt.','Launch Lowxxy AR from your Home Screen.']);
+      installGuideNative.classList.remove('hidden');
+    }else if(isSamsung){
+      installGuideCopy.textContent='Samsung Internet can add Lowxxy AR to your Home Screen.';
+      setInstallSteps(['Tap the menu button (three lines).','Tap Add page to.','Choose Home screen, then confirm Add.']);
+    }else if(isAndroid){
+      installGuideCopy.textContent='Use your browser menu to add Lowxxy AR.';
+      setInstallSteps(['In Chrome, tap the three-dot menu.','Tap Install app or Add to Home screen.','Confirm Install or Add.']);
+    }else{
+      installGuideCopy.textContent='Use your browser install control to add Lowxxy AR.';
+      setInstallSteps(['Open the browser menu or install icon in the address bar.','Choose Install app or Add to Home screen.','Confirm the installation.']);
+    }
+    installGuide.classList.add('show');
+  };
+  if(isStandalone)installButton.classList.add('hidden');
+  window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();deferredInstallPrompt=event;if(!isStandalone)installButton.classList.remove('hidden')});
+  window.addEventListener('appinstalled',()=>{deferredInstallPrompt=null;installButton.classList.add('hidden');closeInstallGuide()});
+  installButton.addEventListener('click',async()=>{
+    installHelp.style.display='none';
+    if(deferredInstallPrompt&&!isInAppBrowser&&!isIOS){
+      try{
+        deferredInstallPrompt.prompt();
+        const choice=await deferredInstallPrompt.userChoice;
+        if(choice?.outcome==='accepted'){deferredInstallPrompt=null;return}
+      }catch(error){console.warn('Native install prompt failed',error)}
+    }
+    showInstallGuide();
+  });
+  installGuideNative.addEventListener('click',async()=>{
+    if(!deferredInstallPrompt){showInstallGuide();return}
+    try{deferredInstallPrompt.prompt();const choice=await deferredInstallPrompt.userChoice;if(choice?.outcome==='accepted'){deferredInstallPrompt=null;closeInstallGuide()}}catch(error){console.warn('Native install prompt failed',error)}
+  });
+  installGuideClose.addEventListener('click',closeInstallGuide);
+  installGuide.addEventListener('click',event=>{if(event.target===installGuide)closeInstallGuide()});
+  document.addEventListener('keydown',event=>{if(event.key==='Escape'&&installGuide.classList.contains('show'))closeInstallGuide()});
   shopButton.addEventListener('click',()=>{filmTransitionTo('https://lowxxy.myshopify.com')});scene.addEventListener('loaded',()=>{arSystem=scene.systems['mindar-image-system']});
   document.querySelectorAll('.ar-model').forEach(model=>{model.addEventListener('model-loaded',()=>{loadedModels+=1;const modelObject=model.getObject3D('mesh');if(modelObject){modelObject.traverse(node=>{if(node.isMesh||node.isSkinnedMesh){node.frustumCulled=false;const materials=Array.isArray(node.material)?node.material:[node.material];materials.filter(Boolean).forEach(material=>{material.side=THREE.DoubleSide;material.needsUpdate=true})}})}const clips=modelObject?.animations||[];model._animationDuration=clips.length?Math.max(...clips.map(clip=>clip.duration||0)):5;console.log('Loaded AR model',loadedModels,'of 4','duration:',model._animationDuration)});model.addEventListener('model-error',event=>{console.error('Model error',event);errorText.style.display='block';errorText.textContent='One of the 3D animations could not load. Confirm all four GLB files are inside the assets folder.'})});
   const restartAnimation=model=>{const mixer=model.components['animation-mixer'];if(mixer&&mixer.mixer){mixer.mixer.stopAllAction();mixer.mixer.setTime(0);model.removeAttribute('animation-mixer');requestAnimationFrame(()=>model.setAttribute('animation-mixer','clip:*; loop:repeat; repetitions:Infinity; timeScale:1'))}};
