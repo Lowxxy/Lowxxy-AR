@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Lowxxy AR</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=275" />
+  <link rel="manifest" href="./manifest.webmanifest?v=276" />
   <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=273" />
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
@@ -1258,7 +1258,33 @@ window.addEventListener('DOMContentLoaded', () => {
   const shopBar=document.querySelector('#shopBar'),shopButton=document.querySelector('#shopButton'),errorText=document.querySelector('#errorText'),targets=[...document.querySelectorAll('.ar-target')],cameraTools=document.querySelector('#cameraTools'),collectionButton=document.querySelector('#collectionButton'),openSelfie=document.querySelector('#openSelfie'),takeScannerPhoto=document.querySelector('#takeScannerPhoto'),captureToast=document.querySelector('#captureToast'),unlockBurst=document.querySelector('#unlockBurst'),unlockName=document.querySelector('#unlockName'),crownEasterToast=document.querySelector('#crownEasterToast'),crownRain=document.querySelector('#crownRain'),scanCrown=document.querySelector('.scan-crown-watermark'),cameraLoader=document.querySelector('#cameraLoader'),cameraLoaderText=document.querySelector('#cameraLoaderText');
   const showCameraLoader=(message='Starting the scanner…')=>{if(cameraLoaderText)cameraLoaderText.textContent=message;cameraLoader?.classList.add('show')};
   const hideCameraLoader=()=>cameraLoader?.classList.remove('show');
-  const waitForCameraFeed=async(timeout=6500)=>{const start=performance.now();return await new Promise(resolve=>{const check=()=>{const video=[...document.querySelectorAll('video')].find(v=>v.readyState>=2&&v.videoWidth>0&&v.videoHeight>0);if(video)return resolve(true);if(performance.now()-start>timeout)return resolve(false);requestAnimationFrame(check)};check()})};
+  const getMindARCameraVideo=()=>[...document.querySelectorAll('video')].find(v=>v.srcObject||v.readyState>=1);
+  const normalizeCameraVideo=video=>{
+    if(!video)return;
+    video.setAttribute('playsinline','');
+    video.setAttribute('webkit-playsinline','');
+    video.setAttribute('autoplay','');
+    video.muted=true;
+    video.playsInline=true;
+    video.autoplay=true;
+    if(video.srcObject&&video.paused){video.play().catch(()=>{})}
+  };
+  const waitForCameraFeed=async(timeout=9000)=>{const start=performance.now();return await new Promise(resolve=>{const check=()=>{const video=getMindARCameraVideo();normalizeCameraVideo(video);if(video&&video.readyState>=2&&video.videoWidth>0&&video.videoHeight>0)return resolve(true);if(performance.now()-start>timeout)return resolve(false);requestAnimationFrame(check)};check()})};
+  const stopMindARCamera=async()=>{
+    try{if(arSystem?.stop)await arSystem.stop()}catch(e){console.warn('MindAR stop failed',e)}
+    document.querySelectorAll('video').forEach(video=>{try{video.srcObject?.getTracks?.().forEach(track=>track.stop())}catch(e){}});
+  };
+  const cameraErrorMessage=error=>{
+    const name=error?.name||'';
+    const ua=navigator.userAgent||'';
+    const inApp=/Instagram|FBAN|FBAV|TikTok|Snapchat|Pinterest|Threads/i.test(ua);
+    if(inApp)return 'This browser may block the camera. Open LOWXXY AR in Safari on iPhone or Chrome on Android, then tap START THE SHOW again.';
+    if(!window.isSecureContext)return 'The camera only works on a secure HTTPS page. Open the official LOWXXY AR link and try again.';
+    if(name==='NotAllowedError'||name==='SecurityError')return 'Camera access is blocked. Allow Camera for this site in your browser settings, then tap START THE SHOW again.';
+    if(name==='NotReadableError'||name==='AbortError')return 'Your camera is allowed but another app or browser tab may be using it. Close other camera apps, then try again.';
+    if(name==='NotFoundError'||name==='OverconstrainedError')return 'This browser could not find a usable camera. Try Safari on iPhone or Chrome/Samsung Internet on Android.';
+    return 'The camera was allowed, but the live camera feed did not start. Tap START THE SHOW again. If it still does not open, refresh the page or open it in Safari/Chrome.';
+  };
   let crownRainHideTimer=null,crownRainClearTimer=null;
   const playCrownRain=(mode='big')=>{if(!crownRain)return;clearTimeout(crownRainHideTimer);clearTimeout(crownRainClearTimer);crownRain.innerHTML='';crownRain.className=mode==='big'?'show big':'show';const count=mode==='big'?34:15,maxDelay=mode==='big'?.85:.45;for(let i=0;i<count;i++){const crown=document.createElement('img');crown.className='crown-drop';crown.src='./assets/lowxxy-crown.png?v=239';crown.alt='';crown.style.left=`${Math.random()*100}vw`;crown.style.width=`${(mode==='big'?25:20)+Math.random()*(mode==='big'?34:22)}px`;crown.style.setProperty('--delay',`${(Math.random()*maxDelay).toFixed(2)}s`);crown.style.setProperty('--dur',`${(mode==='big'?2.5:2.0)+Math.random()*(mode==='big'?1.4:.8)}s`);crown.style.setProperty('--drift',`${Math.round((Math.random()*2-1)*(mode==='big'?100:65))}px`);crown.style.setProperty('--spin',`${Math.round((Math.random()*2-1)*540)}deg`);crown.style.setProperty('--scale',`${(.72+Math.random()*.55).toFixed(2)}`);crownRain.appendChild(crown)}const hideAt=mode==='big'?3450:2450;crownRainHideTimer=setTimeout(()=>crownRain.classList.remove('show'),hideAt);crownRainClearTimer=setTimeout(()=>{crownRain.innerHTML='';crownRain.className=''},hideAt+950)};
 
@@ -1535,11 +1561,18 @@ window.addEventListener('DOMContentLoaded', () => {
     errorText.style.display='none';
 
     try{
+      if(!navigator.mediaDevices?.getUserMedia){
+        const unsupported=new Error('Camera API unavailable');
+        unsupported.name='NotSupportedError';
+        throw unsupported;
+      }
+
       if(!arSystem)arSystem=scene.systems['mindar-image-system'];
 
-      /* On some phones the first tap can arrive just before A-Frame/MindAR
-         finishes attaching the system. Wait briefly instead of treating
-         that first tap like a failed press. */
+      /* The AR system should normally be ready before the visitor can press START.
+         If it is still attaching, wait briefly, but once it exists start the camera
+         immediately. Calling MindAR start before the visual transition keeps the
+         camera request as close as possible to the visitor's tap on mobile browsers. */
       if(!arSystem){
         await new Promise(resolve=>{
           let tries=0;
@@ -1553,12 +1586,17 @@ window.addEventListener('DOMContentLoaded', () => {
         });
       }
 
-      if(!arSystem){
-        throw new Error('The AR engine did not load.');
-      }
+      if(!arSystem)throw new Error('The AR engine did not load.');
 
-      await new Promise(r=>setTimeout(r,180));
-      await playIrisClose();
+      showCameraLoader('Opening your camera…');
+
+      /* IMPORTANT: start the camera before waiting on the iris animation. On some
+         mobile browsers, delaying getUserMedia until after animation/timers can
+         make an accepted permission prompt return without a usable video feed. */
+      const firstStart=arSystem.start();
+      const irisClose=playIrisClose();
+      await firstStart;
+      await irisClose;
 
       startOverlay.classList.add('hidden');
       statusBar.classList.remove('hidden');
@@ -1567,12 +1605,30 @@ window.addEventListener('DOMContentLoaded', () => {
       scanFrame.classList.remove('hidden');
       showCameraLoader('Starting the scanner…');
 
-      await arSystem.start();
-      await waitForCameraFeed();
+      let cameraReady=await waitForCameraFeed(9000);
+
+      /* A permission dialog can leave WebKit/Chromium with a granted permission
+         but a stalled first MediaStream. Do one clean automatic restart instead of
+         leaving the customer staring at a black scanner. */
+      if(!cameraReady){
+        showCameraLoader('Camera allowed — reconnecting…');
+        await stopMindARCamera();
+        await new Promise(r=>setTimeout(r,350));
+        await arSystem.start();
+        cameraReady=await waitForCameraFeed(9000);
+      }
+
+      if(!cameraReady){
+        const noFeed=new Error('Camera permission granted but no live feed');
+        noFeed.name='NotReadableError';
+        throw noFeed;
+      }
+
       hideCameraLoader();
       irisWipe.className='';
     }catch(error){
-      console.error(error);
+      console.error('LOWXXY camera start failed:',error);
+      await stopMindARCamera();
       hideCameraLoader();
       irisWipe.className='';
       startOverlay.classList.remove('hidden');
@@ -1581,9 +1637,9 @@ window.addEventListener('DOMContentLoaded', () => {
       cameraTools.classList.add('hidden');
       scanFrame.classList.add('hidden');
       errorText.style.display='block';
-      errorText.textContent='Camera or scanner could not start. Allow camera access, then try START THE SHOW again.';
+      errorText.textContent=cameraErrorMessage(error);
       startButton.disabled=false;
-      startButton.textContent='START THE SHOW';
+      startButton.textContent='TRY CAMERA AGAIN';
       startOverlay.classList.add('ready');
       lowxxyStartInProgress=false;
       return;
@@ -1591,7 +1647,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
     lowxxyStartInProgress=false;
   };
-
   /* pointerup is the primary mobile/desktop action.
      click remains as a keyboard/accessibility fallback. */
   let lowxxyPointerHandled=false;
@@ -1614,7 +1669,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     startLowxxyShow(event);
   });
-  const shouldResumeAR=sessionStorage.getItem('lowxxy-resume-ar')==='1';if(!shouldResumeAR)requestAnimationFrame(()=>requestAnimationFrame(playIrisOpen));if(shouldResumeAR){sessionStorage.removeItem('lowxxy-resume-ar');const resumeScanner=async()=>{if(!arSystem)arSystem=scene.systems['mindar-image-system'];if(!arSystem)return;irisWipe.className='';startOverlay.classList.add('hidden');statusBar.classList.remove('hidden');shopBar.classList.remove('hidden');cameraTools.classList.remove('hidden');scanFrame.classList.remove('hidden');showCameraLoader('Reopening the scanner…');try{await arSystem.start();await waitForCameraFeed();hideCameraLoader()}catch(error){hideCameraLoader();console.error(error);errorText.style.display='block';errorText.textContent='Camera or scanner could not start. Allow camera access, then refresh.'}};if(scene.hasLoaded)setTimeout(resumeScanner,180);else scene.addEventListener('loaded',()=>setTimeout(resumeScanner,180),{once:true})}
+  const shouldResumeAR=sessionStorage.getItem('lowxxy-resume-ar')==='1';if(!shouldResumeAR)requestAnimationFrame(()=>requestAnimationFrame(playIrisOpen));if(shouldResumeAR){sessionStorage.removeItem('lowxxy-resume-ar');const resumeScanner=async()=>{if(!arSystem)arSystem=scene.systems['mindar-image-system'];if(!arSystem)return;irisWipe.className='';startOverlay.classList.add('hidden');statusBar.classList.remove('hidden');shopBar.classList.remove('hidden');cameraTools.classList.remove('hidden');scanFrame.classList.remove('hidden');showCameraLoader('Reopening the scanner…');try{await arSystem.start();let cameraReady=await waitForCameraFeed(9000);if(!cameraReady){await stopMindARCamera();await new Promise(r=>setTimeout(r,350));await arSystem.start();cameraReady=await waitForCameraFeed(9000)}if(!cameraReady)throw new Error('Camera feed did not resume');hideCameraLoader()}catch(error){await stopMindARCamera();hideCameraLoader();console.error(error);startOverlay.classList.remove('hidden');statusBar.classList.add('hidden');shopBar.classList.add('hidden');cameraTools.classList.add('hidden');scanFrame.classList.add('hidden');errorText.style.display='block';errorText.textContent=cameraErrorMessage(error);startButton.disabled=false;startButton.textContent='TRY CAMERA AGAIN';startOverlay.classList.add('ready')}};if(scene.hasLoaded)setTimeout(resumeScanner,180);else scene.addEventListener('loaded',()=>setTimeout(resumeScanner,180),{once:true})}
   if('serviceWorker'in navigator){window.addEventListener('load',async()=>{try{const registration=await navigator.serviceWorker.register('./service-worker.js',{updateViaCache:'none'});registration.update().catch(()=>{})}catch(err){console.warn('SW registration failed',err)}})}
   collectionButton.addEventListener('click',()=>{sessionStorage.setItem('lowxxy-return-url',location.href);sessionStorage.setItem('lowxxy-session-started','1');sessionStorage.setItem('lowxxy-resume-ar','1');filmTransitionTo('./collection.html?v=239','left')});openSelfie.addEventListener('click',()=>{sessionStorage.setItem('lowxxy-return-url',location.href);sessionStorage.setItem('lowxxy-session-started','1');sessionStorage.setItem('lowxxy-resume-ar','1');filmTransitionTo('./selfie.html?v=239','right')});
   function drawCover(ctx,source,width,height,mirror=false){const sw=source.videoWidth||source.width,sh=source.videoHeight||source.height;if(!sw||!sh)return false;const scale=Math.max(width/sw,height/sh),dw=sw*scale,dh=sh*scale,dx=(width-dw)/2,dy=(height-dh)/2;ctx.save();if(mirror){ctx.translate(width,0);ctx.scale(-1,1)}ctx.drawImage(source,dx,dy,dw,dh);ctx.restore();return true}
