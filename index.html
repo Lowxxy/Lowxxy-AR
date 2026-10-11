@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Lowxxy AR</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=276" />
+  <link rel="manifest" href="./manifest.webmanifest?v=277" />
   <link rel="apple-touch-icon" href="./icons/lowxxy-character-192.png?v=273" />
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
@@ -110,6 +110,8 @@
     @keyframes filmTapeRight{0%{transform:translateY(-50%) translateX(0)}50%{transform:translateY(-50%) translateX(180vw)}100%{transform:translateY(-50%) translateX(500vw)}}@keyframes filmTapeLeft{0%{transform:translateY(-50%) translateX(0)}50%{transform:translateY(-50%) translateX(-180vw)}100%{transform:translateY(-50%) translateX(-500vw)}}@keyframes filmFramesRoll{from{transform:translateX(0)}to{transform:translateX(-34vw)}}@keyframes filmFlicker{0%,100%{opacity:.18}50%{opacity:.34}}
 
     .global-film-grain{position:fixed;inset:0;z-index:500;pointer-events:none;opacity:.045;mix-blend-mode:screen;background-image:radial-gradient(#fff 0 .55px,transparent .8px),radial-gradient(#000 0 .65px,transparent .9px);background-size:7px 7px,9px 9px;background-position:0 0,4px 5px;animation:grain .18s steps(2) infinite}
+    /* v277: keep the vintage texture on the intro, but remove it completely once the live AR scanner is open. */
+    body.lowxxy-ar-live #filmOverlay,body.lowxxy-ar-live .global-film-grain{display:none!important}
     .brand-logo,.show-title,#statusBar{animation:headerProjectorFlicker 8.5s steps(1,end) infinite}@keyframes headerProjectorFlicker{0%,92%,94%,96%,100%{opacity:1}93%{opacity:.82}95%{opacity:.94}}
     #unlockBurst{position:fixed;inset:0;z-index:5000;display:grid;place-items:center;pointer-events:none;opacity:0;visibility:hidden;background:radial-gradient(circle,rgba(214,170,66,.11),rgba(0,0,0,.2) 42%,rgba(0,0,0,.72));transition:opacity .18s ease}#unlockBurst.show{visibility:visible;opacity:1}#unlockBurst .unlock-card{width:min(86vw,360px);padding:28px 22px 25px;text-align:center;border:3px solid #d6aa42;border-radius:26px;background:radial-gradient(circle at 50% 10%,#4e3a12,#171006 55%,#080808 100%);box-shadow:0 0 0 6px #0b0b0b,0 0 32px rgba(214,170,66,.48),0 24px 55px #000d;transform:scale(.65) rotate(-2deg);animation:unlockPop .82s cubic-bezier(.18,.86,.3,1.25) forwards}#unlockBurst .unlock-crown{width:112px;height:auto;filter:sepia(1) saturate(4) brightness(1.45) drop-shadow(0 0 10px rgba(255,229,154,.35));margin-bottom:8px}#unlockBurst .unlock-small{color:#ffe59a;font:900 11px/1 Arial,sans-serif;letter-spacing:.2em}#unlockBurst .unlock-name{margin-top:7px;color:#fff;font:900 24px/1 Georgia,serif;text-transform:uppercase;letter-spacing:.05em}@keyframes unlockPop{0%{transform:scale(.5) rotate(-4deg);filter:brightness(.55)}55%{transform:scale(1.07) rotate(1deg);filter:brightness(1.2)}100%{transform:scale(1) rotate(0);filter:none}}
     #crownEasterToast{position:fixed;z-index:5100;left:50%;top:50%;transform:translate(-50%,-50%) scale(.72);opacity:0;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:6px;min-width:min(86vw,320px);padding:20px 28px;border:3px solid #f2f0e8;border-radius:26px;background:#080808;color:#ffe59a;font:900 14px/1 Georgia,serif;letter-spacing:.12em;text-align:center;box-shadow:0 0 28px #d6aa4266,0 12px 38px #000;transition:.22s}#crownEasterToast.show{opacity:1;transform:translate(-50%,-50%) scale(1)}#crownEasterToast span{display:block;white-space:nowrap}
@@ -911,11 +913,11 @@ html,body{
   -webkit-text-stroke:2px #050505!important;
 }
 #startButton{
-  background:#56534c!important;
-  color:#f4f4f1!important;
-  -webkit-text-fill-color:#f4f4f1!important;
-  border-color:#66635c!important;
-  box-shadow:0 6px 0 #34332f,0 10px 0 #111!important;
+  background:#c8a45b!important;
+  color:#090909!important;
+  -webkit-text-fill-color:#090909!important;
+  border-color:#f0d18d!important;
+  box-shadow:0 6px 0 #6f5528,0 10px 0 #111,0 0 18px rgba(200,164,91,.28)!important;
 }
 
 @media(max-width:430px){
@@ -937,9 +939,11 @@ html,body{
   }
   .tv-shirt{filter:brightness(1.02) contrast(1.02) saturate(0)!important}
   #startButton{
-    background:#56534c!important;
-    color:#f4f4f1!important;
-    -webkit-text-fill-color:#f4f4f1!important;
+    background:#c8a45b!important;
+    color:#090909!important;
+    -webkit-text-fill-color:#090909!important;
+    border-color:#f0d18d!important;
+    box-shadow:0 6px 0 #6f5528,0 10px 0 #111,0 0 18px rgba(200,164,91,.28)!important;
   }
 }
 
@@ -1599,6 +1603,7 @@ window.addEventListener('DOMContentLoaded', () => {
       await irisClose;
 
       startOverlay.classList.add('hidden');
+      document.body.classList.add('lowxxy-ar-live');
       statusBar.classList.remove('hidden');
       shopBar.classList.remove('hidden');
       cameraTools.classList.remove('hidden');
@@ -1631,6 +1636,7 @@ window.addEventListener('DOMContentLoaded', () => {
       await stopMindARCamera();
       hideCameraLoader();
       irisWipe.className='';
+      document.body.classList.remove('lowxxy-ar-live');
       startOverlay.classList.remove('hidden');
       statusBar.classList.add('hidden');
       shopBar.classList.add('hidden');
@@ -1669,7 +1675,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     startLowxxyShow(event);
   });
-  const shouldResumeAR=sessionStorage.getItem('lowxxy-resume-ar')==='1';if(!shouldResumeAR)requestAnimationFrame(()=>requestAnimationFrame(playIrisOpen));if(shouldResumeAR){sessionStorage.removeItem('lowxxy-resume-ar');const resumeScanner=async()=>{if(!arSystem)arSystem=scene.systems['mindar-image-system'];if(!arSystem)return;irisWipe.className='';startOverlay.classList.add('hidden');statusBar.classList.remove('hidden');shopBar.classList.remove('hidden');cameraTools.classList.remove('hidden');scanFrame.classList.remove('hidden');showCameraLoader('Reopening the scanner…');try{await arSystem.start();let cameraReady=await waitForCameraFeed(9000);if(!cameraReady){await stopMindARCamera();await new Promise(r=>setTimeout(r,350));await arSystem.start();cameraReady=await waitForCameraFeed(9000)}if(!cameraReady)throw new Error('Camera feed did not resume');hideCameraLoader()}catch(error){await stopMindARCamera();hideCameraLoader();console.error(error);startOverlay.classList.remove('hidden');statusBar.classList.add('hidden');shopBar.classList.add('hidden');cameraTools.classList.add('hidden');scanFrame.classList.add('hidden');errorText.style.display='block';errorText.textContent=cameraErrorMessage(error);startButton.disabled=false;startButton.textContent='TRY CAMERA AGAIN';startOverlay.classList.add('ready')}};if(scene.hasLoaded)setTimeout(resumeScanner,180);else scene.addEventListener('loaded',()=>setTimeout(resumeScanner,180),{once:true})}
+  const shouldResumeAR=sessionStorage.getItem('lowxxy-resume-ar')==='1';if(!shouldResumeAR)requestAnimationFrame(()=>requestAnimationFrame(playIrisOpen));if(shouldResumeAR){sessionStorage.removeItem('lowxxy-resume-ar');const resumeScanner=async()=>{if(!arSystem)arSystem=scene.systems['mindar-image-system'];if(!arSystem)return;irisWipe.className='';startOverlay.classList.add('hidden');document.body.classList.add('lowxxy-ar-live');statusBar.classList.remove('hidden');shopBar.classList.remove('hidden');cameraTools.classList.remove('hidden');scanFrame.classList.remove('hidden');showCameraLoader('Reopening the scanner…');try{await arSystem.start();let cameraReady=await waitForCameraFeed(9000);if(!cameraReady){await stopMindARCamera();await new Promise(r=>setTimeout(r,350));await arSystem.start();cameraReady=await waitForCameraFeed(9000)}if(!cameraReady)throw new Error('Camera feed did not resume');hideCameraLoader()}catch(error){await stopMindARCamera();hideCameraLoader();console.error(error);document.body.classList.remove('lowxxy-ar-live');startOverlay.classList.remove('hidden');statusBar.classList.add('hidden');shopBar.classList.add('hidden');cameraTools.classList.add('hidden');scanFrame.classList.add('hidden');errorText.style.display='block';errorText.textContent=cameraErrorMessage(error);startButton.disabled=false;startButton.textContent='TRY CAMERA AGAIN';startOverlay.classList.add('ready')}};if(scene.hasLoaded)setTimeout(resumeScanner,180);else scene.addEventListener('loaded',()=>setTimeout(resumeScanner,180),{once:true})}
   if('serviceWorker'in navigator){window.addEventListener('load',async()=>{try{const registration=await navigator.serviceWorker.register('./service-worker.js',{updateViaCache:'none'});registration.update().catch(()=>{})}catch(err){console.warn('SW registration failed',err)}})}
   collectionButton.addEventListener('click',()=>{sessionStorage.setItem('lowxxy-return-url',location.href);sessionStorage.setItem('lowxxy-session-started','1');sessionStorage.setItem('lowxxy-resume-ar','1');filmTransitionTo('./collection.html?v=239','left')});openSelfie.addEventListener('click',()=>{sessionStorage.setItem('lowxxy-return-url',location.href);sessionStorage.setItem('lowxxy-session-started','1');sessionStorage.setItem('lowxxy-resume-ar','1');filmTransitionTo('./selfie.html?v=239','right')});
   function drawCover(ctx,source,width,height,mirror=false){const sw=source.videoWidth||source.width,sh=source.videoHeight||source.height;if(!sw||!sh)return false;const scale=Math.max(width/sw,height/sh),dw=sw*scale,dh=sh*scale,dx=(width-dw)/2,dy=(height-dh)/2;ctx.save();if(mirror){ctx.translate(width,0);ctx.scale(-1,1)}ctx.drawImage(source,dx,dy,dw,dh);ctx.restore();return true}
