@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lowxxy-ar-v282-selfie-save-confirm';
+const CACHE_NAME = 'lowxxy-ar-v283-selfie-native-save';
 const APP_SHELL = [
   './',
   './index.html?v=278',
