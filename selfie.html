@@ -291,34 +291,44 @@ async function makePhotoCanvas(source){const sw=source.width||source.videoWidth,
       window.LowxxyShoulderAR.drawToPhoto(ctx,out.width,out.height);
     }
   }catch(e){console.warn('Lowxxy shoulder photo overlay skipped',e)}drawLowxxyPhotoMark(ctx,out.width,out.height);return out}
-async function savePhoto(){LowxxySound.shutter();if(!cameraReady||!stream){showToast('CAMERA IS STILL LOADING');return}shoot.disabled=true;showToast('CAPTURING…');try{
-  // Use the exact live selfie frame instead of ImageCapture.takePhoto().
-  // Some phones return a different sensor crop/FOV from takePhoto(), which made
-  // the shoulder character appear to jump in the saved image.
-  const drawable=await captureFromVideo();
-  const canvas=await makePhotoCanvas(drawable);
-  if(canvasLooksBlack(canvas))throw new Error('Camera returned a black frame');
-  const blob=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('Encoding failed')),'image/png'));
-  const file=new File([blob],`lowxxy-selfie-${Date.now()}.png`,{type:'image/png'});
-  const isiOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
-  if(!isiOS){
-    showToast('PHOTO SAVED!');
-    const url=URL.createObjectURL(blob),a=document.createElement('a');
-    a.href=url;a.download=file.name;a.style.display='none';
-    document.body.appendChild(a);a.click();a.remove();
-    setTimeout(()=>URL.revokeObjectURL(url),15000);
-  }else if(navigator.share&&navigator.canShare?.({files:[file]})){
-    showToast('TAP “SAVE IMAGE” TO ADD TO PHOTOS');
-    await navigator.share({files:[file],title:'Lowxxy Selfie'}).catch(err=>{
-      if(err?.name!=='AbortError')throw err;
+async function savePhoto(){
+  if(!cameraReady||!stream){showToast('CAMERA IS STILL LOADING');return}
+  LowxxySound.shutter();shoot.disabled=true;showToast('CAPTURING...');
+  try{
+    // Snapshot the *live preview* so the shoulder AR remains aligned.
+    // Do not discard a photograph based on a dark-frame heuristic.
+    let drawable;
+    try{drawable=await captureFromVideo()}
+    catch(e){console.warn('Camera frame wait failed; using live video',e);drawable=video}
+    const canvas=await makePhotoCanvas(drawable);
+    if(!canvas.width||!canvas.height)throw new Error('Empty photo canvas');
+    const encode=(type,quality)=>new Promise((resolve,reject)=>{
+      try{canvas.toBlob(blob=>blob?.size?resolve(blob):reject(new Error(type+' encoder returned empty image')),type,quality)}
+      catch(err){reject(err)}
     });
-  }else{
-    showToast('OPEN IMAGE, THEN SAVE TO PHOTOS');
-    const url=URL.createObjectURL(blob),win=window.open(url,'_blank');
-    if(!win)location.href=url;
+    let blob,ext;
+    try{blob=await encode('image/png');ext='png'}
+    catch(e){console.warn('PNG capture unavailable; trying JPEG',e);blob=await encode('image/jpeg',0.94);ext='jpg'}
+    const filename=`lowxxy-selfie-${Date.now()}.${ext}`;
+    const file=new File([blob],filename,{type:blob.type||('image/'+(ext==='jpg'?'jpeg':'png'))});
+    const isiOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+    // Mobile Safari cannot always download blobs into Photos directly.
+    if(isiOS&&navigator.share&&navigator.canShare?.({files:[file]})){
+      showToast('CHOOSE SAVE IMAGE');
+      try{await navigator.share({files:[file],title:'Lowxxy Selfie'});return}
+      catch(err){if(err?.name==='AbortError')return;console.warn('Share failed; using file link',err)}
+    }
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;a.download=filename;
+    a.style.display='none';document.body.appendChild(a);a.click();a.remove();
+    // Some mobile browsers need the URL alive beyond the click event.
     setTimeout(()=>URL.revokeObjectURL(url),60000);
-  }
-}catch(error){console.error(error);showToast('CAMERA BLOCKED THE PHOTO — TRY CHROME')}finally{shoot.disabled=false}}
+    showToast('PHOTO DOWNLOADED - CHECK DOWNLOADS');
+  }catch(error){
+    console.error('LOWXXY selfie capture failed:',error);
+    showToast('PHOTO FAILED - TRY AGAIN');
+  }finally{shoot.disabled=false}
+}
 
 function ensureFilmWipe(){
   let wipe=document.getElementById('lowxxyFilmWipe');
