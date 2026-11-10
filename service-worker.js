@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lowxxy-ar-v280-crown-aspect-camera-compat';
+const CACHE_NAME = 'lowxxy-ar-v281-photo-save-video-smooth';
 const APP_SHELL = [
   './',
   './index.html?v=278',
