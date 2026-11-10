@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lowxxy-ar-v278-home-name';
+const CACHE_NAME = 'lowxxy-ar-v279-camera-capture';
 const APP_SHELL = [
   './',
   './index.html?v=278',
