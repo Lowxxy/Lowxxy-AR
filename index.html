@@ -961,6 +961,16 @@ html,body{
 }
 
 </style>
+
+<style id="lowxxy-ar-record-upgrade">
+#takeScannerPhoto.is-recording{background:#ed3c4a!important;border-color:#fff!important;box-shadow:0 0 0 5px rgba(237,60,74,.26),0 0 25px rgba(237,60,74,.40)!important;animation:none!important}
+#takeScannerPhoto.is-recording svg{animation:none!important}
+#arCaptureLabel{min-width:46px}
+#arCaptureLabel.is-recording{color:#ff6473!important;font-weight:900}
+#arRecordingTimer{position:fixed;top:calc(env(safe-area-inset-top,0px) + 14px);left:50%;transform:translateX(-50%);z-index:900;background:rgba(0,0,0,.75);border:1px solid rgba(255,255,255,.36);border-radius:100px;padding:8px 15px;color:white;font:800 13px/1.2 Arial,sans-serif;letter-spacing:1.2px;pointer-events:none;display:none}
+#arRecordingTimer.show{display:block}
+#arRecordingTimer:before{content:'';display:inline-block;width:9px;height:9px;background:#ff414e;border-radius:100%;margin-right:8px}
+</style>
 </head>
 <body>
 <div id="app"><div id="irisWipe"><div id="irisHole"></div></div><div class="global-film-grain"></div>
@@ -1000,10 +1010,10 @@ html,body{
   <div id="shopBar" class="hidden"><div class="shop-copy"><span class="shop-title">More from Lowxxy</span><span class="shop-subtitle">See the latest designs.</span></div><button id="shopButton" class="shop-button">VISIT THE SHOP</button></div>
   <div id="cameraTools" class="hidden">
     <div class="tool-wrap collect"><button id="collectionButton" aria-label="Open shirt collection" title="Collection"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4 10 6h4l2-2 4 3-2 4-2-1v10H8V10l-2 1-2-4 4-3Z"/></svg></button><span class="tool-label">COLLECT</span></div>
-    <div class="tool-wrap"><button id="takeScannerPhoto" class="round-tool" aria-label="Take AR photo" title="Take photo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 7 9 4.8h6L16.5 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h3.5Z"/><circle cx="12" cy="13" r="4"/></svg></button><span class="tool-label">PHOTO</span></div>
+    <div class="tool-wrap"><button id="takeScannerPhoto" class="round-tool" aria-label="Start AR video recording" title="Record AR video"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 7 9 4.8h6L16.5 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h3.5Z"/><circle cx="12" cy="13" r="4"/></svg></button><span class="tool-label" id="arCaptureLabel">RECORD</span></div>
     <div class="tool-wrap"><button id="openSelfie" class="round-tool" aria-label="Switch to selfie camera" title="Selfie camera"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 8a8 8 0 0 0-13.7-3.7L4 6.5"/><path d="M4 3v3.5h3.5"/><path d="M4 16a8 8 0 0 0 13.7 3.7l2.3-2.2"/><path d="M20 21v-3.5h-3.5"/><rect x="7" y="8" width="10" height="8" rx="2"/><circle cx="12" cy="12" r="2.2"/></svg></button><span class="tool-label">SELFIE</span></div>
   </div>
-  <div id="captureToast">PHOTO READY!</div><div id="unlockBurst"><div class="unlock-card"><img class="unlock-crown" src="./assets/lowxxy-crown.png?v=239" alt=""><div class="unlock-small">ANIMATION FOUND</div><div class="unlock-name" id="unlockName">LOWXXY</div></div></div><div id="crownRain"></div><div id="crownEasterToast"><span>STAND OUT.</span><span>STAY HUMBLE.</span></div>
+  <div id="captureToast">VIDEO READY!</div><div id="arRecordingTimer" role="status" aria-live="off">REC 00:00</div><img id="arRecordCrown" src="./assets/lowxxy-crown.png?v=239" alt="" hidden><div id="unlockBurst"><div class="unlock-card"><img class="unlock-crown" src="./assets/lowxxy-crown.png?v=239" alt=""><div class="unlock-small">ANIMATION FOUND</div><div class="unlock-name" id="unlockName">LOWXXY</div></div></div><div id="crownRain"></div><div id="crownEasterToast"><span>STAND OUT.</span><span>STAY HUMBLE.</span></div>
   <a-scene mindar-image="imageTargetSrc: ./assets/targets.mind?v=239; maxTrack: 1; autoStart: false; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.00001; filterBeta: 0.0001; warmupTolerance: 15; missTolerance: 18;" embedded color-space="sRGB" renderer="colorManagement: true; alpha: true; antialias: true; logarithmicDepthBuffer: true; preserveDrawingBuffer: true;" vr-mode-ui="enabled:false" device-orientation-permission-ui="enabled:false">
     <a-camera position="0 0 0" near="0.01" far="1000" look-controls="enabled:false"></a-camera>
     <a-assets timeout="90000"><a-asset-item id="chainmailAsset" src="./assets/chainmail.glb?v=239"></a-asset-item><a-asset-item id="groundedGainsAsset" src="./assets/grounded-gains.glb?v=239"></a-asset-item><a-asset-item id="hangAsset" src="./assets/hang-v77.glb?v=239"></a-asset-item><a-asset-item id="popArtAsset" src="./assets/pop-art.glb?v=239"></a-asset-item></a-assets>
@@ -1721,7 +1731,147 @@ window.addEventListener('DOMContentLoaded', () => {
     setTimeout(()=>URL.revokeObjectURL(url),60000);
     return 'open';
   }
-  takeScannerPhoto.addEventListener('click',async()=>{LowxxySound.shutter();takeScannerPhoto.disabled=true;showCaptureToast('CAPTURING...',true);await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));try{const cameraVideo=[...document.querySelectorAll('video')].find(video=>video.readyState>=2&&video.videoWidth>0),arCanvas=scene.canvas||scene.renderer?.domElement||scene.querySelector('canvas');if(!cameraVideo||!arCanvas)throw new Error('Camera or AR canvas is not ready');const width=cameraVideo.videoWidth||1280,height=cameraVideo.videoHeight||720;if(scene.renderer)scene.renderer.render(scene.object3D,scene.camera);const output=document.createElement('canvas');output.width=width;output.height=height;const ctx=output.getContext('2d');drawCover(ctx,cameraVideo,width,height,false);ctx.drawImage(arCanvas,0,0,width,height);ctx.fillStyle='rgba(0,0,0,.72)';ctx.fillRect(0,height-Math.max(64,height*.08),width,Math.max(64,height*.08));ctx.fillStyle='#fff';ctx.textAlign='center';ctx.font=`900 ${Math.max(26,width*.035)}px Arial`;ctx.fillText('@LOWXXY.BRAND',width/2,height-Math.max(22,height*.027));const blob=await new Promise(resolve=>output.toBlob(resolve,'image/png',.96));if(!blob)throw new Error('Photo could not be created');const saveMode=await savePhotoEverywhere(blob,`lowxxy-ar-${Date.now()}.png`);if(saveMode==='download')showCaptureToast('PHOTO SAVED!')}catch(error){console.error(error);showCaptureToast('PHOTO FAILED — TRY AGAIN')}finally{takeScannerPhoto.disabled=false}});
+  // AR RECORDING: composite the live camera with the A-Frame canvas each frame.
+  // The existing tracking, model playback and skinning are never modified.
+  const arCaptureLabel=document.querySelector('#arCaptureLabel');
+  const arRecordingTimer=document.querySelector('#arRecordingTimer');
+  const arRecordCrown=document.querySelector('#arRecordCrown');
+  let arRecorder=null,arRecordChunks=[],arRecordCanvas=null,arRecordRaf=0;
+  let arRecordStarted=0,arRecordTimer=0,arRecordEnding=false,arRecordMime='';
+  const AR_MAX_SECONDS=30;
+  const isIOSDevice=()=>/iPad|iPhone|iPod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  const padTime=n=>String(n).padStart(2,'0');
+  function drawVideoBrand(ctx,w,h){
+    const size=Math.max(15,Math.round(w*.025)),pad=Math.round(w*.026);
+    ctx.save();ctx.font=`700 ${size}px Arial,sans-serif`;
+    const label='@lowxxy.brand',textW=ctx.measureText(label).width;
+    const cw=Math.round(size*1.55),gap=Math.round(size*.36);
+    const bw=Math.round(textW+cw+gap+pad*.9),bh=Math.round(size*2.2);
+    const bx=w-bw-pad,by=h-bh-pad;
+    ctx.fillStyle='rgba(0,0,0,.48)';ctx.beginPath();ctx.roundRect(bx,by,bw,bh,bh*.28);ctx.fill();
+    if(arRecordCrown?.complete&&arRecordCrown.naturalWidth)ctx.drawImage(arRecordCrown,bx+pad*.35,by+(bh-cw)/2,cw,cw);
+    ctx.fillStyle='white';ctx.textBaseline='middle';ctx.textAlign='left';
+    ctx.shadowColor='black';ctx.shadowBlur=3;
+    ctx.fillText(label,bx+pad*.35+cw+gap,by+bh/2);ctx.restore();
+  }
+  function resetRecordUI(){
+    takeScannerPhoto.disabled=false;takeScannerPhoto.classList.remove('is-recording');
+    arCaptureLabel.textContent='RECORD';arCaptureLabel.classList.remove('is-recording');
+    arRecordingTimer.classList.remove('show');
+    takeScannerPhoto.setAttribute('aria-label','Start AR video recording');
+    takeScannerPhoto.title='Record AR video';
+    clearInterval(arRecordTimer);arRecordTimer=0;
+    cancelAnimationFrame(arRecordRaf);arRecordRaf=0;
+    if(arRecordCanvas?._recordStream)arRecordCanvas._recordStream.getTracks().forEach(t=>t.stop());
+    arRecordCanvas=null;
+  }
+  function getRecordMime(){
+    if(!window.MediaRecorder)return '';
+    const options=[
+      'video/mp4;codecs=avc1.42E01E',
+      'video/mp4',
+      'video/webm;codecs=vp9',
+      'video/webm;codecs=vp8',
+      'video/webm'
+    ];
+    return options.find(m=>MediaRecorder.isTypeSupported(m))||'';
+  }
+  async function deliverARVideo(blob,mime){
+    const mp4=/mp4/i.test(mime||blob.type),extension=mp4?'mp4':'webm';
+    const filename=`lowxxy-ar-${Date.now()}.${extension}`;
+    const file=new File([blob],filename,{type:blob.type||mime||'video/webm'});
+    if(isIOSDevice()&&navigator.share&&navigator.canShare?.({files:[file]})){
+      showCaptureToast('CHOOSE SAVE VIDEO',true);
+      try{await navigator.share({files:[file],title:'LOWXXY AR video'});hideCaptureToast();return}
+      catch(e){if(e?.name==='AbortError'){hideCaptureToast();return}console.warn('Video share failed; falling back to download',e)}
+    }
+    const url=URL.createObjectURL(blob),link=document.createElement('a');
+    link.href=url;link.download=filename;document.body.appendChild(link);link.click();link.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),60000);
+    showCaptureToast('VIDEO SAVED');
+  }
+  function stopARRecording(){
+    if(!arRecorder||arRecorder.state==='inactive'||arRecordEnding)return;
+    arRecordEnding=true;takeScannerPhoto.disabled=true;
+    showCaptureToast('SAVING VIDEO...',true);
+    arRecorder.stop();
+  }
+  function startARRecording(){
+    if(!window.MediaRecorder||!HTMLCanvasElement.prototype.captureStream){
+      showCaptureToast('RECORDING NOT SUPPORTED — OPEN IN CHROME OR SAFARI');return;
+    }
+    const cameraVideo=getMindARCameraVideo();
+    const arCanvas=scene.canvas||scene.renderer?.domElement||scene.querySelector('canvas');
+    if(!cameraVideo||cameraVideo.readyState<2||!cameraVideo.videoWidth||!arCanvas){
+      showCaptureToast('WAIT FOR CAMERA TO START');return;
+    }
+    // Social-ready portrait format on portrait devices; keeps camera + AR aligned.
+    const portrait=innerHeight>innerWidth;
+    const w=portrait?1080:Math.min(1920,Math.max(1280,cameraVideo.videoWidth));
+    const h=portrait?1920:Math.round(w*9/16);
+    const output=document.createElement('canvas');output.width=w;output.height=h;
+    const context=output.getContext('2d',{alpha:false,desynchronized:true});
+    if(!context){showCaptureToast('VIDEO CANVAS NOT AVAILABLE');return}
+    let stream,recorder;
+    const mime=getRecordMime();
+    try{
+      const redraw=()=>{
+        if(!arRecorder||arRecorder.state==='inactive')return;
+        try{
+          context.clearRect(0,0,w,h);
+          drawCover(context,cameraVideo,w,h,false);
+          // The renderer is transparent and overlays the same CSS viewport as the camera.
+          drawCover(context,arCanvas,w,h,false);
+          drawVideoBrand(context,w,h);
+        }catch(err){console.warn('AR recording frame failed',err)}
+        arRecordRaf=requestAnimationFrame(redraw);
+      };
+      // captureStream renders the composite rather than the raw camera feed alone.
+      stream=output.captureStream(30);
+      const settings={videoBitsPerSecond:Math.min(12000000,Math.max(6000000,w*h*4))};
+      if(mime)settings.mimeType=mime;
+      recorder=new MediaRecorder(stream,settings);
+      arRecordChunks=[];arRecordMime=recorder.mimeType||mime;
+      arRecordCanvas=output;output._recordStream=stream;arRecorder=recorder;
+      recorder.ondataavailable=event=>{if(event.data?.size)arRecordChunks.push(event.data)};
+      recorder.onerror=event=>{console.error('AR recorder error',event);showCaptureToast('RECORDING ERROR');resetRecordUI();arRecorder=null};
+      recorder.onstop=async()=>{
+        const chunks=arRecordChunks.slice();arRecordChunks=[];
+        const type=arRecordMime||recorder.mimeType||'video/webm';
+        resetRecordUI();arRecorder=null;arRecordEnding=false;
+        const blob=new Blob(chunks,{type});
+        if(blob.size<1024){showCaptureToast('VIDEO EMPTY — TRY ANOTHER BROWSER');return}
+        try{await deliverARVideo(blob,type)}catch(err){console.error(err);showCaptureToast('SAVE FAILED — TRY AGAIN')}
+      };
+      arRecordEnding=false;
+      recorder.start(1000);
+      // Draw immediately, then update the composite on every animation frame.
+      redraw();
+      arRecordStarted=performance.now();
+      takeScannerPhoto.classList.add('is-recording');
+      arCaptureLabel.textContent='STOP';arCaptureLabel.classList.add('is-recording');
+      takeScannerPhoto.title='Stop recording';takeScannerPhoto.setAttribute('aria-label','Stop AR video recording');
+      arRecordingTimer.classList.add('show');
+      arRecordTimer=setInterval(()=>{
+        const sec=Math.floor((performance.now()-arRecordStarted)/1000);
+        arRecordingTimer.textContent=`REC ${padTime(Math.floor(sec/60))}:${padTime(sec%60)}`;
+        if(sec>=AR_MAX_SECONDS)stopARRecording();
+      },250);
+      showCaptureToast('RECORDING — TAP STOP');
+    }catch(err){
+      console.error('Unable to start AR video recording',err);
+      try{stream?.getTracks().forEach(t=>t.stop())}catch(_){}
+      arRecorder=null;arRecordEnding=false;resetRecordUI();
+      showCaptureToast('RECORDING NOT AVAILABLE ON THIS BROWSER');
+    }
+  }
+  takeScannerPhoto.addEventListener('click',()=>{
+    if(arRecorder&&arRecorder.state==='recording')stopARRecording();
+    else if(!arRecordEnding)startARRecording();
+  });
+  window.addEventListener('pagehide',()=>{
+    if(arRecorder&&arRecorder.state==='recording')stopARRecording();
+  });
 });
 </script>
 <script>
