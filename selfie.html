@@ -251,7 +251,7 @@ function hideCameraLoader(){cameraLoader?.classList.remove('show')}
 function showShoulderHint(){if(shoulderHintDismissed||!cameraReady)return;shoulderHintBubble?.classList.add('show')}
 function hideShoulderHint(permanent=false){if(permanent)shoulderHintDismissed=true;shoulderHintBubble?.classList.remove('show')}
 function showToast(message='PHOTO READY!'){toast.textContent=message;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1700)}
-async function startCamera(){showCameraLoader('Opening selfie camera…');hideShoulderHint();try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'user'},width:{ideal:2560},height:{ideal:1920},frameRate:{ideal:30,max:60}},audio:false}).catch(()=>navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:false}));video.srcObject=stream;const markCameraReady=()=>{cameraReady=video.videoWidth>0&&video.videoHeight>0;shoot.disabled=!cameraReady;if(cameraReady){hideCameraLoader();setTimeout(showShoulderHint,260)}};video.addEventListener('loadedmetadata',markCameraReady);video.addEventListener('loadeddata',markCameraReady);video.addEventListener('canplay',markCameraReady);await video.play();await new Promise(resolve=>{if(video.readyState>=2&&video.videoWidth>0)return resolve();const done=()=>resolve();video.addEventListener('loadedmetadata',done,{once:true});video.addEventListener('canplay',done,{once:true});video.addEventListener('loadeddata',done,{once:true});setTimeout(done,2500)});markCameraReady();if(!cameraReady)showCameraLoader('Still waking up the camera…')}catch(error){console.error(error);title.textContent='CAMERA PERMISSION NEEDED';showCameraLoader('Camera permission needed');shoot.disabled=true}}
+async function startCamera(){showCameraLoader('Opening selfie camera…');hideShoulderHint();try{if(!navigator.mediaDevices?.getUserMedia)throw new Error('Camera API unavailable (HTTPS required)');const cameraChoices=[{facingMode:{ideal:'user'},width:{ideal:2560},height:{ideal:1920},frameRate:{ideal:30}},{facingMode:{ideal:'user'},width:{ideal:1920},height:{ideal:1080}},{facingMode:'user'},true];let lastCameraError;for(const videoChoice of cameraChoices){try{stream=await navigator.mediaDevices.getUserMedia({video:videoChoice,audio:false});break}catch(err){lastCameraError=err;if(err?.name==='NotAllowedError'||err?.name==='SecurityError')break}}if(!stream)throw lastCameraError||new Error('No camera available');video.srcObject=stream;const markCameraReady=()=>{cameraReady=video.videoWidth>0&&video.videoHeight>0;shoot.disabled=!cameraReady;if(cameraReady){hideCameraLoader();setTimeout(showShoulderHint,260)}};video.addEventListener('loadedmetadata',markCameraReady);video.addEventListener('loadeddata',markCameraReady);video.addEventListener('canplay',markCameraReady);await video.play();await new Promise(resolve=>{if(video.readyState>=2&&video.videoWidth>0)return resolve();const done=()=>resolve();video.addEventListener('loadedmetadata',done,{once:true});video.addEventListener('canplay',done,{once:true});video.addEventListener('loadeddata',done,{once:true});setTimeout(done,2500)});markCameraReady();if(!cameraReady)showCameraLoader('Still waking up the camera…')}catch(error){console.error(error);title.textContent='CAMERA PERMISSION NEEDED';showCameraLoader('Camera permission needed');shoot.disabled=true}}
 function canvasLooksBlack(canvas){const sample=document.createElement('canvas');sample.width=32;sample.height=32;const c=sample.getContext('2d',{willReadFrequently:true});c.drawImage(canvas,0,0,32,32);const data=c.getImageData(0,0,32,32).data;let total=0,varied=0;for(let i=0;i<data.length;i+=4){const lum=(data[i]+data[i+1]+data[i+2])/3;total+=lum;if(lum>8)varied++}return total/(data.length/4)<5||varied<12}
 function drawMirroredCover(ctx,source,sw,sh,dw,dh){const scale=Math.max(dw/sw,dh/sh),cropW=dw/scale,cropH=dh/scale,sx=(sw-cropW)/2,sy=(sh-cropH)/2;ctx.save();ctx.translate(dw,0);ctx.scale(-1,1);ctx.drawImage(source,sx,sy,cropW,cropH,0,0,dw,dh);ctx.restore()}
 async function blobToDrawable(blob){if('createImageBitmap'in window){try{return await createImageBitmap(blob)}catch(e){}}return await new Promise((resolve,reject)=>{const img=new Image(),url=URL.createObjectURL(blob);img.onload=()=>{URL.revokeObjectURL(url);resolve(img)};img.onerror=()=>reject(new Error('decode failed'));img.src=url})}
@@ -263,16 +263,26 @@ function drawLowxxyPhotoMark(ctx,w,h){
   ctx.save();
   ctx.font=`700 ${size}px Arial,sans-serif`;
   const text='@lowxxy.brand',textWidth=ctx.measureText(text).width;
-  const crownSize=Math.round(size*1.65),gap=Math.round(size*.40);
-  const boxW=Math.round(textWidth+crownSize+gap+pad*1.2),boxH=Math.round(size*2.20);
+  const crown=document.getElementById('lowxxy-photo-crown');
+  // The crown asset is portrait (1024 x 1536): never force it into a square.
+  const crownH=Math.round(size*1.8);
+  const ratio=(crown?.naturalWidth&&crown?.naturalHeight)
+    ? crown.naturalWidth/crown.naturalHeight : 2/3;
+  const crownW=Math.round(crownH*ratio),gap=Math.round(size*.40);
+  const innerPad=Math.round(size*.55);
+  const boxW=Math.round(textWidth+crownW+gap+innerPad*2);
+  const boxH=Math.round(Math.max(crownH+size*.34,size*2.25));
   const x=w-boxW-pad,y=h-boxH-pad;
   ctx.fillStyle='rgba(9,9,9,.47)';
-  ctx.beginPath();ctx.roundRect(x,y,boxW,boxH,Math.round(boxH*.30));ctx.fill();
-  const crown=document.getElementById('lowxxy-photo-crown');
-  if(crown?.complete&&crown.naturalWidth)ctx.drawImage(crown,x+pad*.42,y+(boxH-crownSize)/2,crownSize,crownSize);
+  ctx.beginPath();
+  if(typeof ctx.roundRect==='function')ctx.roundRect(x,y,boxW,boxH,Math.round(boxH*.30));
+  else ctx.rect(x,y,boxW,boxH);
+  ctx.fill();
+  if(crown?.complete&&crown.naturalWidth)
+    ctx.drawImage(crown,x+innerPad,y+(boxH-crownH)/2,crownW,crownH);
   ctx.fillStyle='#ffffff';ctx.textAlign='left';ctx.textBaseline='middle';
   ctx.shadowColor='rgba(0,0,0,.55)';ctx.shadowBlur=3;
-  ctx.fillText(text,x+pad*.42+crownSize+gap,y+boxH/2);
+  ctx.fillText(text,x+innerPad+crownW+gap,y+boxH/2);
   ctx.restore();
 }
 async function makePhotoCanvas(source){const sw=source.width||source.videoWidth,sh=source.height||source.videoHeight;if(!sw||!sh)throw new Error('Empty camera frame');const portrait=sh>=sw,out=document.createElement('canvas');out.width=Math.round(Math.max(1080,Math.min(1920,portrait?sw:Math.min(sw,sh*.75))));out.height=Math.round(out.width*4/3);const ctx=out.getContext('2d',{alpha:false,willReadFrequently:true});ctx.fillStyle='#111';ctx.fillRect(0,0,out.width,out.height);drawMirroredCover(ctx,source,sw,sh,out.width,out.height);
