@@ -1779,8 +1779,8 @@ window.addEventListener('DOMContentLoaded', () => {
     const options=[
       'video/mp4;codecs=avc1.42E01E',
       'video/mp4',
-      'video/webm;codecs=vp9',
       'video/webm;codecs=vp8',
+      'video/webm;codecs=vp9',
       'video/webm'
     ];
     return options.find(m=>{try{return typeof MediaRecorder.isTypeSupported==='function'&&MediaRecorder.isTypeSupported(m)}catch(_){return false}})||'';
@@ -1816,28 +1816,35 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     // Social-ready portrait format on portrait devices; keeps camera + AR aligned.
     const portrait=innerHeight>innerWidth;
-    const w=portrait?1080:Math.min(1920,Math.max(1280,cameraVideo.videoWidth));
-    const h=portrait?1920:Math.round(w*9/16);
+    const w=portrait?720:1280;
+    const h=portrait?1280:720;
+    const RECORD_FPS=24; // prioritize consistent capture under live AR tracking
     const output=document.createElement('canvas');output.width=w;output.height=h;
     const context=output.getContext('2d',{alpha:false,desynchronized:true});
     if(!context){showCaptureToast('VIDEO CANVAS NOT AVAILABLE');return}
     let stream,recorder;
     const mime=getRecordMime();
     try{
-      const redraw=()=>{
+      let lastFrameTime=-Infinity;
+      const redraw=(now)=>{
         if(!arRecorder||arRecorder.state==='inactive')return;
-        try{
-          context.clearRect(0,0,w,h);
-          drawCover(context,cameraVideo,w,h,false);
-          // The renderer is transparent and overlays the same CSS viewport as the camera.
-          drawCover(context,arCanvas,w,h,false);
-          drawVideoBrand(context,w,h);
-        }catch(err){console.warn('AR recording frame failed',err)}
+        // Keep compositing close to the recorder frame rate. Drawing a large
+        // frame at the display's full 60-120 Hz causes encoding stalls on phones.
+        if(now-lastFrameTime>=1000/RECORD_FPS-2){
+          try{
+            context.clearRect(0,0,w,h);
+            drawCover(context,cameraVideo,w,h,false);
+            // AR renderer composited over the camera, same as the live view.
+            drawCover(context,arCanvas,w,h,false);
+            drawVideoBrand(context,w,h);
+            lastFrameTime=now;
+          }catch(err){console.warn('AR recording frame failed',err)}
+        }
         arRecordRaf=requestAnimationFrame(redraw);
       };
-      // captureStream renders the composite rather than the raw camera feed alone.
-      stream=output.captureStream(30);
-      const settings={videoBitsPerSecond:Math.min(12000000,Math.max(6000000,w*h*4))};
+      // Lower and steadier recording load than 1080x1920 @ 30 fps.
+      stream=output.captureStream(RECORD_FPS);
+      const settings={videoBitsPerSecond:4000000};
       if(mime)settings.mimeType=mime;
       recorder=new MediaRecorder(stream,settings);
       arRecordChunks=[];arRecordMime=recorder.mimeType||mime;
