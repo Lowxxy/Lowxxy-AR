@@ -1745,14 +1745,23 @@ window.addEventListener('DOMContentLoaded', () => {
     const size=Math.max(15,Math.round(w*.025)),pad=Math.round(w*.026);
     ctx.save();ctx.font=`700 ${size}px Arial,sans-serif`;
     const label='@lowxxy.brand',textW=ctx.measureText(label).width;
-    const cw=Math.round(size*1.55),gap=Math.round(size*.36);
-    const bw=Math.round(textW+cw+gap+pad*.9),bh=Math.round(size*2.2);
+    // Preserve the transparent crown PNG's original 2:3 aspect ratio.
+    const ch=Math.round(size*1.8);
+    const ratio=(arRecordCrown?.naturalWidth&&arRecordCrown?.naturalHeight)
+      ? arRecordCrown.naturalWidth/arRecordCrown.naturalHeight : 2/3;
+    const cw=Math.round(ch*ratio),gap=Math.round(size*.36);
+    const innerPad=Math.round(size*.52),bw=Math.round(textW+cw+gap+innerPad*2);
+    const bh=Math.round(Math.max(ch+size*.34,size*2.25));
     const bx=w-bw-pad,by=h-bh-pad;
-    ctx.fillStyle='rgba(0,0,0,.48)';ctx.beginPath();ctx.roundRect(bx,by,bw,bh,bh*.28);ctx.fill();
-    if(arRecordCrown?.complete&&arRecordCrown.naturalWidth)ctx.drawImage(arRecordCrown,bx+pad*.35,by+(bh-cw)/2,cw,cw);
+    ctx.fillStyle='rgba(0,0,0,.48)';ctx.beginPath();
+    if(typeof ctx.roundRect==='function')ctx.roundRect(bx,by,bw,bh,bh*.28);
+    else ctx.rect(bx,by,bw,bh);
+    ctx.fill();
+    if(arRecordCrown?.complete&&arRecordCrown.naturalWidth)
+      ctx.drawImage(arRecordCrown,bx+innerPad,by+(bh-ch)/2,cw,ch);
     ctx.fillStyle='white';ctx.textBaseline='middle';ctx.textAlign='left';
     ctx.shadowColor='black';ctx.shadowBlur=3;
-    ctx.fillText(label,bx+pad*.35+cw+gap,by+bh/2);ctx.restore();
+    ctx.fillText(label,bx+innerPad+cw+gap,by+bh/2);ctx.restore();
   }
   function resetRecordUI(){
     takeScannerPhoto.disabled=false;takeScannerPhoto.classList.remove('is-recording');
@@ -1774,7 +1783,7 @@ window.addEventListener('DOMContentLoaded', () => {
       'video/webm;codecs=vp8',
       'video/webm'
     ];
-    return options.find(m=>MediaRecorder.isTypeSupported(m))||'';
+    return options.find(m=>{try{return typeof MediaRecorder.isTypeSupported==='function'&&MediaRecorder.isTypeSupported(m)}catch(_){return false}})||'';
   }
   async function deliverARVideo(blob,mime){
     const mp4=/mp4/i.test(mime||blob.type),extension=mp4?'mp4':'webm';
